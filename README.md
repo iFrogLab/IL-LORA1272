@@ -3,7 +3,7 @@ IL-LORA1272 is ifroglab product, please see http://www.ifroglab.com/?p=7086
 
 iFrogLab  Lora 868/900/915 MHz SX1272 module compatible
 
-Features:
+<Font Size="10">Features:</Font>
 
 Frequency Range: 868/900/915MHz
 Modulation: FSK/GFSK/MSK/LoRa
@@ -20,7 +20,7 @@ In addition, We’er add powerful MCU to help Users that don’t needs to read t
 
 
  [Image:http://www.ifroglab.com/wp-content/uploads/2016/07/IMG_0532.jpg]
- 
+
  [[File:http://www.ifroglab.com/wp-content/uploads/2016/07/IMG_0532.jpg|caption]]
 
  [http://www.ifroglab.com/wp-content/uploads/2016/07/IMG_0532.jpg]
