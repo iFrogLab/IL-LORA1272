@@ -18,7 +18,9 @@ iL-LORA1272 module consists of RFIC SX1272 and include powerful MCU, thin SMD cr
 
 In addition, We’er add powerful MCU to help Users that don’t needs to read the datasheet of SX1272, you just go through UART to control this module and will easy to use the module in the best performance.
 
+
+ [Image:http://www.ifroglab.com/wp-content/uploads/2016/07/IMG_0532.jpg]
+ 
  [[File:http://www.ifroglab.com/wp-content/uploads/2016/07/IMG_0532.jpg|caption]]
 
  [http://www.ifroglab.com/wp-content/uploads/2016/07/IMG_0532.jpg]
- [Image:http://www.ifroglab.com/wp-content/uploads/2016/07/IMG_0532.jpg]
