@@ -21,3 +21,4 @@ In addition, We’er add powerful MCU to help Users that don’t needs to read t
  [[File:http://www.ifroglab.com/wp-content/uploads/2016/07/IMG_0532.jpg|caption]]
 
  [http://www.ifroglab.com/wp-content/uploads/2016/07/IMG_0532.jpg]
+ [Image:http://www.ifroglab.com/wp-content/uploads/2016/07/IMG_0532.jpg]
