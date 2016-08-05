@@ -32,7 +32,7 @@ In addition, We’er add powerful MCU to help Users that don’t needs to read t
 
 
 <h2>Where to buy?</h2>
-http://www.ifroglab.com/?post_type=product
+http://www.ifroglab.com/?product=il-lora1272-超遠端資料傳遞模組
 
 
 
