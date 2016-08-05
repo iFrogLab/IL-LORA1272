@@ -13,8 +13,8 @@ iFrogLab  Lora 868/900/915 MHz SX1272 module compatible
 *. Standby current: ≤ 1uA.
 *. Supply voltage: 1.8~3.6V.
 
-==1aaa==
-==2bbb==
+==1a1231231aa==
+==2bb123123b==
 
 
 iL-LORA1272 is a type of low cost RF front-end transceiver module based on SX1272 from Semtech Corporation. It keeps the advantages of RFIC SX1272 but simplifies the circuit design. The high sensitivity (-137dBm) in LoRa modulation and 20dBm high power output make the module suitable for low range and low data rate applications.
