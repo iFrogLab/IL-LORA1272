@@ -1,0 +1,18 @@
+for setup RPi 3, please follow be steps to unlock GPIO UART Pins
+
+
+STEP1:
+$ sudo nano /boot/cmdline.txt
+
+
+Change below:
+dwc_otg.lpm_enable=0 console=tty1 console=serial0,115200 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait
+
+
+TO:
+dwc_otg.lpm_enable=0  console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait
+
+
+STEP2:
+
+minicom -b 115200 -o -D /dev/ttyAMA0

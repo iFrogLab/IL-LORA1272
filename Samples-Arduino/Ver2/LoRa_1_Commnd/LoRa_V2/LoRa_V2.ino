@@ -15,7 +15,7 @@
 #include <SoftwareSerial.h>
 
 
-SoftwareSerial mySerial(10, 11); // RX, TX
+SoftwareSerial mySerial(10, 11); // RX, TX for UNO and MEGA
 String LastString="";
 // the setup function runs once when you press reset or power the board
 void setup() {
@@ -37,11 +37,18 @@ void setup() {
   FunLora_2_ReadSetup();
   Serial.println("\n[5]:FunLora_3_RX");
   FunLora_3_RX();
-  Serial.println("\n[5]:FunLora_3_TX");
+  Serial.println("\n[6]:FunLora_6_read");
+  FunLora_6_read();
+  Serial.println("\n[7]:FunLora_3_TX");
   FunLora_3_TX();
-  Serial.println("\n[6]:FunLora_5_write");
-  String stringOne="Hello";
+  //Serial.println("\n[8]:FunLora_5_write");
+  //FunLora_5_write_test("");
+  Serial.println("\n[8]:FunLora_5_write");
+  String stringOne="abcde";
   FunLora_5_write(stringOne);
+
+
+  
  
   Serial.println("\n[x]:End");
  
@@ -60,7 +67,7 @@ void loop() {
 byte Fun_CRC(byte t1[], int len){
   byte CRC =0;
   for(int i=0;i<len;i++){
-    CRC=CRC^t1[i];
+    CRC=CRC^t1[i]; // xor
   }
  
   return CRC;
@@ -92,13 +99,17 @@ void FunLora_0_GetChipID(){
     Serial.print(",");
     data[i]=t1;
     i=i+1;
-     //if(i>=7+3){
-     if(i>=7){
+     if(i>=10){
       Serial.println(" ");
       Serial.print("\nChip:");
       Serial.println(data[3],HEX);
       Serial.print("FW_Ver:");
       Serial.println(data[4],HEX);
+      Serial.print("Unique number:");
+      Serial.print(data[5],HEX);
+      Serial.print(data[6],HEX);
+      Serial.print(data[7],HEX);
+      Serial.println(data[8],HEX);
       Serial.println("\n------------------");
      return;
     }
@@ -207,7 +218,63 @@ void FunLora_3_RX(){
 
 
 
+void Fun_AddArray(byte source[],byte target[],int sourceLen,int targetStart){
+   for(int i=0;i<sourceLen;i++){
+       target[targetStart+i]=source[i];
+   }
+   return ;
+}
 void FunLora_5_write(String iStr){ //byte iData[]){
+
+  byte t2[16+1+3];
+  byte CRC = 0; 
+  byte len=(byte)(iStr.length());
+  byte len1=len+1;
+  if(len==0) return;
+
+  
+  // 定義碼
+  byte t1[] = {0xc1,0x05,len1};
+  char charBuf[len*2+10];
+  Fun_AddArray(t1,t2,3,0);
+
+  // 字串轉char
+  char charBuf2[len*2];
+  iStr.toCharArray(charBuf2,len*2);
+  
+  //複製字串
+  t2[2]=len;
+  Fun_AddArray(charBuf2,t2,(len*2)+2,3);
+
+  //算CRC
+  CRC=Fun_CRC(t2,3+len);  
+  t2[3+len] = CRC;
+  
+
+  mySerial.write(t2,3+(len)+1);
+  Fun_PrintArray(t2,3+(len)+1);
+  Serial.print("Recive: ");
+
+ 
+  i=0;
+  for(int j=0;j<999999;j++){
+   if (mySerial.available()) {
+    byte t1=mySerial.read();
+    Serial.print(t1, HEX);
+    Serial.print(",");
+    i=i+1;
+     if(i>=5){
+        if(data[1]==0xAA ) { Serial.println("\n OK");   }
+        else {  Serial.println("\n Error!");  }
+     return;
+    }
+   }
+  }
+  
+  
+}
+
+void FunLora_5_write_v0(String iStr){ //byte iData[]){
 
   byte CRC = 0; 
   byte len=(byte)(iStr.length());
@@ -221,13 +288,10 @@ void FunLora_5_write(String iStr){ //byte iData[]){
   
   char charBuf[len+2];
   iStr.toCharArray(charBuf,len1);
-  //Serial.println(iStr);
-  //mySerial.write(charBuf,len);
+
   charBuf[len+1]=CRC;
   mySerial.write(charBuf,len1);
   Fun_PrintArray(charBuf,len1);
-
-  
   Serial.print("Recive: ");
 
  
@@ -240,12 +304,81 @@ void FunLora_5_write(String iStr){ //byte iData[]){
     i=i+1;
      if(i>=5){
      //Serial.println();
+        if(data[1]==0xFF ) {  Serial.println("\n Error!");   }
+        else {  Serial.println("\n OK"); }
      return;
     }
    }
   }
   
   
+}
+//測試　write
+void FunLora_5_write_test(String iStr){ //byte iData[]){
+
+  byte CRC = 0; 
+
+
+  //byte t1[] = {0xc1,0x05,len1};
+  byte t1[] = {0xc1,0x05,3,0x31,0x32,0x33,0};
+  CRC=Fun_CRC(t1,6);
+  t1[6]=CRC;
+  mySerial.write(t1,7);
+  Fun_PrintArray(t1,7);
+ 
+  i=0;
+  for(int j=0;j<999999;j++){
+   if (mySerial.available()) {
+    byte t1=mySerial.read();
+    Serial.print(t1, HEX);
+    Serial.print(",");
+    i=i+1;
+     if(i>=5){
+     //Serial.println();
+        if(data[1]==0xFF ) {  Serial.println("\n Error!");   }
+        else {  Serial.println("\n OK"); }
+     return;
+    }
+   }
+  }
+  
+  
+}
+
+void FunLora_6_read(){
+
+  byte CRC=0;
+  byte t1[] = {0xc1,0x06,0x00,CRC};
+  byte readLen=0;
+  CRC=Fun_CRC(t1,3);
+  t1[3] = CRC;
+  mySerial.write(t1,4);
+  Fun_PrintArray(t1,4);
+  Serial.print("Recive: ");
+  i=0;
+  for(int j=0;j<999999;j++){
+   if (mySerial.available()) {
+    byte t1=mySerial.read();
+    Serial.print(t1, HEX);
+    Serial.print(",");
+    data[i]=t1;
+    i=i+1;
+    if(i>=2){
+      if(i==3) {
+        readLen=data[2];
+        if(data[1]==0xFF ) {  Serial.println("\n Error!");  return;  }
+        else if(data[1]!=0x86 ) {  Serial.println("\n Error!");   return;  }
+        else {  Serial.println("\n OK"); }
+        
+      }else if(i>=3+readLen+1)   {
+        Serial.println(" ");
+        Serial.println("\n------------------");
+        return;
+      }
+    }
+   }
+  }
+
 }
 
 
