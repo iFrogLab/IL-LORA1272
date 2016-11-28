@@ -21,6 +21,16 @@ public:
   int iFrogLabLoRaLibrary::GetDeviceID();
 
 
+
+
+  byte* iFrogLabLoRaLibrary::Setup(byte TXRX,byte Freq1,byte Freq2,byte Freq3,byte Power);
+  void iFrogLabLoRaLibrary::WriteMode();
+  void iFrogLabLoRaLibrary::Write16bytesBroadcast(byte t1[],byte len);
+  void iFrogLabLoRaLibrary::ReadMode();
+  byte*  iFrogLabLoRaLibrary::Read16bytesBroadcast();
+
+
+
   //void set(uint8_t pin, int initBrightness, int fadeAmount, unsigned long delayDuration);
   //void update(void);
 
@@ -28,6 +38,11 @@ public:
   //byte* iFrogLabLoRaLibrary::GetChipID();
   //SoftwareSerial mySerial(10, 11); 
   SoftwareSerial *mySerial;
+  byte m_TXRX;
+  byte m_Freq1;
+  byte m_Freq2;
+  byte m_Freq3;
+  byte m_Power;
 
 
 
@@ -35,14 +50,8 @@ public:
 private:
 
   byte  Fun_CRC(byte t1[], int len);   //計算出CRC 
-  //void  Serial_print(char MSG);
   void  Fun_PrintArray(byte t1[], byte len);
-
-
-
-
-
-
+  void  Fun_AddArray(byte source[],byte target[],int sourceLen,int targetStart);
 
 
   unsigned long m_lastTime;
@@ -51,7 +60,8 @@ private:
   int m_fadeAmount;
   unsigned long m_delayDuration;
 
-  byte data[20];
+  byte data[30];
+  byte data2[20];
   int i=0;
   uint8_t m_RX;
   uint8_t m_TX;
