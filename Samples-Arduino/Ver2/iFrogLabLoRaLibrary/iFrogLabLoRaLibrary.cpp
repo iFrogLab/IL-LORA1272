@@ -32,7 +32,7 @@ iFrogLabLoRaLibrary::iFrogLabLoRaLibrary(int RX, int TX, int DataReady)
 
 }
 
-
+/*
 void iFrogLabLoRaLibrary::set(uint8_t pin, int initBrightness, int fadeAmount, unsigned long delayDuration)
 {
 	m_pin = pin;
@@ -57,7 +57,7 @@ void iFrogLabLoRaLibrary::update(void)
 			m_fadeAmount = -m_fadeAmount;
 		}
 	}
-}
+}*/
 //////////////////////////
 
 byte iFrogLabLoRaLibrary::Fun_CRC(byte t1[], int len){
@@ -81,7 +81,7 @@ void iFrogLabLoRaLibrary::Fun_PrintArray(byte t1[], byte len){
 
 }
 
-byte* iFrogLabLoRaLibrary::GetChipID()
+byte* iFrogLabLoRaLibrary::GetChipIDAll()
 {
 
   byte CRC = 0; 
@@ -124,7 +124,21 @@ byte* iFrogLabLoRaLibrary::GetChipID()
 
   return data;
 }
-
-
+int iFrogLabLoRaLibrary::GetChipID()
+{
+  GetChipIDAll();
+  return data[3];
+}
+int iFrogLabLoRaLibrary::GetFirmwareVersion()
+{
+  GetChipIDAll();
+  return data[4];
+}
+int iFrogLabLoRaLibrary::GetDeviceID()
+{
+  GetChipIDAll();
+  int t1=(data[5]<<(8*3))+(data[6]<<(8*2))+(data[7]<<8)+(data[8]);
+  return t1;
+}
 ////////////////////////////////////////////////////
 

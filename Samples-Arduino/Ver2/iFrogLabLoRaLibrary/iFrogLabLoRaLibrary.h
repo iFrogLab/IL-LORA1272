@@ -15,10 +15,14 @@ public:
   
   iFrogLabLoRaLibrary(int RX, int TX,int DataReady);
   //iFrogLabLoRaLibrary(int DataReady);
-  byte* iFrogLabLoRaLibrary::GetChipID();
+  byte* iFrogLabLoRaLibrary::GetChipIDAll();
+  int iFrogLabLoRaLibrary::GetChipID();
+  int iFrogLabLoRaLibrary::GetFirmwareVersion();
+  int iFrogLabLoRaLibrary::GetDeviceID();
 
-  void set(uint8_t pin, int initBrightness, int fadeAmount, unsigned long delayDuration);
-  void update(void);
+
+  //void set(uint8_t pin, int initBrightness, int fadeAmount, unsigned long delayDuration);
+  //void update(void);
 
   //byte* GetChipID();
   //byte* iFrogLabLoRaLibrary::GetChipID();
