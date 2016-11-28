@@ -1,12 +1,10 @@
 iFrogLab LoRa IL-LORA1272  library
 =========================
 
-Arduino library for controlling iFrogLab LoRa IL-LORA1272 and strip such as the [Adafruit 60 LED/meter Digital LED strip][strip], the [Adafruit FLORA RGB Smart Pixel][flora], the [Adafruit Breadboard-friendly RGB Smart Pixel][pixel], the [Adafruit NeoPixel Stick][stick], and the [Adafruit NeoPixel Shield][shield].
+Arduino library for controlling iFrogLab LoRa [IL-LORA1272][IL-LORA1272],and make sure Pins is below, for the hardware pins connection, please see [IL-LORA1272 WebSite][IL-LORA1272 WebSite].  
+
 
 After downloading, install in Arduino Libraries folder. Restart Arduino IDE, then open File->Sketchbook->Library->iFrogLabLoRaLibrary->sample01_chipInfo.
 
-[flora]:  http://www.ifroglab.com/?p=7086
-[strip]:  http://www.ifroglab.com/?p=7086
-[pixel]:  http://www.ifroglab.com/?p=7086
-[stick]:  http://www.ifroglab.com/?p=7086
-[shield]: http://www.ifroglab.com/?p=7086
+[IL-LORA1272]:  http://www.ifroglab.com/?p=7086
+[IL-LORA1272 WebSite] : https://github.com/iFrogLab/IL-LORA1272/tree/master/Samples-Arduino/Ver2/iFrogLabLoRaLibrary
