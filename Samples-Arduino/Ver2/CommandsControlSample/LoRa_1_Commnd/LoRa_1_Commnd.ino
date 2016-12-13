@@ -1,4 +1,15 @@
 /*
+
+ * iFrogLab IL-LORA1272 
+ * 功能,     ARDUINO , IFROGLAB LORA, IL-LORA1272
+ * 電源,     3.3V    ,Pin 3, VDD
+ * 接地,     GND     ,Pin 1, GND
+ * 接收反應,  Pin 9   , Pin 2, Host_IRQ
+ * UART,     Pin 10  ,UART_RX  Pin 7, UART_TX
+ * UART,     Pin 11  ,UART_TX  Pin 8, UART_RX
+
+
+ 
   Blink
   Turns on an LED on for one second, then off for one second, repeatedly.
 
@@ -22,7 +33,7 @@ void setup() {
   // initialize digital pin 13 as an output.
   pinMode(13, OUTPUT);
 
-  Serial.begin(9600);     // set the dta rate for the Serial port
+  Serial.begin(9600);     // set the dta ```xwrate for the Serial port
   mySerial.begin(115200); // set the data rate for the SoftwareSerial port
   
   Serial.println("\n[1]:Start");
@@ -99,7 +110,7 @@ void FunLora_0_GetChipID(){
     Serial.print(",");
     data[i]=t1;
     i=i+1;
-     if(i>=10){
+     if(i>=6){
       Serial.println(" ");
       Serial.print("\nChip:");
       Serial.println(data[3],HEX);

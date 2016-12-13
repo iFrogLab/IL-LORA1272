@@ -9,6 +9,7 @@ def Fun_CRC(data):
     return crc
 
 
+
 #ser = serial.Serial ("/dev/ttyAMA0")    # Raspbeeey Pi port
 ser = serial.Serial ("/dev/cu.usbserial")    #MAC port
 ser.baudrate = 115200                     #Set baud rate to 9600
@@ -41,6 +42,27 @@ print array3
 ser.write(serial.to_bytes(array3))
 data = ser.read(12)
 print data.encode('hex')
+
+#設定模式與頻率
+#array4=[0xC1,0x3,0x5,0x3,0x1,0x65,0x6C,0x3,0]
+array4=[0xC1,3,5,3,1,0x65,0x6C,0x3,0]
+array4[8]=Fun_CRC(array4)
+print array4
+ser.write(serial.to_bytes(array4))
+data = ser.read(5)
+print data.encode('hex')
+
+#資料
+array5=[0xC1,0x6,0x0,0]
+array5[3]=Fun_CRC(array5)
+print array5
+ser.write(serial.to_bytes(array5))
+data = ser.read(3)
+print data.encode('hex')
+len=data[2]
+data2 = ser.read(len)
+print data2.encode('hex')
+
 
 
 
