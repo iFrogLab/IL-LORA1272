@@ -1,5 +1,11 @@
 # python ap12-SendReceive-data.py -u /dev/tty.usbserial-A700eGFx -r 115200 -a T  -s a1,2,3,4,5
-# python ap12-SendReceive-data.py -u /dev/tty.wchusbserial1410 -r 115200 -a R  
+# python ap12-SendReceive-data.py -u /dev/tty.wchusbserial1410 -r 115200 -a R
+## Linux
+# Send:
+# python2.7  ap12-SendReceive-data.py -u /dev/ttyUSB0   -r 115200 -a T  -s a1,2,3,4,5
+# Read
+# python2.7 ap12-SendReceive-data.py -u /dev/ttyUSB0    -r 115200 -a R
+
 import serial
 import sys, getopt
 import time

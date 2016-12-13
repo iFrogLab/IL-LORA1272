@@ -2,6 +2,7 @@ import serial
 #ser = serial.Serial ("/dev/ttyAMA0")    #Open named port 
 
 #port_path="/dev/cu.usbserial"
+port_path="/dev/ttyUSB0"     #Linux
 port_path="/dev/cttyAMA0"
 ser = serial.Serial (port_path)    #Open named port 
 
@@ -14,13 +15,6 @@ ser.write(serial.to_bytes([0x80,0x00,0x00]))
 data = ser.read(5)
 #ser.write(data)
 print(data)
-print data.encode('hex')
+print(data.encode('hex'))
 ser.close()        
-
-
-
-
-
-
-
 

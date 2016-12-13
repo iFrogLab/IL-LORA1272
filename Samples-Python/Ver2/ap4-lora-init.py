@@ -11,7 +11,9 @@ def Fun_CRC(data):
 
 
 #ser = serial.Serial ("/dev/ttyAMA0")    # Raspbeeey Pi port
-ser = serial.Serial ("/dev/cu.usbserial")    #MAC port
+#ser = serial.Serial ("/dev/cu.usbserial")    #MAC port
+ser = serial.Serial ("/dev/ttyUSB0")    #Linux port
+
 ser.baudrate = 115200                     #Set baud rate to 9600
 
 #讀取F/W版本及Chip ID
