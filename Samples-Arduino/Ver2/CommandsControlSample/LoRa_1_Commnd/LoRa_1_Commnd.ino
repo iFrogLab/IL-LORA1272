@@ -1,10 +1,10 @@
 /*
 
  * iFrogLab IL-LORA1272 
- * 功能,     ARDUINO , IFROGLAB LORA, IL-LORA1272
- * 電源,     3.3V    ,Pin 3, VDD
- * 接地,     GND     ,Pin 1, GND
- * 接收反應,  Pin 9   , Pin 2, Host_IRQ
+ * 功能,     ARDUINO , IFROGLAB LORA, Function
+ * 電源,     3.3V    ,Pin 3         , VDD
+ * 接地,     GND     ,Pin 1         , GND
+ * 接收反應,  Pin 9   , Pin 2        , Host_IRQ
  * UART,     Pin 10  ,UART_RX  Pin 7, UART_TX
  * UART,     Pin 11  ,UART_TX  Pin 8, UART_RX
 
@@ -28,6 +28,8 @@
 
 SoftwareSerial mySerial(10, 11); // RX, TX for UNO and MEGA
 String LastString="";
+int waitingTime=29999;
+//int waitingTime=99999;
 // the setup function runs once when you press reset or power the board
 void setup() {
   // initialize digital pin 13 as an output.
@@ -46,19 +48,24 @@ void setup() {
   FunLora_1_Init();
   Serial.println("\n[4]:FunLora_2_ReadSetup");
   FunLora_2_ReadSetup();
+  
+
+  
+  Serial.println("\n[7]:FunLora_3_TX");
+  FunLora_3_TX();
+  Serial.println("\n[8]:FunLora_5_write");
+  FunLora_5_write_test("");
+  //Serial.println("\n[8]:FunLora_5_write");
+  //String stringOne="abcde";
+  //FunLora_5_write(stringOne);
+
+
+
+
   Serial.println("\n[5]:FunLora_3_RX");
   FunLora_3_RX();
   Serial.println("\n[6]:FunLora_6_read");
   FunLora_6_read();
-  Serial.println("\n[7]:FunLora_3_TX");
-  FunLora_3_TX();
-  //Serial.println("\n[8]:FunLora_5_write");
-  //FunLora_5_write_test("");
-  Serial.println("\n[8]:FunLora_5_write");
-  String stringOne="abcde";
-  FunLora_5_write(stringOne);
-
-
   
  
   Serial.println("\n[x]:End");
@@ -103,14 +110,14 @@ void FunLora_0_GetChipID(){
   Fun_PrintArray(t1,4);
   Serial.print("Recive: ");
   i=0;
-  for(int j=0;j<999999;j++){
+  for(int j=0;j<waitingTime;j++){
    if (mySerial.available()) {
     byte t1=mySerial.read();
     Serial.print(t1, HEX);
     Serial.print(",");
     data[i]=t1;
     i=i+1;
-     if(i>=6){
+     if(i>=7){
       Serial.println(" ");
       Serial.print("\nChip:");
       Serial.println(data[3],HEX);
@@ -122,6 +129,7 @@ void FunLora_0_GetChipID(){
       Serial.print(data[7],HEX);
       Serial.println(data[8],HEX);
       Serial.println("\n------------------");
+      Serial.println("\n------------------");
      return;
     }
     j++;
@@ -131,7 +139,6 @@ void FunLora_0_GetChipID(){
 
 // Init & reset default 
 void FunLora_1_Init(){
-       
   byte CRC = 0; 
   byte t1[] = {0xc1,1,0,CRC};
   CRC=Fun_CRC(t1,3);
@@ -140,7 +147,7 @@ void FunLora_1_Init(){
   Fun_PrintArray(t1,4);
   Serial.print("Recive: ");
   i=0;
-  for(int j=0;j<999999;j++){
+  for(int j=0;j<waitingTime;j++){
    if (mySerial.available()) {
     byte t1=mySerial.read();
     Serial.print(t1, HEX);
@@ -159,14 +166,13 @@ void FunLora_1_Init(){
 }
 // 讀取設定
 void FunLora_2_ReadSetup(){
-
   byte CRC =  0xc1 ^ 2 ^ 0; 
   byte t1[] = {0xc1,2,0,CRC};
   mySerial.write(t1, 4);
   Fun_PrintArray(t1,4);
   Serial.print("Recive: ");
   i=0;
-  for(int j=0;j<999999;j++){
+  for(int j=0;j<waitingTime;j++){
    if (mySerial.available()) {
     byte t1=mySerial.read();
     Serial.print(t1, HEX);
@@ -200,7 +206,7 @@ void FunLora_3_Setup(byte TXRX,byte Freq1,byte Freq2,byte Freq3,byte Power){
   Fun_PrintArray(t1,9);
   Serial.print("Recive: ");
   i=0;
-  for(int j=0;j<999999;j++){
+  for(int j=0;j<waitingTime;j++){
    if (mySerial.available()) {
     byte t1=mySerial.read();
     Serial.print(t1, HEX);
@@ -268,7 +274,7 @@ void FunLora_5_write(String iStr){ //byte iData[]){
 
  
   i=0;
-  for(int j=0;j<999999;j++){
+  for(int j=0;j<waitingTime;j++){
    if (mySerial.available()) {
     byte t1=mySerial.read();
     Serial.print(t1, HEX);
@@ -307,7 +313,7 @@ void FunLora_5_write_v0(String iStr){ //byte iData[]){
 
  
   i=0;
-  for(int j=0;j<999999;j++){
+  for(int j=0;j<waitingTime;j++){
    if (mySerial.available()) {
     byte t1=mySerial.read();
     Serial.print(t1, HEX);
@@ -338,7 +344,7 @@ void FunLora_5_write_test(String iStr){ //byte iData[]){
   Fun_PrintArray(t1,7);
  
   i=0;
-  for(int j=0;j<999999;j++){
+  for(int j=0;j<waitingTime;j++){
    if (mySerial.available()) {
     byte t1=mySerial.read();
     Serial.print(t1, HEX);
@@ -367,7 +373,7 @@ void FunLora_6_read(){
   Fun_PrintArray(t1,4);
   Serial.print("Recive: ");
   i=0;
-  for(int j=0;j<999999;j++){
+  for(int j=0;j<waitingTime;j++){
    if (mySerial.available()) {
     byte t1=mySerial.read();
     Serial.print(t1, HEX);

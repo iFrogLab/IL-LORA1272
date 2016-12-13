@@ -1,21 +1,12 @@
 /*
-  Software serial multple serial test
-
- Receives from the hardware serial, sends to software serial.
- Receives from software serial, sends to hardware serial.
-
- The circuit:
- * RX is digital pin 10 (connect to TX of other device)
- * TX is digital pin 11 (connect to RX of other device)
-
- Note:
- Not all pins on the Mega and Mega 2560 support change interrupts,
- so only the following can be used for RX:
- 10, 11, 12, 13, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 68, 69
-
- Not all pins on the Leonardo support change interrupts,
- so only the following can be used for RX:
- 8, 9, 10, 11, 14 (MISO), 15 (SCK), 16 (MOSI).
+ * 
+ * iFrogLab IL-LORA1272 
+ * 功能,     ARDUINO , IFROGLAB LORA, Function
+ * 電源,     3.3V    ,Pin 3         , VDD
+ * 接地,     GND     ,Pin 1         , GND
+ * 接收反應,  Pin 9   , Pin 2        , Host_IRQ
+ * UART,     Pin 10  ,UART_RX  Pin 7, UART_TX
+ * UART,     Pin 11  ,UART_TX  Pin 8, UART_RX
 
  created back in the mists of time
  modified 25 May 2012
@@ -26,7 +17,7 @@
 
  */
 #include <SoftwareSerial.h>
-
+int loopCounter=999999;
 SoftwareSerial mySerial(10, 11); // RX, TX
 
 void setup() {
@@ -44,23 +35,32 @@ void setup() {
   FunLora_0_GetChipID();
   delay(200);
 
+  Serial.println("FunLora_1_Init");
   FunLora_1_Init();
   delay(200);
+  Serial.println("FunLora_2_ReadSetup");
   FunLora_2_ReadSetup();  
   delay(200);
+
+  Serial.println("-------Write");
+  
+  Serial.println("FunLora_3_Setup(2)");
+  FunLora_3_Setup(2);
+  delay(200);
+  Serial.println("FunLora_5_write()");
+  FunLora_5_write();
+  delay(200);
+
+  
+  Serial.println("-------Read");
+  Serial.println("FunLora_3_Setup(3)");
   FunLora_3_Setup(3);
   delay(200);
-  //FunLora_5_write();
-  delay(200);
+  Serial.println("FunLora_6_read()");
   FunLora_6_read();
   delay(200);
 
-  Serial.println("-------");
-  
-  FunLora_3_Setup(2);
-  delay(200);
-  FunLora_5_write();
-  delay(200);
+
   
 }
 
@@ -82,7 +82,7 @@ void FunLora_0_GetChipID(){
   byte t1[] = {0x80,0,0};
   mySerial.write(t1, 3);
   i=0;
-  for(int j=0;j<999999;j++){
+  for(int j=0;j<loopCounter;j++){
    if (mySerial.available()) {
     byte t1=mySerial.read();
     Serial.print(t1, HEX);
@@ -101,7 +101,7 @@ void FunLora_1_Init(){
   byte t1[] = {0xc1,1,0};
   mySerial.write(t1, 3);
   i=0;
-  for(int j=0;j<999999;j++){
+  for(int j=0;j<loopCounter;j++){
    if (mySerial.available()) {
     byte t1=mySerial.read();
     Serial.print(t1, HEX);
@@ -122,7 +122,7 @@ void FunLora_2_ReadSetup(){
   byte t1[] = {0xc1,2,0};
   mySerial.write(t1, 3);
   i=0;
-  for(int j=0;j<999999;j++){
+  for(int j=0;j<loopCounter;j++){
    if (mySerial.available()) {
     byte t1=mySerial.read();
     Serial.print(t1, HEX);
@@ -141,7 +141,7 @@ void FunLora_3_Setup(byte TXRX){
   byte t1[] = {0xc1,0x03,0x05,TXRX,0xE4,0xC0,0x0,0x3};
   mySerial.write(t1, 8 );
   i=0;
-  for(int j=0;j<999999;j++){
+  for(int j=0;j<loopCounter;j++){
    if (mySerial.available()) {
     byte t1=mySerial.read();
     Serial.print(t1, HEX);
@@ -160,7 +160,7 @@ void FunLora_5_write(){ //byte iData[]){
   byte t1[] = {0xc1,0x05,0x03,0x01,0x02,0x03};
   mySerial.write(t1, 8 );
   i=0;
-  for(int j=0;j<999999;j++){
+  for(int j=0;j<loopCounter;j++){
    if (mySerial.available()) {
     byte t1=mySerial.read();
     Serial.print(t1, HEX);
@@ -180,7 +180,7 @@ void FunLora_6_read(){
   byte t1[] = {0xc1,0x06,0x0,0x00};
   mySerial.write(t1, 3 );
   i=0;
-  for(int j=0;j<999999;j++){
+  for(int j=0;j<loopCounter;j++){
    if (mySerial.available()) {
     byte t1=mySerial.read();
     Serial.print(t1, HEX);
