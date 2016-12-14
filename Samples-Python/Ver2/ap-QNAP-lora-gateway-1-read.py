@@ -63,13 +63,22 @@ LoRa.FunLora_3_RX();
 print("\n[8]:FunLora_6_read")
 data=LoRa.FunLora_6_read();
 
-i=0	
-for t1 in data:
-   print("data[%d]=%s,  Hex->%s"%(i,t1,t1.encode('hex')))
-   i=i+1
 
-#print("data[4]=%s,  Hex->%s"%(data[4],data[4].encode('hex')))
-#print("data[5]=%s,  Hex->%s"%(data[5],data[5].encode('hex')))
+if len(data)>5:                                                                                                                                                           
+   print("data[3]=%s,  Hex->%s"%(data[3],data[3].encode('hex')))                                                                                                          
+   print("data[4]=%s,  Hex->%s"%(data[4],data[4].encode('hex')))                                                                                                          
+   print("data[5]=%s,  Hex->%s"%(data[5],data[5].encode('hex')))                                                                                                          
+    
+
+
+for t1 in range(10):                                                                                                                                                      
+   data=LoRa.FunLora_6_read()                                                                                                                                             
+   if len(data)>4:                                                                                                                                                        
+      print("data[3]=%s,  Hex->%s"%(data[3],data[3].encode('hex')))                                                                                                       
+   time.sleep(1)  
+
+
+
 
 
 # 關閉
