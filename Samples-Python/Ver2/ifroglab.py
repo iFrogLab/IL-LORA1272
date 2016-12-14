@@ -114,20 +114,6 @@ class LoRa:
        data=self.FunLora_ChipSendByte(array1)
        return data
 
-    # 設定寫入和頻段
-    def FunLora_3_TX(self):
-       array1=[0xC1,3,5,2,1,0x65,0x6C,0x3,0]
-       array1[8]=self.Fun_CRC(array1)
-       data=self.FunLora_ChipSendByte(array1)
-       return data
-
-    # 寫入測試
-    def FunLora_5_write_test(self):
-       array1=[0xC1,0x5,0x5,0x61,0x62,0x63,0x64,0x65,0]
-       array1[8]=self.Fun_CRC(array1)
-       data=self.FunLora_ChipSendByte(array1)
-       return data
-
     # 設定讀取和頻段
     def FunLora_3_RX(self):
        array1=[0xC1,3,5,3,1,0x65,0x6C,0x3,0]
@@ -142,7 +128,46 @@ class LoRa:
        data=self.FunLora_ChipSendByte(array1)
        return data
 
+    # 設定寫入和頻段
+    def FunLora_3_TX(self):
+       array1=[0xC1,3,5,2,1,0x65,0x6C,0x3,0]
+       array1[8]=self.Fun_CRC(array1)
+       data=self.FunLora_ChipSendByte(array1)
+       return data
 
+    # 寫入測試
+    def FunLora_5_write_test(self):
+       array1=[0xC1,0x5,0x5,0x61,0x62,0x63,0x64,0x65,0]
+       array1[8]=self.Fun_CRC(array1)
+       data=self.FunLora_ChipSendByte(array1)
+       return data
+
+    def FunLora_5_write16bytesArray(self,data_array):
+        #self.ser.write(serial.to_bytes([0xc1,0x03,0x05,0x02,0xe4,0xc0,0x00,0x03]))
+        #data = ser.read(5)
+        #print data.encode('hex')
+        TX_Data=data_array
+        ##[0x01,0x02,0x03]
+        CMD_Data=[0xc1,0x05]
+        CMD_Data.append(len(TX_Data))
+        for i3 in data_array:
+           #CMD_Data.append(int(i3, 16))
+           CMD_Data.append(ord(i3))
+        ##ser.write(serial.to_bytes([0xc1,0x05,0x03,0x01,0x02,0x03]))
+        CRC=self.Fun_CRC(CMD_Data)
+        CMD_Data.append(CRC)
+        print(CMD_Data)
+        data=self.FunLora_ChipSendByte(CMD_Data)
+        return data
+
+        ##ser.write(serial.to_bytes(TX_Data))
+        #ser.write(CMD_Data)
+        #
+        #print ("Send:")
+        ##print ','.join(format(x, '02x') for x in serial.to_bytes(TX_Data))
+        #print ','.join([i2 for i2 in TX_Data])
+        #data = ser.read(5)
+        #print data.encode('hex')
 
 
 

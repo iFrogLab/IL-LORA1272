@@ -51,6 +51,13 @@ LoRa.FunLora_3_TX();
 print("\n[8]:FunLora_5_write")
 LoRa.FunLora_5_write_test();
 
+#寫入資料
+print("\n[10]:FunLora_5_write16bytesArray")
+LoRa.FunLora_5_write16bytesArray("abcdef");
+
+
+
+
 
 
 # 關閉
