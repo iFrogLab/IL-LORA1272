@@ -41,13 +41,26 @@ print("\n[4]:FunLora_2_ReadSetup");
 LoRa.FunLora_2_ReadSetup();
 
 
+
+# 設定寫入和頻段
+print("\n[7]:FunLora_3_TX")
+LoRa.FunLora_3_TX();
+
+
+#寫入資料：通知大家，Gateway 啟動了
+print("\n[10]:FunLora_5_write16bytesArray")
+LoRa.FunLora_5_write16bytesArray("D:iFL,G:S");
+
+
+
+
 # 設定讀取和頻段
 print("\n[7]:FunLora_3_RX")
 LoRa.FunLora_3_RX();
 
 
 #讀取資料
-print("\n[8]:FunLora_5_write")
+print("\n[8]:FunLora_6_read")
 data=LoRa.FunLora_6_read();
 
 i=0	
