@@ -55,6 +55,13 @@ for t1 in data:
    print("data[%d]=%s,  Hex->%s"%(i,t1,t1.encode('hex')))
    i=i+1
 
+
+#讀取資料
+print("\n[9]:FunLora_7_readCounter")
+LoRa.FunLora_7_readCounter()
+
+
+
 #print("data[4]=%s,  Hex->%s"%(data[4],data[4].encode('hex')))
 #print("data[5]=%s,  Hex->%s"%(data[5],data[5].encode('hex')))
 

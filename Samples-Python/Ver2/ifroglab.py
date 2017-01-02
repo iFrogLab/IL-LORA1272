@@ -18,6 +18,11 @@ import platform
 
 from serial import SerialException
 import time
+import sys
+import glob
+
+
+
 #import sys, getopt
 #import time
 #import numpy
@@ -51,35 +56,83 @@ class LoRa:
          crc=crc^i
        return crc
 
+    def serial_ports(self):
+      """ Lists serial port names
+
+        :raises EnvironmentError:
+            On unsupported or unknown platforms
+        :returns:
+            A list of the serial ports available on the system
+      """
+      if sys.platform.startswith('win'):
+        ports = ['COM%s' % (i + 1) for i in range(256)]
+      elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
+        # this excludes your current terminal "/dev/tty"
+        ports = glob.glob('/dev/tty[A-Za-z]*')
+      elif sys.platform.startswith('darwin'):
+        ports = glob.glob('/dev/tty.*')
+      else:
+        raise EnvironmentError('Unsupported platform')
+      result = []
+      for port in ports:
+        try:
+            if port=="/dev/tty.Bluetooth-Incoming-Port":
+              s=1
+            else:
+              s = serial.Serial(port)
+              s.close()
+              result.append(port)
+        except (OSError, serial.SerialException):
+            pass
+      return result
+
+
     def Fun_OS(self):
-       OSVersion=platform.system()
-       self.port_path="/dev/cu.usbserial"
-       print OSVersion
-       if OSVersion=="Darwin":              #MAC Port
-         self.port_path="/dev/cu.usbserial"
-       elif OSVersion=="Linux":            #Linux Port
+      OSVersion=platform.system()
+      self.port_path="/dev/cu.usbserial"
+      print OSVersion
+      if OSVersion=="Darwin":              #MAC Port
+         #self.port_path="/dev/cu.usbserial"
+         #self.port_path="/dev/cu.usbmodem1421"
+         self.port_path="/dev/cu.usbserial-A700eGFx"
+      elif OSVersion=="Linux":            #Linux Port
          self.port_path="/dev/ttyUSB0"
-       return self.port_path
+      self.ports=self.serial_ports()
+      print(self.ports)
+      t1=len(self.ports)
+      print("This device has %d Serial devices"%t1)
+      if t1>0:
+         self.port_path=self.ports[0]
+      return self.port_path
 
     # 送byte 到　Chip 上
     def FunLora_ChipSendByte(self,array1):    
-       print array1
-       self.ser.write(serial.to_bytes(array1))
-       time.sleep(0.04)
-       bytesToRead = self.ser.inWaiting()
-       data = self.ser.read(bytesToRead)
-       print(data.encode('hex'))
-       return data
+      try:
+        print array1
+        self.ser.write(serial.to_bytes(array1))
+        time.sleep(0.04)
+        bytesToRead = self.ser.inWaiting()
+        data = self.ser.read(bytesToRead)
+        print(data.encode('hex'))
+      except (OSError, serial.SerialException):
+        pass
+      return data
+
+    def Fun_ser_Write(self,array1):
+      try:
+         self.ser.write(serial.to_bytes(array1))
+      except SerialException:
+        print("Fun_ser_Write error")
 
 
+    # close Serial Port
     def FunLora_close(self):
       try:
         self.ser.close()
       except SerialException:
         print("port already open")
-       
-       
-
+    
+    # open Serial Port   
     def FunLora_init(self):
       try:
         self.portPath=self.Fun_OS()
@@ -93,7 +146,7 @@ class LoRa:
        array1=[0x80,0x00,0x00,0]
        array1[3]=self.Fun_CRC(array1)
        print array1
-       self.ser.write(serial.to_bytes(array1))
+       self.Fun_ser_Write(array1)
        time.sleep(0.01)
        bytesToRead = self.ser.inWaiting()
        data = self.ser.read(bytesToRead)
@@ -169,8 +222,12 @@ class LoRa:
         #data = ser.read(5)
         #print data.encode('hex')
 
-
-
+    # 讀取LoRa 傳過來的資料
+    def FunLora_7_readCounter(self):
+       array1=[0xC1,0x7,0x0,0]
+       array1[3]=self.Fun_CRC(array1)
+       data=self.FunLora_ChipSendByte(array1)
+       return data
 
 
 

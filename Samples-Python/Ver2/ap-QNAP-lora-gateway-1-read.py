@@ -71,10 +71,11 @@ if len(data)>5:
     
 
 
-for t1 in range(10):                                                                                                                                                      
+for t1 in range(30):                                                                                                                                                      
    data=LoRa.FunLora_6_read()                                                                                                                                             
    if len(data)>4:                                                                                                                                                        
       print("data[3]=%s,  Hex->%s"%(data[3],data[3].encode('hex')))                                                                                                       
+      print("data[4]=%s,  Hex->%s"%(data[4],data[4].encode('hex')))
    time.sleep(1)  
 
 
