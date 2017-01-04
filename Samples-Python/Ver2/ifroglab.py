@@ -1,5 +1,6 @@
-# coding=UTF-8
+# www.ifroglab.com
 # -*- coding: utf8 -*-
+# coding=UTF-8
 # * iFrogLab IL-LORA1272  www.ifroglab.com
 # *
 # * 功能,             USB to TTL , IFROGLAB LORA 
@@ -86,7 +87,27 @@ class LoRa:
             pass
       return result
 
+    # open Serial Port   
+    def FunLora_init(self):
+      try:
+        self.portPath=self.Fun_OS()
+        print(self.portPath)
+        self.ser = serial.Serial(self.portPath, 115200, timeout=3)    
+        return self.ser
+      except SerialException:
+        print("port already open")
 
+    # open Serial Port  by  name , like "/dev/xxx"
+    def FunLora_initByName(self,i_portPath):
+      try:
+        #self.portPath=self.Fun_OS()
+        print(i_portPath)
+        self.ser = serial.Serial(i_portPath, 115200, timeout=3)    
+        return self.ser
+      except SerialException:
+        print("port already open")
+
+    #  get all USB Uart Port.
     def Fun_OS(self):
       OSVersion=platform.system()
       self.port_path="/dev/cu.usbserial"
@@ -101,8 +122,18 @@ class LoRa:
       print(self.ports)
       t1=len(self.ports)
       print("This device has %d Serial devices"%t1)
-      if t1>0:
-         self.port_path=self.ports[0]
+      for self.port_path in self.ports:
+        #if t1>0:
+        #self.port_path=self.ports[0]
+        #self.ser=self.port_path
+        # 判對是否是LoRa 接在上面
+        print("1")
+        self.ser=self.FunLora_initByName(self.port_path)
+        print(self.ser)
+        data=self.FunLora_0_GetChipID()
+        print(data)
+        if(len(data)>1):
+          return self.port_path  
       return self.port_path
 
     # 送byte 到　Chip 上
@@ -132,15 +163,9 @@ class LoRa:
       except SerialException:
         print("port already open")
     
-    # open Serial Port   
-    def FunLora_init(self):
-      try:
-        self.portPath=self.Fun_OS()
-        print(self.portPath)
-        self.ser = serial.Serial(self.portPath, 115200, timeout=3)    
-        return self.ser
-      except SerialException:
-        print("port already open")
+
+
+
 
     def FunLora_0_GetChipID(self):
        array1=[0x80,0x00,0x00,0]
