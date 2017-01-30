@@ -1,36 +1,21 @@
 /*
-
+/*
  * iFrogLab IL-LORA1272 
- * 功能,     ARDUINO , IFROGLAB LORA, Function
- * 電源,     3.3V    ,Pin 3         , VDD
- * 接地,     GND     ,Pin 1         , GND
- * 接收反應,  Pin 9   , Pin 2        , Host_IRQ
- * UART,     Pin 10  ,UART_RX  Pin 7, UART_TX
- * UART,     Pin 11  ,UART_TX  Pin 8, UART_RX
-
-
- 
-  Blink
-  Turns on an LED on for one second, then off for one second, repeatedly.
-
-  Most Arduinos have an on-board LED you can control. On the Uno and
-  Leonardo, it is attached to digital pin 13. If you're unsure what
-  pin the on-board LED is connected to on your Arduino model, check
-  the documentation at http://www.arduino.cc
-
-  This example code is in the public domain.
-
-  modified 8 May 2014
-  by Scott Fitzgerald
+ * Function功能,     ARDUINO , IFROGLAB LORA IL-LORA1272
+ * GND接地,          GND     ,Pin 1, 
+ * Host_IRQ接收反應, Pin 9   ,Pin 2, 
+ * VDD電源,          3.3V    ,Pin 3, 
+ * UART TX,         Pin 10  ,Pin 7 
+ * UART RX,         Pin 11  ,Pin 8 
+ * 
+ * tutorial: please see http://www.ifroglab.com/?p=7641
  */
 #include <SoftwareSerial.h>
 
 
-SoftwareSerial mySerial(10, 11); // RX, TX for UNO and MEGA
+SoftwareSerial mySerial(10, 11); 
 String LastString="";
 int waitingTime=29999;
-//int waitingTime=99999;
-// the setup function runs once when you press reset or power the board
 void setup() {
   // initialize digital pin 13 as an output.
   pinMode(13, OUTPUT);
