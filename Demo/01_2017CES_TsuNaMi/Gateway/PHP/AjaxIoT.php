@@ -2,27 +2,13 @@
 
 define('INCLUDE_CHECK',true);
 
-require 'connect.php';
 require 'functions.php';
+require 'connect.php';
 
 
 try
 {
-	//Open database connection
-//	$con = mysql_connect("localhost","root","");
-//	mysql_select_db("db449462569", $con);
-	
-	
-//	$con = mysql_connect("db560898688.db.1and1.com","dbo560898688","looptek");
-//	mysql_select_db("db560898688", $con);
-	
-	
-	
-//$con=mysql_connect(DB_HOST,DB_USER,DB_PASSWORD) or die("Failed to connect to MySQL: " . mysql_error());
-//$db=mysql_select_db(DB_NAME,$con) or die("Failed to connect to MySQL: " . mysql_error());
-
-
-
+ mysql_error()); 
 
 	//Getting records (listAction)  
 	if($_GET["action"] == "list")

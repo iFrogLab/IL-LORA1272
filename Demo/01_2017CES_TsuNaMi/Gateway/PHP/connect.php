@@ -8,10 +8,13 @@ $db_user		= 'ifroglab';
 $db_pass		= 'ifroglab';
 $db_database	= 'ifroglab'; 
 
- 
 
-$link =$con = mysql_connect($db_host,$db_user,$db_pass);
-mysql_select_db($db_database, $con);
+
+ 
+	$link =$con = po_mysqli_connect($db_host,$db_user,$db_pass);
+
+	po_mysqli_select_db($db_database, $con);
+
 
  
 

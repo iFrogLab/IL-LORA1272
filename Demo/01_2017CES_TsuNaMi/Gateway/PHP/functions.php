@@ -20,4 +20,72 @@ function send_mail($from,$to,$subject,$body)
 
 	mail($to,$subject,$body,$headers);
 }
+
+function po_mysqli_connect($db_host,$db_user,$db_pass)
+{
+	if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
+		return mysqli_connect($db_host,$db_user,$db_pass);
+	}else{
+		return mysql_connect($db_host,$db_user,$db_pass);
+	}
+}
+
+function po_mysqli_select_db($db_database, $con){
+	if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
+		return mysqli_select_db($db_database, $con);
+	}else{
+		return mysql_select_db($db_database, $con);
+	}
+}
+
+
+function po_mysql_query($sql){
+	if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
+		return mysql_query($sql);
+	}else{
+		return mysql_query($sql);
+	}
+}
+
+function po_mysql_fetch_array($i1){
+	if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
+		return mysql_fetch_array($i1);
+	}else{
+		return mysql_fetch_array($i1);
+	}
+}
+ 
+
+
+function po_mysql_num_fields($sql){
+	if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
+		return mysqli_num_fields($sql);
+	}else{
+		return mysql_num_fields($sql);
+	}
+}
+
+function po_mysql_field_name($sql,$i2){
+	if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
+		return mysqli_field_name($sql,$i2);
+	}else{
+		return mysql_field_name($sql,$i2);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ?>
