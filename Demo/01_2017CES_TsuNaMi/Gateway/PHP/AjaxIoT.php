@@ -5,33 +5,32 @@ define('INCLUDE_CHECK',true);
 require 'functions.php';
 require 'connect.php';
 
-
 try
 {
- mysql_error()); 
+ //mysql_error(); 
 
 	//Getting records (listAction)  
 	if($_GET["action"] == "list")
 	{
 	    //Get record count
-		$result = mysql_query("SELECT COUNT(*) AS RecordCount FROM ".$IoTTable.";");
-		$row = mysql_fetch_array($result);
+		$result = po_mysql_query("SELECT COUNT(*) AS RecordCount FROM ".$IoTTable.";");
+		$row = po_mysql_fetch_array($result);
 		$recordCount = $row['RecordCount'];
 
 		//Get records from database
-		$result = mysql_query("SELECT * FROM ".$IoTTable." ORDER by Id;");
+		$result = po_mysql_query("SELECT * FROM ".$IoTTable." ORDER by Id;");
 		//$result = mysql_query("SELECT * FROM wp_users;");
-		$columns = mysql_num_fields($result); 
+		$columns = po_mysql_num_fields($result); 
 		
 		$columns_name = array();
 		for($i = 0; $i < $columns; $i++) { 
-  			 $fieldName = mysql_field_name($result,$i);		
+  			 $fieldName = po_mysql_field_name($result,$i);		
 		  	 $columns_name[$i] = $fieldName;
 		}
 		
 		//Add all records to an array
 		$rows = array();
-		while($row = mysql_fetch_array($result))
+		while($row = po_mysql_fetch_array($result))
 		{
 		    $rows[] = $row;
 			////////
@@ -79,7 +78,7 @@ try
 		    //$sql2="DELETE FROM ".$IoTTable."  WHERE id IN (SELECT id FROM ".$IoTTable."  where OwnerId=". $_GET["OwnerId"] ." ORDER BY id ASC LIMIT 5)";
 		    //$sql2="DELETE FROM ".$IoTTable." WHERE Datetime IS NOT NULL order by Datetime ASC LIMIT 1";
 	        $sql2="DELETE FROM ".$IoTTable." WHERE id <= ( SELECT id  FROM (     SELECT id     FROM ".$IoTTable."  WHERE OwnerId=". $OwnerId ." AND IoTProjectsId=".$IoTProjectsId." ORDER BY id DESC  LIMIT 1 OFFSET 50     ) foo )";
-			$result = mysql_query($sql2);
+			$result = po_mysql_query($sql2);
 
 			$now = new DateTime();
 		    $mysqltime = $now->format('Y-m-d H:i:s'); 
@@ -91,7 +90,7 @@ try
 			 "," . $_GET["Datatype"] .
 			 ",".	$IoTProjectsId .
 			 ",'".$mysqltime."');";
-			$result1 = mysql_query($sql); 
+			$result1 = po_mysql_query($sql); 
 
 			$jTableResult = array();
 			$jTableResult['Debug'] = $sql;
@@ -115,7 +114,7 @@ try
 	    $sql2="DELETE FROM ".$IoTTable."  WHERE id IN (SELECT id FROM ".$IoTTable."  where OwnerId=". $_GET["OwnerId"] ." ORDER BY id ASC LIMIT 5)";
 	    $sql2="DELETE FROM ".$IoTTable." WHERE Datetime IS NOT NULL order by Datetime ASC LIMIT 1";
         $sql2="DELETE FROM ".$IoTTable." WHERE id <= ( SELECT id  FROM (     SELECT id     FROM ".$IoTTable."  WHERE IoTProjectsId=". $_GET["OwnerId"] ."  AND  OwnerId=". $_GET["OwnerId"] ."  ORDER BY id DESC  LIMIT 1 OFFSET 50     ) foo )";
-		$result = mysql_query($sql2);
+		$result = po_mysql_query($sql2);
 
 
 		$now = new DateTime();
@@ -128,7 +127,7 @@ try
 		 "," . $_GET["Datatype"] . 
 		",".	 $_GET["IoTProjectsId"] .
 		 ",'".$mysqltime."');";
-		$result1 = mysql_query($sql); 
+		$result1 = po_mysql_query($sql); 
 
 		$jTableResult = array();
 		$jTableResult['Debug'] = $sql;
@@ -153,7 +152,7 @@ try
 		 "," . $_POST["Datatype"] .
 		 "," . $_POST["IoTProjectsId"] .
 		 ",'".$mysqltime."');";
-		$result1 = mysql_query($sql);
+		$result1 = po_mysql_query($sql);
 		 
         //INSERT INTO IoTTable( Data,OwnerId,Datatype, Datetime) VALUES(,1,,0,now());
 
@@ -161,8 +160,8 @@ try
 		
 		
 		//Get last inserted record (to return to jTable)
-		$result = mysql_query("SELECT * FROM ".$IoTTable." ");
-		$row = mysql_fetch_array($result);
+		$result = po_mysql_query("SELECT * FROM ".$IoTTable." ");
+		$row = po_mysql_fetch_array($result);
 
 		//Return result to jTable
 		$jTableResult = array();
@@ -182,7 +181,7 @@ try
 										    ", Datatype = " .$_POST["Datatype"] .
 		 								    ", IoTProjectsId = " .$_POST["IoTProjectsId"] .
 										    " WHERE Id = " . $_POST["Id"] . ";";
-		$result = mysql_query($sql);
+		$result = po_mysql_query($sql);
 		//Return result to jTable
 		$jTableResult = array();
 		$jTableResult['Debug'] =$sql;
@@ -193,7 +192,7 @@ try
 	else if($_GET["action"] == "delete")
 	{
 		//Delete from database
-		$result = mysql_query("DELETE FROM ".$IoTTable." WHERE Id = " . $_POST["Id"] . ";");
+		$result = po_mysql_query("DELETE FROM ".$IoTTable." WHERE Id = " . $_POST["Id"] . ";");
 
 		//Return result to jTable
 		$jTableResult = array();
