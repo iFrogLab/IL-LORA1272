@@ -21,12 +21,14 @@ function send_mail($from,$to,$subject,$body)
 	mail($to,$subject,$body,$headers);
 }
 
-function po_mysqli_connect($db_host,$db_user,$db_pass)
+function po_mysqli_connect($db_host,$db_user,$db_pass,$db_database)
 {
 	if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
 		return mysqli_connect($db_host,$db_user,$db_pass);
 	}else{
-		return mysql_connect($db_host,$db_user,$db_pass);
+		$con=mysql_connect($db_host,$db_user,$db_pass);
+		po_mysqli_select_db($db_database, $con);
+		return $con;
 	}
 }
 
@@ -39,17 +41,17 @@ function po_mysqli_select_db($db_database, $con){
 }
 
 
-function po_mysql_query($sql){
+function po_mysql_query($con,$sql){
 	if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
-		return mysql_query($sql);
+		return mysqli_query($con,$sql);
 	}else{
 		return mysql_query($sql);
 	}
 }
 
-function po_mysql_fetch_array($i1){
+function po_mysql_fetch_array($con,$i1){
 	if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
-		return mysql_fetch_array($i1);
+		return mysqli_fetch_array($con,$i1);
 	}else{
 		return mysql_fetch_array($i1);
 	}
@@ -57,17 +59,17 @@ function po_mysql_fetch_array($i1){
  
 
 
-function po_mysql_num_fields($sql){
+function po_mysql_num_fields($con,$sql){
 	if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
-		return mysqli_num_fields($sql);
+		return mysqli_num_fields($con,$sql);
 	}else{
 		return mysql_num_fields($sql);
 	}
 }
 
-function po_mysql_field_name($sql,$i2){
+function po_mysql_field_name($con,$sql,$i2){
 	if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
-		return mysqli_field_name($sql,$i2);
+		return mysqli_field_name($con,$sql,$i2);
 	}else{
 		return mysql_field_name($sql,$i2);
 	}
