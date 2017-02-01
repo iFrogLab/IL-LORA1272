@@ -21,10 +21,10 @@ function send_mail($from,$to,$subject,$body)
 	mail($to,$subject,$body,$headers);
 }
 
-function po_mysqli_connect($db_host,$db_user,$db_pass,$db_database)
+function po_mysql_connect($db_host,$db_user,$db_pass,$db_database)
 {
 	if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
-		return mysqli_connect($db_host,$db_user,$db_pass);
+		return mysqli_connect($db_host,$db_user,$db_pass,$db_database);
 	}else{
 		$con=mysql_connect($db_host,$db_user,$db_pass);
 		po_mysqli_select_db($db_database, $con);
