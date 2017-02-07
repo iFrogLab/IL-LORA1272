@@ -37,7 +37,7 @@
 
        function FunCharRedraw(){
             $.post( "AjaxIoT.php?action=list", function( data ) {
-        var maxCount=50;
+        		var maxCount=50;
                 var obj = JSON.parse(data);
                 if(obj.TotalRecordCount>0){
                     var xCount=0;
@@ -98,8 +98,7 @@
                           FunAddText(obj.Records[i].KeyName+","+obj.Records[i].Data+","+obj.Records[i].Datetime);
                     }
                 }
-        mChart.draw(mChart_data, mChart_options);
-
+        		mChart.draw(mChart_data, mChart_options);
             });
         }
     function FunAddText(i_msg){
