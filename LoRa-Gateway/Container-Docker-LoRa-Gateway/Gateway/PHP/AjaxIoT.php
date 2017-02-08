@@ -17,6 +17,7 @@ try
 		$row = po_mysql_fetch_array($con,$result);
 		$recordCount = $row['RecordCount'];
 
+/*
 		//Get records from database
 		$result = po_mysql_query($con,"SELECT * FROM ".$IoTTable." ORDER by Id;");
 		//$result = mysql_query("SELECT * FROM wp_users;");
@@ -27,7 +28,7 @@ try
   			 $fieldName = po_mysql_field_name($con,$result,$i);		
 		  	 $columns_name[$i] = $fieldName;
 		}
-		
+*/		
 		//Add all records to an array
 		$rows = array();
 		while($row = po_mysql_fetch_array($con,$result))
