@@ -73,6 +73,27 @@ unzip phpMyAdmin-4.6.5.2-all-languages.zip
 // 目前用 https://github.com/tutumcloud/lamp
 // 看不確定 mysql 並且看不到 ssh
 
+mkdir /ifroglab
+cd /ifroglab
+git clone https://github.com/iFrogLab/IL-LORA1272.git
+# apt-get install python
+# apt-get install wget
+//download pyserial from https://pypi.python.org/pypi/pyserial#downloads
+# wget https://pypi.python.org/packages/1f/3b/ee6f354bcb1e28a7cd735be98f39ecf80554948284b41e9f7965951befa6/pyserial-3.2.1.tar.gz#md5=7142a421c8b35d2dac6c47c254db023d
+
+# tar xvf pyserial-3.2.1.tar.gz 
+# cd pyserial-3.2.1 
+# python setup.py install
+// 測試iFrogLab USB 是否正常工作
+# cd /ifroglab/IL-LORA1272/Samples-Python/Ver2
+# python ap-Lib-1-lora-init.py
+
+
+
+
+
+
+
 
 // root
 // root    或　raspberry
