@@ -110,7 +110,7 @@
                           FunAddText(obj.Records[i].KeyName+","+obj.Records[i].Data+","+obj.Records[i].Datetime);
                     }
                 }
-                
+
                 
           //mChart.draw(mChart_data, mChart_options);
       var mbarchart_data = new google.visualization.DataTable();
@@ -125,7 +125,7 @@
         }
     function FunAddText(i_msg){
         var t1=$( "#chart_div_text" ).html()
-        var t2=i_msg+"<br>"+t1.substring(0, 1000);
+        var t2=i_msg+"<br>"+t1.substring(0, 2000);
         $( "#chart_div_text").html(t2)
     }
     </script>
