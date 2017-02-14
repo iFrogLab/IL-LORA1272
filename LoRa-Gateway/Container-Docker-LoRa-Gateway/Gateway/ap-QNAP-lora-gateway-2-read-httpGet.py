@@ -74,7 +74,7 @@ def Fun_main():
     print("\n[8]:FunLora_6_read")
 
 
-    for t1 in range(60*60*24*365):     // 請整到實際的工作秒數
+    for t1 in range(60*60*24*365):     # 請整到實際的工作秒數
         data=LoRa.FunLora_6_read();
         len1=len(data)
         if len1>4:       
