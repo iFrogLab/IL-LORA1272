@@ -88,8 +88,8 @@ def Fun_main():
                     Fun_HTTPGet("127.0.0.1",urlData)  # 上傳資料          
             time.sleep(1)     
             #time.sleep(10)
-	except KeyboardInterrupt:
-    	print 'interrupted!'
+    except:
+        print("quit")
 
         
 
