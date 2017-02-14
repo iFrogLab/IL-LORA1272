@@ -87,20 +87,20 @@
                             str2 = str.substring(t1,str.length);
                           }
                           
-                          if(obj.Records[i].KeyName=="x"){
+                          if(obj.Records[i].KeyName=="1"){
                             x[xCount] = new Array(2);
                             x[xCount][0] = str2;
                             x[xCount][1] = currentValue=parseFloat(obj.Records[i].Data);
                             xCount++;
                             mChart_data.setValue(0, 1, currentValue);
-                          }else if(obj.Records[i].KeyName=="y"){
+                          }else if(obj.Records[i].KeyName=="2"){
 
                             y[yCount] = new Array(2);
                             y[yCount][0] = str2;
                             y[yCount][1] = currentValue=parseFloat(obj.Records[i].Data);
                             mChart_data.setValue(1, 1, currentValue);
                             yCount++;
-                          }else if(obj.Records[i].KeyName=="z"){
+                          }else if(obj.Records[i].KeyName=="3"){
                           z[zCount] = new Array(2);
                             z[zCount][0] = str2;
                             z[zCount][1] = currentValue=parseFloat(obj.Records[i].Data);
@@ -110,6 +110,8 @@
                           FunAddText(obj.Records[i].KeyName+","+obj.Records[i].Data+","+obj.Records[i].Datetime);
                     }
                 }
+                
+                
           //mChart.draw(mChart_data, mChart_options);
       var mbarchart_data = new google.visualization.DataTable();
             mbarchart_data.addColumn('string', 'X');
