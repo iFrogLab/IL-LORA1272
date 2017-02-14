@@ -84,7 +84,7 @@ def Fun_main():
                 for t1 in range(0,len1-3):                                                                                                                                                      
                     print("data[%s]=%s,  Hex->%s"%(t1,data[t1+3],data[t1+3].encode('hex')))    
                     x1=(int(data[t1+3].encode('hex'),16))
-                    urlData="localhost/AjaxIoT.php?action=insertByAPIKey&KeyName=%s&Data=%d&Datatype=1&APIKey=iloveifroglab"%(t1,x1);
+                    urlData="AjaxIoT.php?action=insertByAPIKey&KeyName=%s&Data=%d&Datatype=1&APIKey=iloveifroglab"%(t1,x1);
                     print(urlData)
                     Fun_HTTPGet("127.0.0.1",urlData)  # 上傳資料          
             time.sleep(1)     
