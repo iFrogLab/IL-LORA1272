@@ -48,8 +48,37 @@ class LoRa:
         self.balance -= amount
     
     def __str__(self):
-        return 'Account({0}, {1}, {2})'.format(self.name, self.number, self.balance)
-       
+        return 'Account({0}, {1}, {2})'.format(self.name, self.number, self.balance)/Users/powenko/Desktop/powenko/github/IL-LORA1272/Samples-Python/Ver2/ifroglab.py
+    
+
+
+    def serial_allPorts(self):
+        """ Lists serial port names
+            :raises EnvironmentError:
+                On unsupported or unknown platforms
+            :returns:
+                A list of the serial ports available on the system
+        """
+        if sys.platform.startswith('win'):
+            ports = ['COM%s' % (i + 1) for i in range(256)]
+        elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
+            # this excludes your current terminal "/dev/tty"
+            ports = glob.glob('/dev/tty[A-Za-z]*')
+        elif sys.platform.startswith('darwin'):
+            ports = glob.glob('/dev/tty.*')
+        else:
+            raise EnvironmentError('Unsupported platform')
+        result = []
+        for port in ports:
+            try:
+                s = serial.Serial(port)
+                s.close()
+                result.append(port)
+            except (OSError, serial.SerialException):
+                pass           
+        return result
+
+
     # 計算CRC 檢查碼   
     def Fun_CRC(self,data):
        crc=0
@@ -88,6 +117,8 @@ class LoRa:
       return result
 
     # open Serial Port   
+
+
     def FunLora_init(self):
       try:
         self.portPath=self.Fun_OS()

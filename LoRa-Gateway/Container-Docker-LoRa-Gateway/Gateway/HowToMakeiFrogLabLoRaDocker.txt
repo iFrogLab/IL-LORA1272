@@ -1,0 +1,77 @@
+
+sudo docker pull ubuntu:latest
+sudo docker run  -p 80:80 -p 3306:3306 -t -i ubuntu/latest
+
+
+
+
+apt-get update
+apt-get upgrade
+add-apt-repository ppa:ondrej/php
+apt update
+apt install php5.6 libapache2-mod-php5.6 php5.6-curl php5.6-gd php5.6-mbstring php5.6-mcrypt php5.6-mysql php5.6-xml php5.6-xmlrpc
+a2dismod php7.0
+a2enmod php5.6
+systemctl restart apache2
+
+
+
+
+
+
+# apt-get install apache2
+# apt-get install php5.6
+# service apache2 restart
+
+
+
+apt-get install php libapache2-mod-php php-mcrypt php-mysql
+# apt-get install php7.0-mysql
+# apt-get install libapche2-mod-php7.0 
+# apt-get install php
+# apt-get install nano
+# nano /var/www/html/myphp.php
+<?php
+ print("Hello, www.powenko.com");
+ ?>
+# service apache2 restart
+
+
+
+
+apt-get update
+apt-get install mysql-server
+service mysql start
+find / -type s
+mysql_secure_installation
+# password: root
+
+#service mysql start
+
+
+
+apt-get install mysql-server mysql-client 
+apt-get install php7.0-mcrypt
+apt-get install wget
+apt-get install unzip
+cd /var/www/html
+wget https://files.phpmyadmin.net/phpMyAdmin/4.6.5.2/phpMyAdmin-4.6.5.2-all-languages.zip
+unzip phpMyAdmin-4.6.5.2-all-languages.zip
+
+
+// sudo docker ps -l
+// sudo docker commit 5bc4b48d61 ifroglab/1
+// docker images
+
+// 目前用 https://github.com/tutumcloud/lamp
+// 看不確定 mysql 並且看不到 ssh
+
+
+// root
+// root    或　raspberry
+#service apache2 restart
+#service mysql start
+
+
+
+

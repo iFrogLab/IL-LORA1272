@@ -72,33 +72,19 @@ def Fun_main():
 
     #讀取資料
     print("\n[8]:FunLora_6_read")
-    data=LoRa.FunLora_6_read();
-
-    if len(data)>5:                                                                                                                                                           
-       print("data[3]=%s,  Hex->%s"%(data[3],data[3].encode('hex')))                                                                                                          
-       print("data[4]=%s,  Hex->%s"%(data[4],data[4].encode('hex')))                                                                                                          
-       print("data[5]=%s,  Hex->%s"%(data[5],data[5].encode('hex')))                                                                                                          
-    
 
 
-    for t1 in range(60*60*8):  
-        data=LoRa.FunLora_6_read()                                                                                                                                             
-        if len(data)>4:                                                                                                                                                        
-            print("data[3]=%s,  Hex->%s"%(data[3],data[3].encode('hex')))                                                                                                       
-            print("data[4]=%s,  Hex->%s"%(data[4],data[4].encode('hex')))
-            x1=(int(data[3].encode('hex'),16)*256)+int(data[4].encode('hex'),16)
-            urlData="localhost/AjaxIoT.php?action=insertByAPIKey&KeyName=x&Data=%d&Datatype=1&APIKey=iloveifroglab"%x1;
-            Fun_HTTPGet("127.0.0.1",urlData)  # 上傳資料
-            y1=(int(data[5].encode('hex'),16)*256)+int(data[6].encode('hex'),16)
-            urlData="localhost/AjaxIoT.php?action=insertByAPIKey&KeyName=y&Data=%d&Datatype=1&APIKey=iloveifroglab"%y1;
-            Fun_HTTPGet("127.0.0.1",urlData)  # 上傳資料
-            z1=(int(data[7].encode('hex'),16)*256)+int(data[8].encode('hex'),16)
-            urlData="localhost/AjaxIoT.php?action=insertByAPIKey&KeyName=z&Data=%d&Datatype=1&APIKey=iloveifroglab"%z1;
-            Fun_HTTPGet("127.0.0.1",urlData)  # 上傳資料
-
-            #http://localhost/ICBlock/web/AjaxIoT.php?action=insertByAPIKey&KeyName=y&Data=3&Datatype=1&APIKey=iloveifroglab
-        time.sleep(1)  
-
+    for t1 in range(60*60*24*365):     // 請整到實際的工作秒數
+        data=LoRa.FunLora_6_read();
+        len1=len(data)
+        if len1>4:       
+           for t1 in range(0,len1-3):                                                                                                                                                      
+                print("data[%s]=%s,  Hex->%s"%(t1,data[t1+3],data[t1+3].encode('hex')))    
+                x1=(int(data[t1+3].encode('hex'),16))
+                urlData="localhost/AjaxIoT.php?action=insertByAPIKey&KeyName=%s&Data=%d&Datatype=1&APIKey=iloveifroglab"%(t1,x1);
+                Fun_HTTPGet("127.0.0.1",urlData)  # 上傳資料  
+        time.sleep(1)          
+        
 
     # 關閉
     LoRa.FunLora_close() 

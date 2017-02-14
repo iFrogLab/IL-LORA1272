@@ -13,9 +13,18 @@ def Fun_CRC(data):
 LoRa = ifroglab.LoRa()
 
 
+print("List All Ports, serial_ports()")
+serPorts=LoRa.serial_allPorts()
+print(serPorts)
+portName=serPorts[-1]
+
+
+
+
+
 # 打開Port
 print("Open Port, FunLora_init()")
-ser=LoRa.FunLora_init()
+ser=LoRa.FunLora_initByName(portName)
 
 #讀取F/W版本及Chip ID
 print("Get Firmware Version, FunLora_0_GetChipID()")

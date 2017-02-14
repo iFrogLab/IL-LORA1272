@@ -13,8 +13,22 @@ def Fun_CRC(data):
 
 
 
+
+LoRa = ifroglab.LoRa()
+
+
+# 取得所有可以用的Port
+print("List All Ports, serial_ports()")
+serPorts=LoRa.serial_allPorts()
+print(serPorts)
+portName=serPorts[-1]
+
+
+
+
 #ser = serial.Serial ("/dev/ttyAMA0")    # Raspbeeey Pi port
-ser = serial.Serial ("/dev/cu.usbserial")    #MAC port
+#ser = serial.Serial ("/dev/cu.usbserial")    #MAC port
+ser = serial.Serial (portName)    
 ser.baudrate = 115200                     #Set baud rate to 9600
 
 #讀取F/W版本及Chip ID
