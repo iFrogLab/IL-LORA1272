@@ -85,6 +85,7 @@ def Fun_main():
                     print("data[%s]=%s,  Hex->%s"%(t1,data[t1+3],data[t1+3].encode('hex')))    
                     x1=(int(data[t1+3].encode('hex'),16))
                     urlData="localhost/AjaxIoT.php?action=insertByAPIKey&KeyName=%s&Data=%d&Datatype=1&APIKey=iloveifroglab"%(t1,x1);
+                    print(urlData)
                     Fun_HTTPGet("127.0.0.1",urlData)  # 上傳資料          
             time.sleep(1)     
             #time.sleep(10)
@@ -96,6 +97,7 @@ def Fun_main():
     # 關閉
     LoRa.FunLora_close() 
     ser.close()
+    print("cose port.")
 
 
 # Start Main Program
