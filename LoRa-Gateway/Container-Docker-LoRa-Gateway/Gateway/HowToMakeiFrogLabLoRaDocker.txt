@@ -1,4 +1,11 @@
 
+
+
+
+
+
+
+
 sudo docker pull ubuntu:latest
 sudo docker run  -p 80:80 -p 3306:3306 -t -i ubuntu/latest
 
