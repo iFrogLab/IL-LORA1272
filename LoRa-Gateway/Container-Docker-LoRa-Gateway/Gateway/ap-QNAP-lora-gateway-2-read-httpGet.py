@@ -72,21 +72,25 @@ def Fun_main():
 
     #讀取資料
     print("\n[8]:FunLora_6_read")
+    try:
+    	while True:
+        	# IDs2=UpdatePoints(value,IDs2)  # 請整到實際的工作秒數
+            # ptint(t1)
+            data=LoRa.FunLora_6_read();
+            print(data)
+            len1=len(data)
+            print(len1)
+            if len1>4:       
+                for t1 in range(0,len1-3):                                                                                                                                                      
+                    print("data[%s]=%s,  Hex->%s"%(t1,data[t1+3],data[t1+3].encode('hex')))    
+                    x1=(int(data[t1+3].encode('hex'),16))
+                    urlData="localhost/AjaxIoT.php?action=insertByAPIKey&KeyName=%s&Data=%d&Datatype=1&APIKey=iloveifroglab"%(t1,x1);
+                    Fun_HTTPGet("127.0.0.1",urlData)  # 上傳資料          
+            time.sleep(1)     
+            #time.sleep(10)
+	except KeyboardInterrupt:
+    	print 'interrupted!'
 
-
-    for t1 in range(60*60*24*365):     # 請整到實際的工作秒數
-        ptint(t1)
-        data=LoRa.FunLora_6_read();
-        print(data)
-        len1=len(data)
-        print(len1)
-        if len1>4:       
-           for t1 in range(0,len1-3):                                                                                                                                                      
-                print("data[%s]=%s,  Hex->%s"%(t1,data[t1+3],data[t1+3].encode('hex')))    
-                x1=(int(data[t1+3].encode('hex'),16))
-                urlData="localhost/AjaxIoT.php?action=insertByAPIKey&KeyName=%s&Data=%d&Datatype=1&APIKey=iloveifroglab"%(t1,x1);
-                Fun_HTTPGet("127.0.0.1",urlData)  # 上傳資料          
-        time.sleep(1)          
         
 
     # 關閉
