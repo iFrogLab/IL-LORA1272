@@ -13,50 +13,13 @@
       google.charts.load('current', {'packages':['corechart', 'bar','line','gauge']});
       google.charts.setOnLoadCallback(drawChart);
       function drawChart() {
-/*
-        mChart_data= google.visualization.arrayToDataTable([
-          ['Label', 'Value'],
-          ['Value 0', 0],
-          ['Value 1', 0],
-          ['Value 2', 0],
-        ]);
-
-        mChart_options = {
-          width: 640, height: 300,
-          redFrom: 300, redTo: 360,
-          yellowFrom:250, yellowTo: 300,
-          minorTicks: 5,
-          min:0,
-          max:360,
-        };
-
-        /////////////////////BEGIN 條狀
-        
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'X');
-        data.addColumn('number', 'Wave Slope');
-        mbarchart_options = {title:'iFrgoLab LoRa Gateway',
-                            width:'100%',
-                            height:'100%',　
-                            max:360,
-                            min:0,
-                            legend: 'none'};
-        mbarchart = new google.visualization.BarChart(document.getElementById('barchart_div'));
-        mbarchart.draw(data, mbarchart_options);
-        /////////////////////END 條狀
-
-
-        mChart = new google.visualization.Gauge(document.getElementById('chart_div'));
-        */
+ 
         setInterval(function() {
           FunCharRedraw();
         }, 2000);
        
       }
-
-// {"Result":"OK","TotalRecordCount":"52","Records":[{"0":"179698","Id":"179698","1":"2017-01-08 02:56:56","Datetime":"2017-01-08 02:56:56","2":"x","KeyName":"x","3":"196","Data":"196","4":"0","OwnerId":"0","5":"1","Datatype":"1","6":"0","IoTWidgetID":"0"},
-// {"0":"179748","Id":"179748","1":"2017-02-13 04:53:22","Datetime":"2017-02-13 04:53:22","2":"Temperature","KeyName":"Temperature","3":"15.34","Data":"15.34","4":"0","OwnerId":"0","5":"database","Datatype":"database","6":"8","IoTWidgetID":"8"},{"0":"179749","Id":"179749","1":"2017-02-14 19:24:43","Datetime":"2017-02-14 19:24:43","2":"Temperature","KeyName":"Temperature","3":"15.34","Data":"15.34","4":"0","OwnerId":"0","5":"database","Datatype":"database","6":"8","IoTWidgetID":"8"}]}
-      
+ 
       function FunCharRedraw(){　　　　　　　　　　　　　　　　　　　　　// 定時處理畫面
           $.post( "AjaxIoT.php?action=list", function(data) {　　//　取的AjaxIoT.php資料庫的資料
               var KeyName=new Array();
@@ -91,20 +54,7 @@
         var table=new Array();
         var table_title=['Label','Value'];
         table.push(table_title);
-      //  console.log( table_title );
-
-
-
-
-/*
-        table_title.push('Latest');     
-        for(i=0;i<KeyName.length;i++){
-          table_title.push(KeyName[i]);
-        }
-        table.push(table_title);
-        console.log( table_title );
-*/
-
+ 
         // 取的每一筆最新的資料
         
         var tlen=iDataArray.length;       
@@ -244,28 +194,13 @@
             table.push(table_data);
           }
         }
-
-
-       // console.log( table );
-
-
-
-
+ 
 
 
         // 依照日期最大的
 
 
-        firstDateString="2017-03-13 05:53:22";
-        secondDateString="2018-02-01 04:54:02";
-        //////////
-        var data = google.visualization.arrayToDataTable([
-          ['Datetime', 'Sales', 'Expenses'],
-          ['2013',  1000,      400],
-          ['2014',  1170,      460],
-          ['2015',  660,       1120],
-          ['2016',  1030,      540]
-        ]);
+ 
 
         var data = google.visualization.arrayToDataTable(table);
         var options = {
@@ -389,14 +324,11 @@
                           }
                           FunAddText(obj.Records[i].KeyName+","+obj.Records[i].Data+","+obj.Records[i].Datetime);
                     }
-                }
-          //mChart.draw(mChart_data, mChart_options);
-
+                } 
       var mbarchart_data = new google.visualization.DataTable();
             mbarchart_data.addColumn('string', 'X');
             mbarchart_data.addColumn('number', 'Wave Slope');
-            mbarchart_data.addRows(x);
-            //mChart.draw(mbarchart_data, mChart_options);
+            mbarchart_data.addRows(x); 
             mbarchart.draw(mbarchart_data, mbarchart_options);
         });
         }
