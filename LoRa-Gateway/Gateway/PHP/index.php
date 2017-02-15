@@ -81,7 +81,7 @@
         //顯示 Gauge
         var data = google.visualization.arrayToDataTable( table);
         var options = {
-          width: 400, height: 120,
+          width: 1024, height: 200,
           min:gaugemin,
           max:gaugemax,
           redFrom: gaugemin+((gaugemax-gaugemin)*0.9), redTo: gaugemin+((gaugemax-gaugemin)),
@@ -143,10 +143,19 @@
 
 
       function Fun_Draw_corechart(KeyName,iDataArray){
+        /*
+ var data = google.visualization.arrayToDataTable([
+          ['Year', 'Sales', 'Expenses'],
+          ['2013',  1000,      400],
+          ['2014',  1170,      460],
+          ['2015',  660,       1120],
+          ['2016',  1030,      540]
+        ]);
+*/
         var table=new Array();
         // 設定抬頭
         var table_title=new Array();
-        table_title.push('Latest');     
+        table_title.push('DateTime');     
         for(i=0;i<KeyName.length;i++){
           table_title.push(KeyName[i]);
         }
@@ -177,25 +186,33 @@
         }
         table.push(table_data);
 
+            console.log( "Datetime"+Datetime);
 
         // 依照日期的大小列出資料
         var table_data_latest=table_data;                // 放置最後資料
         var DatetimeLen=Datetime.length;
+        
+
+
+        var table_data2=table_data_latest.slice();
         if(DatetimeLen>1){
-          var table_data=table_data_latest;
-          for(i=1;i<DatetimeLen;i++){
-            table_data[0]=Datetime[i];     
+          for(i=DatetimeLen-2;i>0;i--){
+            var table_data=table_data2.slice();
+            table_data[0]=Datetime[i];    
+            // console.log( "table_data[0]"+table_data[0]);
             for(j=0;j<KeyName.length;j++){
                 if(KeyName[j]==iDataArray[i].KeyName){
-                  table_data[j]=parseFloat(iDataArray[i].Data);
+                  table_data[j+1]=parseFloat(iDataArray[i].Data);
                   break;
                 }
             }
             table.push(table_data);
+            table_data2=table_data.slice();
           }
         }
  
 
+             console.log( "table"+table);
 
         // 依照日期最大的
 
@@ -204,7 +221,7 @@
 
         var data = google.visualization.arrayToDataTable(table);
         var options = {
-          title: 'Company Performance',
+          title: 'Performance',
           hAxis: {title: 'Datetime',  titleTextStyle: {color: '#333'}},
           vAxis: {minValue: 0}
         };
@@ -339,13 +356,9 @@
      iFrogLab LoRa Gateway Dashboard
 
 
-     <div id="gauge_div" style="width: 100%;height: 300px;   "></div>
-     <div id="chart_div" style="width: 100%; height: 300px;"></div>
-
-
-    
-
-    <div id="bar_div_latest" style="width: 100%; height: 300px;"></div>
+     <div id="gauge_div" style="width: 100%;height: 200px;   "></div>
+     <div id="chart_div" style="width: 100%; height: 200px;"></div>
+    <div id="bar_div_latest" style="width: 100%; height: 200px;"></div>
     <div id="chart_div_text" style="width: 100%; height: 300px;"></div>
   </body>
 </html>

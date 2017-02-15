@@ -50,7 +50,7 @@ function po_mysqli_select_db($db_database, $con){
 
 function po_mysql_query($con,$sql){
 	if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
-		return mysqli_query($sql);
+		return mysqli_query($con,$sql);
 	}else{
 		return mysql_query($sql);
 	}
