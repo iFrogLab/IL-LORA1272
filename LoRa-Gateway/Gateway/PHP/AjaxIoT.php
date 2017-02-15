@@ -201,7 +201,7 @@ try
 	}
 
 	//Close database connection
-	mysql_close($con);
+	po_mysql_close($con);
 
 }
 catch(Exception $ex)
