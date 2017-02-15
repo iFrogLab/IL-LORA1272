@@ -48,17 +48,17 @@ function po_mysqli_select_db($db_database, $con){
 }
 
 
-function po_mysql_query($sql){
+function po_mysql_query($con,$sql){
 	if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
-		return mysql_query($sql);
+		return mysqli_query($sql);
 	}else{
 		return mysql_query($sql);
 	}
 }
 
-function po_mysql_fetch_array($i1){
+function po_mysql_fetch_array($con,$i1){
 	if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
-		return mysql_fetch_array($i1);
+		return mysqli_fetch_array($i1,MYSQLI_ASSOC);
 	}else{
 		return mysql_fetch_array($i1);
 	}
