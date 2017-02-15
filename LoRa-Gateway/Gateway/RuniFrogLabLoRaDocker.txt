@@ -1,0 +1,29 @@
+//please see :https://hub.docker.com/r/ifroglab/loragateway/
+//請看　https://hub.docker.com/r/ifroglab/loragateway/
+#.LoRa Gateway from iFrogLab now offers Docker Container,
+
+#.For developers and users of LoRa USB Dongle,
+your machine could become LoRa gateway at short time
+
+How to use it?
+
+connect iFrogLab LoRa USB Dongle to Docker PC.
+sudo docker pull ifroglab/loragateway:latest
+sudo docker run -p 80:80 -p 3306:3306 --device=/dev/ttyACM0 -i -t ifroglab/loragateway:latest run ./ifroglab.shPython
+cd /
+./loragateway.sh
+open http://localhost
+power on you LoRa Node.
+Done. you will see the http://localhost dashboard, and display data from LoRa Node.
+This is available at the Docker Hub
+
+The contents are:
+
+#.LoRa Gateway's Service Python Server program handles LoRa data passing in the background.
+
+#.Dashboard shows LoRa pass over the information http: //localhost/index.php location in / var / www / html /
+
+#. PHP uses the Apache2 web page to display the Dashboard program
+
+#.MySQL storage LoRa to the information, account ifroglab password ifroglab
+Myphpadmin management database, http: // localhost / myphpadmin account root password root

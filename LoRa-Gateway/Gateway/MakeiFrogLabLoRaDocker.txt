@@ -90,15 +90,50 @@ git clone https://github.com/iFrogLab/IL-LORA1272.git
 
 
 
+//安莊MQTT
+//1.安裝相關套件及含式庫:
+sudo apt-get install libssl-dev libwrap0-dev libc-ares-dev uuid-dev
+
+//2.安裝Mosquitto
+// 採用apt-get方式 (本文所採用方式)
+wget http://repo.mosquitto.org/debian/mosquitto-repo.gpg.key
+sudo apt-key add mosquitto-repo.gpg.key
+rm mosquitto-repo.gpg.key
+
+cd /etc/apt/sources.list.d/
+sudo wget http://repo.mosquitto.org/debian/mosquitto-repo.list
+sudo apt-get update
+
+sudo apt-get install mosquitto mosquitto-clients
+
+
+// 按照上述步驟即完成Mosquitto軟體安裝。接著驗證一下Mosquitto是否可以正確執行。
+// 3.首先開啟兩個視窗，或者使用兩個ssh連線。
+// 4.在第一個視窗中執行:(當作訂閱者角色)
+// 如果你想改變群組名稱的話，請把「ifroglab/lora」改成你要的　例如：「hello/world」
+mosquitto_sub -d -t ifroglab/lora
 
 
 
 
 
-// root
-// root    或　raspberry
+
+
+
+// 重新開基石，需要執行的動作
+//   root root
+//    或　raspberry
 #service apache2 restart
 #service mysql start
+
+
+
+
+
+// 帳號 root 密碼 root
+// http://localhost/phpmyadmin
+
+
 
 
 

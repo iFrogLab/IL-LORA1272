@@ -29,9 +29,9 @@ def Fun_HTTPGet(iURL,iURLPath):
         response = httplib.HTTPConnection(iURL)  #"www.powenko.com")
         response.request("GET", iURLPath)   #"/download_release/get.php?name=powenko&password=12345")
         r1 = response.getresponse()
-        print(r1.status, r1.reason)
+        #print(r1.status, r1.reason)
         data1 = r1.read()
-        print(data1)
+        #print(data1)
    except Exception, e:
         print(e)
    finally:
@@ -79,8 +79,10 @@ def Fun_main():
             data=LoRa.FunLora_6_read();
             print(data)
             len1=len(data)
-            print(len1)
-            if len1>4:       
+            #print(len1)
+            if len1>4:      
+                mqtt=" mosquitto_pub -d -t ifroglab/mqtt  -m '%d -h test.mosquitto.org"%(data); 
+                print os.popen(mqtt).read()
                 for t1 in range(0,len1-3):                                                                                                                                                      
                     print("data[%s]=%s,  Hex->%s"%(t1,data[t1+3],data[t1+3].encode('hex')))    
                     x1=(int(data[t1+3].encode('hex'),16))
@@ -93,7 +95,7 @@ def Fun_main():
         print("quit")
 
         
-
+    
     # 關閉
     LoRa.FunLora_close() 
     ser.close()
