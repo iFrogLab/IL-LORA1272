@@ -12,10 +12,11 @@
 
 import ifroglab
 import time
+import os
 import serial
 import httplib
 
-
+# 檢查碼計算
 def Fun_CRC(data):
     crc=0
     for i in data:
@@ -73,25 +74,27 @@ def Fun_main():
     #讀取資料
     print("\n[8]:FunLora_6_read")
     try:
-    	while True:
-        	# IDs2=UpdatePoints(value,IDs2)  # 請整到實際的工作秒數
+        while True:
+            # IDs2=UpdatePoints(value,IDs2)  # 請整到實際的工作秒數
             # ptint(t1)
             data=LoRa.FunLora_6_read();
-            print(data)
+            #  print(data)
             len1=len(data)
             #print(len1)
             if len1>4:      
-                hex_string = "".join("%02x" % b for b in data)
-                mqtt=" mosquitto_pub -d -t ifroglab/mqtt  -m '%s -h test.mosquitto.org"%(hex_string); 
+                HexString=LoRa.FunArrayToHexStringKeepPureData(data)
+                mqtt=" mosquitto_pub -d -t ifroglab/mqtt  -m '%s' -h test.mosquitto.org"%(HexString);
                 # mqtt=" mosquitto_pub -d -t ifroglab/mqtt  -m '%d "%(data); 
+                print(mqtt)
                 print os.popen(mqtt).read()
                 for t1 in range(0,len1-3):                                                                                                                                                      
-                    print("data[%s]=%s,  Hex->%s"%(t1,data[t1+3],data[t1+3].encode('hex')))    
+                    #print("data[%s]=%s,  Hex->%s"%(t1,data[t1+3],data[t1+3].encode('hex')))
                     x1=(int(data[t1+3].encode('hex'),16))
                     urlData="/AjaxIoT.php?action=insertByAPIKey&KeyName=%s&Data=%d&Datatype=1&APIKey=iloveifroglab"%(t1,x1);
-                    print(urlData)
+                    #print(urlData)
                     Fun_HTTPGet("127.0.0.1",urlData)  # 上傳資料          
-            time.sleep(1)     
+            time.sleep(5)     
+            #break;
             #time.sleep(10)
     except:
         print("quit")

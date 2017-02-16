@@ -167,12 +167,60 @@ class LoRa:
           return self.port_path  
       return self.port_path
 
+
+    def FunArrayDel(self,array1,index): 
+        t1=len(array1)
+        array2=[]
+        j=0
+        for i in range(t1):
+          if not index==i:
+            #print(i)
+            array2.append(array1[i])
+            #j=j+1 
+        return array2
+
+    def FunArrayToHexString_v2(self,array1):
+        #urlData = "/AjaxIoT.php?action=insertByAPIKey&KeyName=%s&Data=%d&Datatype=1&APIKey=iloveifroglab" % (t1, x1);
+        t1=len(array1)
+        str2=" "
+        for i in range(t1-1):
+            #print("array1[%s]=%s,  Hex->%s" % (i, array1[i], array1[i].encode('hex')))
+            x1 = (int(array1[i].encode('hex'), 16))
+            x2=str( array1[i].encode('hex'))
+            str2=str2+x2
+        return str2
+        #return array1.encode('hex')
+
+
+
+    def FunArrayToHexStringKeepPureData(self,array1):    
+        array2=array1
+        print("FunArrayToHexStringKeepPureData")
+        str1=array1.encode('hex')
+        print(str1)        
+        t1=len(array1)
+        array2=self.FunArrayDel(array2,t1)
+        array2=self.FunArrayDel(array2,2)
+        array2=self.FunArrayDel(array2,1)
+        array2=self.FunArrayDel(array2,0)
+        str2=self.FunArrayToHexString_v2(array2)
+        print(str2)
+        return str2
+
+    def FunArrayToHexString(self,array1):    
+      try:    
+        str1=array1.encode('hex')
+        print(str1)
+      except (OSError, serial.SerialException):
+        pass
+      return str1
+
     # 送byte 到　Chip 上
     def FunLora_ChipSendByte(self,array1):    
       try:
         print array1
         self.ser.write(serial.to_bytes(array1))
-        time.sleep(0.04)
+        time.sleep(0.02)
         bytesToRead = self.ser.inWaiting()
         data = self.ser.read(bytesToRead)
         print(data.encode('hex'))
