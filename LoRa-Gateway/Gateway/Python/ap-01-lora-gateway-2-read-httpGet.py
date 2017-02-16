@@ -81,7 +81,9 @@ def Fun_main():
             len1=len(data)
             #print(len1)
             if len1>4:      
-                mqtt=" mosquitto_pub -d -t ifroglab/mqtt  -m '%d -h test.mosquitto.org"%(data); 
+                hex_string = "".join("%02x" % b for b in data)
+                mqtt=" mosquitto_pub -d -t ifroglab/mqtt  -m '%s -h test.mosquitto.org"%(hex_string); 
+                # mqtt=" mosquitto_pub -d -t ifroglab/mqtt  -m '%d "%(data); 
                 print os.popen(mqtt).read()
                 for t1 in range(0,len1-3):                                                                                                                                                      
                     print("data[%s]=%s,  Hex->%s"%(t1,data[t1+3],data[t1+3].encode('hex')))    
