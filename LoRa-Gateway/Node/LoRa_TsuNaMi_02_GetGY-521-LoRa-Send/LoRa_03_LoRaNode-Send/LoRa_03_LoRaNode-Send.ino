@@ -1,18 +1,19 @@
 /*
  * iFrogLab IL-LORA1272 
- * 功能,     ARDUINO , IFROGLAB LORA, IL-LORA1272
- * 電源,     3.3V    ,Pin 3, VDD
- * 接地,     GND     ,Pin 1, GND
- * 接收反應,  Pin 9   , Pin 2, Host_IRQ
- * UART,     Pin 10  ,UART_RX  Pin 7, UART_TX
- * UART,     Pin 11  ,UART_TX  Pin 8, UART_RX
+ * 功能:     ARDUINO  , IFROGLAB LORA, IL-LORA1272
+ * 電源:     3.3V     ,Pin 3, VDD
+ * 接地:     GND      ,Pin 1, GND
+ * 接收反應:  Pin 9   ,Pin 2, Host_IRQ
+ * UART:     Pin 10  ,Pin 7
+ * UART:     Pin 11  ,Pin 8 
  * 
- * GY-521 
- * 電源,     5V    ,VCC
- * 接地,     GND     ,GND
- * 接收反應,  Pin 2   , INT
- * UART,     Pin 10  ,UART_RX  Pin 7, UART_TX
- * UART,     Pin 11  ,UART_TX  Pin 8, UART_RX
+ *         ARDUINO   GY-521 
+ * 電源:     5V      ,VCC
+ * 接地:     GND     ,GND
+ *    :      A5      ,SCL
+ *    :      A4      ,SDA 
+ *    :     GND      ,AD0 
+ *    :   Pin 2      ,INT
  */
 // I2C device class (I2Cdev) demonstration Arduino sketch for MPU6050 class using DMP (MotionApps v2.0)
 // 6/21/2012 by Jeff Rowberg <jeff@rowberg.net>
