@@ -32,32 +32,6 @@ iFrogLabLoRaLibrary::iFrogLabLoRaLibrary(int RX, int TX, int DataReady)
 
 }
 
-/*
-void iFrogLabLoRaLibrary::set(uint8_t pin, int initBrightness, int fadeAmount, unsigned long delayDuration)
-{
-	m_pin = pin;
-	m_brightness = initBrightness;
-	m_fadeAmount = fadeAmount;
-	m_delayDuration = delayDuration;
-	
-	pinMode(m_pin, OUTPUT);
-	analogWrite(m_pin, m_brightness);
-	m_lastTime = millis();
-}
-void iFrogLabLoRaLibrary::update(void)
-{
-	unsigned long t = millis();
-	if(t > m_lastTime + m_delayDuration){
-		m_lastTime += m_delayDuration;
-		
-		analogWrite(m_pin, m_brightness);
-		m_brightness = m_brightness + m_fadeAmount;
-	
-		if (m_brightness <= 0 || m_brightness >= 255) {
-			m_fadeAmount = -m_fadeAmount;
-		}
-	}
-}*/
 //////////////////////////
 void iFrogLabLoRaLibrary::Fun_AddArray(byte source[],byte target[],int sourceLen,int targetStart){
    for(int i=0;i<sourceLen;i++){
@@ -126,9 +100,15 @@ byte* iFrogLabLoRaLibrary::GetChipIDAll()
     }
     j++;
    }
-  }
-
+  }　
+  Message_error();
   return data;
+}
+void iFrogLabLoRaLibrary::Message_error()
+{
+  Serial.println("Error:");
+  Serial.println("Cannot find the iFrogLab LoRa device, please check hardware, RX, TX, 3.3V, GND.  ");
+  Serial.println("mroe detail, please see hhttp://www.ifroglab.com/?p=7086 ");
 }
 int iFrogLabLoRaLibrary::GetChipID()
 {
@@ -183,6 +163,8 @@ byte* iFrogLabLoRaLibrary::Setup(byte TXRX,byte Freq1,byte Freq2,byte Freq3,byte
     }
    }
   }
+
+  Message_error();
 }
 
 void iFrogLabLoRaLibrary::WriteMode(){
@@ -242,6 +224,7 @@ void iFrogLabLoRaLibrary::Write16bytesBroadcast(byte iData[],byte len){
    }
   }
   
+  Message_error();
 
 }
 void iFrogLabLoRaLibrary::ReadMode(){
@@ -311,6 +294,7 @@ byte*  iFrogLabLoRaLibrary::Read16bytesBroadcast(){
   }
   
 
+  Message_error();
 }
 
 

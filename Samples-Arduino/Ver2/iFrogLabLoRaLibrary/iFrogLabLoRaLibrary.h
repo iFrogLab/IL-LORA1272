@@ -30,7 +30,6 @@ public:
   byte*  iFrogLabLoRaLibrary::Read16bytesBroadcast();
 
 
-
   //void set(uint8_t pin, int initBrightness, int fadeAmount, unsigned long delayDuration);
   //void update(void);
 
@@ -53,6 +52,7 @@ private:
   void  Fun_PrintArray(byte t1[], byte len);
   void  Fun_AddArray(byte source[],byte target[],int sourceLen,int targetStart);
 
+  void iFrogLabLoRaLibrary::Message_error();
 
   unsigned long m_lastTime;
   uint8_t m_pin;
