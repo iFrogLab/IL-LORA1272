@@ -1,5 +1,6 @@
 import serial
-ser = serial.Serial ("/dev/ttyAMA0")    #Open named port 
+#ser = serial.Serial ("/dev/ttyAMA0")    #Open named port
+ser = serial.Serial ("/dev/tty.usbserial") 
 ser.baudrate = 115200                     #Set baud rate to 9600
 
 #data = ser.read(10)                     #Read ten characters from serial port to data

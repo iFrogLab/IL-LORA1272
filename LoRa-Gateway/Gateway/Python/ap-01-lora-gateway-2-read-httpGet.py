@@ -83,7 +83,8 @@ def Fun_main():
             #print(len1)
             if len1>4:      
                 HexString=LoRa.FunArrayToHexStringKeepPureData(data)
-                mqtt=" mosquitto_pub -d -t ifroglab/mqtt  -m '%s' -h test.mosquitto.org"%(HexString);
+                mqtt=" mosquitto_pub -d -t ifroglab/mqtt  -m '%s' -h 'iot.eclipse.org' "%(HexString);
+                # mqtt=" mosquitto_pub -d -t ifroglab/mqtt  -m '%s' -h test.mosquitto.org"%(HexString);
                 # mqtt=" mosquitto_pub -d -t ifroglab/mqtt  -m '%d "%(data); 
                 print(mqtt)
                 print os.popen(mqtt).read()
