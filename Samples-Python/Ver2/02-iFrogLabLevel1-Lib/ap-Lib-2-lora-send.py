@@ -10,6 +10,7 @@
 # * UART,             RX         ,UART_RX  Pin 7
 # * UART,             TX         ,UART_TX  Pin 8
 
+
 import ifroglab
 import time
 import serial
@@ -21,7 +22,6 @@ def Fun_CRC(data):
     return crc
 
 LoRa = ifroglab.LoRa()
-
 
 # 找最後一個USB  UART 設備
 print("List All Ports, serial_ports()")
@@ -49,29 +49,15 @@ print("\n[4]:FunLora_2_ReadSetup");
 LoRa.FunLora_2_ReadSetup();
 
 
-# 設定讀取和頻段
-print("\n[7]:FunLora_3_RX")
-LoRa.FunLora_3_RX();
-
-
-#讀取資料
-print("\n[8]:FunLora_5_write")
-data=LoRa.FunLora_6_read();
-
-i=0	
-for t1 in data:
-   print("data[%d]=%s,  Hex->%s"%(i,t1,t1.encode('hex')))
-   i=i+1
-
-
-#讀取資料
-print("\n[9]:FunLora_7_readCounter")
-LoRa.FunLora_7_readCounter()
+# 設定寫入和頻段
+print("\n[7]:FunLora_3_TX")
+LoRa.FunLora_3_TX();
 
 
 
-#print("data[4]=%s,  Hex->%s"%(data[4],data[4].encode('hex')))
-#print("data[5]=%s,  Hex->%s"%(data[5],data[5].encode('hex')))
+#寫入資料
+print("\n[10]:FunLora_5_write16bytesArray")
+LoRa.FunLora_5_write16bytesArray("111");
 
 
 # 關閉

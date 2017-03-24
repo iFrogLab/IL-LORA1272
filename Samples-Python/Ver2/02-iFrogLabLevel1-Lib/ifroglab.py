@@ -30,7 +30,13 @@ import glob
 #import RPi.GPIO as GPIO ## Import GPIO library
 
 
-class LoRa:
+class LoRa(object):   
+    deviceID=0
+    waitTillRespnseTime=5
+    debug=False
+    sleep=0
+    firmwareVersion=0 
+
     def __init__(self):
         #self.name = name
         #self.number = number
@@ -87,13 +93,6 @@ class LoRa:
        return crc
 
     def serial_ports(self):
-      """ Lists serial port names
-
-        :raises EnvironmentError:
-            On unsupported or unknown platforms
-        :returns:
-            A list of the serial ports available on the system
-      """
       if sys.platform.startswith('win'):
         ports = ['COM%s' % (i + 1) for i in range(256)]
       elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
@@ -131,7 +130,6 @@ class LoRa:
     # open Serial Port  by  name , like "/dev/xxx"
     def FunLora_initByName(self,i_portPath):
       try:
-        #self.portPath=self.Fun_OS()
         print(i_portPath)
         self.ser = serial.Serial(i_portPath, 115200, timeout=3)    
         return self.ser
@@ -170,12 +168,14 @@ class LoRa:
     # 送byte 到　Chip 上
     def FunLora_ChipSendByte(self,array1):    
       try:
-        print array1
+        if self.debug==True:
+           print array1
         self.ser.write(serial.to_bytes(array1))
         time.sleep(0.04)
         bytesToRead = self.ser.inWaiting()
         data = self.ser.read(bytesToRead)
-        print(data.encode('hex'))
+        if self.debug==True:
+           print(data.encode('hex'))
       except (OSError, serial.SerialException):
         pass
       return data
@@ -201,13 +201,44 @@ class LoRa:
     def FunLora_0_GetChipID(self):
        array1=[0x80,0x00,0x00,0]
        array1[3]=self.Fun_CRC(array1)
-       print array1
+       if self.debug==True:
+          print array1
        self.Fun_ser_Write(array1)
        time.sleep(0.01)
        bytesToRead = self.ser.inWaiting()
        data = self.ser.read(bytesToRead)
-       print(data.encode('hex'))
+       if self.debug==True:
+          print(data.encode('hex'))
+       # get Device ID // deviceID
+       t1=0
+       num=0xffffff;
+       for i in range(5,len(data)-1):
+          #print(num)
+          t1=t1+((int(data[i].encode('hex'),16))*num)
+          num=num/0xff;    
+          #print(data[i].encode('hex'))
+          #print(t1)
+       self.deviceID=t1; 
+       #get Chip ID // firmwareVersion
+       self.firmwareVersion=int(data[4].encode('hex'),16)
        return data
+
+    # 4 bytes 組合為ID　
+    def FunLora_0_GetDeviceID(self):
+       array1=[0x80,0x00,0x00,0] 
+       array1[3]=self.Fun_CRC(array1)
+       data=self.FunLora_ChipSendByte(array1) 
+       t1=0
+       num=0xffffff;
+       for i in range(5,len(data)-1):
+          #print(num)
+          t1=t1+((int(data[i].encode('hex'),16))*num);
+          num=num/0xff;    
+          #print(data[i].encode('hex'))
+          #print(t1)
+       self.an_id=t1;    
+       return data
+          
 
     # 重置 & 初始化
     def FunLora_1_Init(self):
@@ -237,6 +268,25 @@ class LoRa:
        data=self.FunLora_ChipSendByte(array1)
        return data
 
+        # 讀取LoRa 傳過來的資料去掉CRC, RSSI 等別的資料
+    def FunLora_6_readPureData(self):
+       array1=[0xC1,0x6,0x0,0]
+       array1[3]=self.Fun_CRC(array1)
+       data=self.FunLora_ChipSendByte(array1)
+       data2=[]
+       t_len=len(data)
+       i=0
+       if(t_len>6):
+          for i3 in data:
+            if(i>=3):
+              data2.append(ord(i3))
+              if (i>t_len-5):
+                break
+            i=i+1    
+       if self.debug==True:     
+           print(data2)   
+       return data2   
+
     # 設定寫入和頻段
     def FunLora_3_TX(self):
        array1=[0xC1,3,5,2,1,0x65,0x6C,0xf,0]
@@ -244,46 +294,98 @@ class LoRa:
        data=self.FunLora_ChipSendByte(array1)
        return data
 
-    # 寫入測試
-    def FunLora_5_write_test(self):
-       array1=[0xC1,0x5,0x5,0x61,0x62,0x63,0x64,0x65,0]
-       array1[8]=self.Fun_CRC(array1)
-       data=self.FunLora_ChipSendByte(array1)
-       return data
-
-    def FunLora_5_write16bytesArray(self,data_array):
-        #self.ser.write(serial.to_bytes([0xc1,0x03,0x05,0x02,0xe4,0xc0,0x00,0x03]))
-        #data = ser.read(5)
-        #print data.encode('hex')
-        TX_Data=data_array
-        ##[0x01,0x02,0x03]
-        CMD_Data=[0xc1,0x05]
-        CMD_Data.append(len(TX_Data))
-        for i3 in data_array:
-           #CMD_Data.append(int(i3, 16))
-           CMD_Data.append(ord(i3))
-        ##ser.write(serial.to_bytes([0xc1,0x05,0x03,0x01,0x02,0x03]))
-        CRC=self.Fun_CRC(CMD_Data)
-        CMD_Data.append(CRC)
-        print(CMD_Data)
-        data=self.FunLora_ChipSendByte(CMD_Data)
-        return data
-
-        ##ser.write(serial.to_bytes(TX_Data))
-        #ser.write(CMD_Data)
-        #
-        #print ("Send:")
-        ##print ','.join(format(x, '02x') for x in serial.to_bytes(TX_Data))
-        #print ','.join([i2 for i2 in TX_Data])
-        #data = ser.read(5)
-        #print data.encode('hex')
-
-    # 讀取LoRa 傳過來的資料
+    # 讀取LoRa 是否有新的資料 (　限firmwareVersion>=5 才有的功能)
     def FunLora_7_readCounter(self):
        array1=[0xC1,0x7,0x0,0]
        array1[3]=self.Fun_CRC(array1)
        data=self.FunLora_ChipSendByte(array1)
        return data
+
+    # 寫入
+    def FunLora_5_write16bytesArray(self,data_array):
+        TX_Data=data_array
+        ##[0x01,0x02,0x03]
+        CMD_Data=[0xc1,0x05]
+        CMD_Data.append(len(TX_Data))
+        for i3 in data_array:
+           CMD_Data.append(ord(i3))
+        CRC=self.Fun_CRC(CMD_Data)
+        CMD_Data.append(CRC)
+        while True:
+          data=self.FunLora_ChipSendByte(CMD_Data)
+          time.sleep(self.sleep)
+          if len(data)!=6:                            # 確認回傳的是　c1aa01553f
+            break
+        if self.debug==True:
+           print(data.encode('hex'))    
+        return data
+
+
+    # 寫入
+    def FunLora_5_write16bytes(self,data_array):
+        TX_Data=data_array
+        ##[0x01,0x02,0x03]
+        CMD_Data=[0xc1,0x05]
+        CMD_Data.append(len(TX_Data))
+        for i3 in data_array:
+           CMD_Data.append(i3)
+        CRC=self.Fun_CRC(CMD_Data)
+        CMD_Data.append(CRC)
+        while True:
+          data=self.FunLora_ChipSendByte(CMD_Data)
+          time.sleep(self.sleep())
+          if len(data)!=6:                            # 確認回傳的是　c1aa01553f
+            break
+        if self.debug==True:
+           print(data.encode('hex'))    
+        return data
+
+    # 寫入
+    def FunLora_5_writeString(self,data_array):
+        #TX_Data=data_array
+        t_Len=len(data_array)
+        t_lenCurrent=0
+        t_seg_len=14
+        t_segments=t_Len/t_seg_len
+        if (t_Len%t_seg_len)>0:                               #處理餘數
+          t_segments=t_segments+1
+        for t_segment in range(0, t_segments):
+            CMD_Data=[]
+            for t_x in range(0, t_seg_len):
+                CMD_Data.append(ord(data_array[t_lenCurrent]))
+                t_lenCurrent=t_lenCurrent+1
+                if t_lenCurrent >= t_Len:                     #處理餘數
+                   break
+            print(CMD_Data)
+            self.FunLora_5_write16bytes(CMD_Data)
+
+
+    # 寫入並等待對方回應
+    # def FunLora_5_writeStringWaitTillResponse(self,data_array):
+
+
+
+
+
+    def Fun_ArrayIsSame(self,A,B):
+        if(len(A)>0 and len(B)>0 ):
+          if(len(A)!=len(B)):
+            return True
+          else:
+            IsSame=True
+            i=0
+            for t1 in A:
+              t2=B[i]
+              #print("data[%d]=%s,  Hex->%s"%(i,t1,t1.encode('hex')))
+              #print("data[%d]=%s,  Hex->%s"%(i,t2,t2.encode('hex')))
+              if(t1!=t2):
+                return False
+              i=i+1    
+            return True  
+        else:
+           return False   # No data  
+
+
 
 
 

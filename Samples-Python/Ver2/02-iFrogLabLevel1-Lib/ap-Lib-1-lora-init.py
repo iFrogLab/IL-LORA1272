@@ -19,9 +19,6 @@ print(serPorts)
 portName=serPorts[-1]
 
 
-
-
-
 # 打開Port
 print("Open Port, FunLora_init()")
 ser=LoRa.FunLora_initByName(portName)
@@ -29,6 +26,11 @@ ser=LoRa.FunLora_initByName(portName)
 #讀取F/W版本及Chip ID
 print("Get Firmware Version, FunLora_0_GetChipID()")
 LoRa.FunLora_0_GetChipID()
+print("firmware Version= %d" % LoRa.firmwareVersion);
+
+#Display Device ID 讀取設備的唯一碼
+print("device ID= %d" % LoRa.deviceID);
+
 
 # 重置 & 初始化
 print("Init, FunLora_1_Init()")

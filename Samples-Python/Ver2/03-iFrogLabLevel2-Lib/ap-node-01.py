@@ -30,6 +30,7 @@ print(serPorts)
 portName=serPorts[-1]
 
 
+
 # 打開Port
 print("Open Port, FunLora_init()")
 ser=LoRa.FunLora_initByName(portName)
@@ -38,6 +39,11 @@ ser=LoRa.FunLora_initByName(portName)
 #讀取F/W版本及Chip ID
 print("Get Firmware Version, FunLora_0_GetChipID()")
 LoRa.FunLora_0_GetChipID()
+print("firmware Version= %d" % LoRa.firmwareVersion);
+
+#Display Device ID 讀取設備的唯一碼
+print("device ID= %d" % LoRa.deviceID);
+
 
 # 重置 & 初始化
 print("Init, FunLora_1_Init()")
@@ -53,15 +59,29 @@ LoRa.FunLora_2_ReadSetup();
 print("\n[7]:FunLora_3_TX")
 LoRa.FunLora_3_TX();
 
+##寫入資料
+#print("\n[10]:FunLora_5_write16bytesArray")
+#LoRa.FunLora_5_write16bytesArray("abcdefghijklmnop");
+
+##寫入資料
+#print("\n[11]:FunLora_5_write16bytes")
+#data=[ 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112]
+#LoRa.FunLora_5_write16bytes(data);
 
 #寫入資料
-#print("\n[8]:FunLora_5_write")
-#LoRa.FunLora_5_write_test();
+print("\n[12]:FunLora_5_writeString")
+LoRa.FunLora_5_writeString("abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890");
 
 
 #寫入資料
-print("\n[10]:FunLora_5_write16bytesArray")
-LoRa.FunLora_5_write16bytesArray("111");
+print("\n[13]:FunLora_5_writeStringWaitTillResponse")
+LoRa.FunLora_5_writeStringWaitTillResponse("abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890");
+
+
+
+
+
+
 
 
 # 關閉
