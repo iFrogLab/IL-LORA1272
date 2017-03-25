@@ -282,18 +282,11 @@ class LoRa(object):
        i=0
        if(t_len>6):
           if(data[1].encode('hex')=="86"):
-            t_DataLen=ord(data[2])
-            for i in range(3,3+t_DataLen-2):
-              print data[i]
-            #
-            #for i3 in data:
-            #  if(i>=3):
-            #    data2.append(ord(i3))
-            #    if (i>t_len-5):
-            #      break
-            #  i=i+1
-       if self.debug==True:     
-           print(data2)   
+             t_DataLen=ord(data[2])
+             for i in range(3,3+t_DataLen-2):
+                 data2.append(ord(data[i]))
+                 if self.debug == True:
+                     print data[i]
        return data2   
 
 
@@ -327,8 +320,6 @@ class LoRa(object):
           time.sleep(self.sleep)
           if len(data)!=6:                            # 確認回傳的是　c1aa01553f
             break
-        #if self.debug==True:
-        #   print(data.encode('hex'))
         return data
 
 
@@ -396,8 +387,12 @@ class LoRa(object):
         else:
            return False   # No data  
 
-
-
+    def Fun_ArrayCopy(self, A):
+        t_len=len(A)
+        B=[]
+        for i in A:
+            B.append(i)
+        return B
 
 
 

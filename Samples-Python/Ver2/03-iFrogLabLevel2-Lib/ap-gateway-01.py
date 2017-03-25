@@ -63,17 +63,24 @@ LoRa.FunLora_1_Init()
 print("\n[4]:FunLora_2_ReadSetup");
 LoRa.FunLora_2_ReadSetup();
 
+# 設定讀取和頻段
+# print("\n[7]:FunLora_3_RX")
+LoRa.FunLora_3_RX();
 
+LoRa.debug=False
 counter=0
+lastData=[]
 while True:
-  # 設定讀取和頻段
-  #print("\n[7]:FunLora_3_RX")
-  LoRa.FunLora_3_RX();
   #讀取資料
   #print("\n[8]:FunLora_6_read")
   #data=LoRa.FunLora_6_read();
   data=LoRa.FunLora_6_readPureData()
-  time.sleep(0.01)
+  if LoRa.Fun_ArrayIsSame(data, lastData)==False:
+     lastData=LoRa.Fun_ArrayCopy(data)
+     print ','.join('{:02x}'.format(x) for x in data)
+     #print(" recive data: %s"% str)
+     #print(data)
+  #time.sleep(0.01)
 
 
 
@@ -102,8 +109,8 @@ if(LoRa.FunLora_init(portName)==False):
 # 等待資料進來
 LoRa.FunLora_BoardcaseRead()
 
-
 """
+
 
 
 """

@@ -85,7 +85,7 @@ while True:
   LoRa2.FunLora_5_write16bytesArray(str(counter));
   counter=counter+1
   print(counter)
-  time.sleep(0.01)
+  time.sleep(0.02)
 
 # 關閉
 LoRa2.FunLora_close()

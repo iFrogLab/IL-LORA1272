@@ -8,7 +8,7 @@
 # * 接地GND,          GND        ,Pin 1        
 # * 接收反應Host_IRQ,  null       , Pin 2        
 # * UART,             RX         ,UART_RX  Pin 7 
-# * UART,             TX         ,UART_TX  Pin 8 
+# * UART,             TX         ,UART_TX  Pin 8
 
 
 # python ap12-SendReceive-data.py -u /dev/tty.usbserial-A700eGFx -r 115200 -a T  -s a1,2,3,4,5 -b /dev/tty.ttyAMA0 -m 9600
@@ -37,6 +37,7 @@ class LoRa(object):
     sleep=0
     firmwareVersion=0
     waitCount=99999
+    segLen=9
 
     def __init__(self):
         #self.name = name
@@ -278,16 +279,20 @@ class LoRa(object):
        data=self.FunLora_ChipSendByte(array1)
        data2=[]
        t_len=len(data)
+       t_DataLen=0
        i=0
        if(t_len>6):
-          for i3 in data:
-            if(i>=3):
-              data2.append(ord(i3))
-              if (i>t_len-5):
-                break
-            i=i+1    
-       if self.debug==True:     
-           print(data2)   
+          if(data[1].encode('hex')=="86"):
+             t_DataLen=ord(data[2])
+             if(t_DataLen>2 and t_DataLen<=16):
+               for i in range(3,t_DataLen-2+2+1):
+                 try:
+                     data2.append(ord(data[i]))
+                     if self.debug == True:
+                        print data[i]
+                 except:
+                     print("except")
+                     break
        return data2   
 
 
@@ -321,8 +326,6 @@ class LoRa(object):
           time.sleep(self.sleep)
           if len(data)!=6:                            # 確認回傳的是　c1aa01553f
             break
-        if self.debug==True:
-           print(data.encode('hex'))    
         return data
 
 
@@ -341,16 +344,16 @@ class LoRa(object):
           time.sleep(self.sleep)
           if len(data)!=6:                            # 確認回傳的是　c1aa01553f
             break
-        if self.debug==True:
-           print(data.encode('hex'))    
+        #if self.debug==True:
+        #   print(data.encode('hex'))
         return data
 
-    # 寫入
+    # 寫入長資料
     def FunLora_5_writeString(self,data_array):
         #TX_Data=data_array
         t_Len=len(data_array)
         t_lenCurrent=0
-        t_seg_len=14
+        t_seg_len=self.segLen
         t_segments=t_Len/t_seg_len
         if (t_Len%t_seg_len)>0:                               #處理餘數
           t_segments=t_segments+1
@@ -361,8 +364,11 @@ class LoRa(object):
                 t_lenCurrent=t_lenCurrent+1
                 if t_lenCurrent >= t_Len:                     #處理餘數
                    break
-            print(CMD_Data)
+            self.FunLora_3_TX();
             self.FunLora_5_write16bytes(CMD_Data)
+
+
+
 
 
     # 寫入並等待對方回應
@@ -373,25 +379,40 @@ class LoRa(object):
 
 
     def Fun_ArrayIsSame(self,A,B):
+
         if(len(A)>0 and len(B)>0 ):
           if(len(A)!=len(B)):
-            return True
+            if self.debug == True:
+              print("False")
+            return False
           else:
             IsSame=True
             i=0
             for t1 in A:
               t2=B[i]
-              #print("data[%d]=%s,  Hex->%s"%(i,t1,t1.encode('hex')))
-              #print("data[%d]=%s,  Hex->%s"%(i,t2,t2.encode('hex')))
+              #print("A data[%d]=%s,  Hex->%s"%(i,t1,t1.encode('hex')))
+              #print("B data[%d]=%s,  Hex->%s"%(i,t2,t2.encode('hex')))
+              #print("A data[%d]=%s,  "%(i,t1 ))
+              #print("B data[%d]=%s,   "%(i,t2 ))
               if(t1!=t2):
+                if self.debug == True:
+                  print("False")
                 return False
-              i=i+1    
+              i=i+1
+            if self.debug == True:
+              print("True")
             return True  
         else:
-           return False   # No data  
+          if self.debug == True:
+            print("False")
+          return False   # No data
 
-
-
+    def Fun_ArrayCopy(self, A):
+        t_len=len(A)
+        B=[]
+        for i in A:
+            B.append(i)
+        return B
 
 
 
