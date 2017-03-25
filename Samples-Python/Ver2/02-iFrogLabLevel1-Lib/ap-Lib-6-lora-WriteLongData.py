@@ -16,6 +16,56 @@ import time
 import serial
 
 
+
+LoRa2 = ifroglab.LoRa()
+
+
+# 找最後一個USB  UART 設備
+print("List All Ports, serial_ports()")
+serPorts=LoRa2.serial_allPorts()
+print(serPorts)
+portName=serPorts[-2]
+
+
+
+# 打開Port
+print("Open Port, FunLora_init()")
+ser=LoRa2.FunLora_initByName(portName)
+
+
+#讀取F/W版本及Chip ID
+print("Get Firmware Version, FunLora_0_GetChipID()")
+LoRa2.FunLora_0_GetChipID()
+
+
+
+# 重置 & 初始化
+print("Init, FunLora_1_Init()")
+LoRa2.FunLora_1_Init()
+# 讀取設定狀態
+print("\n[4]:FunLora_2_ReadSetup");
+LoRa2.FunLora_2_ReadSetup();
+
+
+counter=0
+while True:
+  # 設定寫入和頻段
+  #print("\n[7]:FunLora_3_TX")
+  LoRa2.FunLora_3_TX();
+  # 寫入資料
+  #print("\n[10]:FunLora_5_write16bytesArray")
+  #LoRa2.FunLora_5_write16bytesArray(str(counter));
+  LoRa2.FunLora_5_writeString("abcdefghijklmnopqrstuvwxyz0123456789");
+  counter=counter+1
+  print(counter)
+  #time.sleep(0.05)
+
+# 關閉
+LoRa2.FunLora_close()
+
+
+
+"""
 #######
 LoRa2 = ifroglab.LoRa()
 
@@ -53,14 +103,16 @@ LoRa2.FunLora_3_TX();
 counter=0
 while True:
   # 寫入資料
-  LoRa2.FunLora_5_writeString("abcdefghijklmnopqrstuvwxyz0123456789\n");
+  #LoRa2.FunLora_5_writeString("abcdefghijklmnopqrstuvwxyz0123456789\n");
+  #LoRa2.FunLora_5_writeString("abcdefghijklmnopqrstuvwxyz0123456789\n");
+  LoRa2.FunLora_5_write16bytesArray(str(counter));
   counter=counter+1
   print(counter)
-  time.sleep(5)
+  time.sleep(1)
 
 # 關閉
 LoRa2.FunLora_close()
 
-
+"""
 
 

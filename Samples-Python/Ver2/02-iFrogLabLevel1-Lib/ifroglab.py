@@ -22,7 +22,9 @@ import time
 import sys
 import glob
 
-
+import Queue
+import threading
+import urllib2
 
 #import sys, getopt
 #import time
@@ -37,7 +39,7 @@ class LoRa(object):
     sleep=0
     firmwareVersion=0
     waitCount=99999
-    segLen=9
+    segLen=16
 
     def __init__(self):
         #self.name = name
@@ -284,12 +286,12 @@ class LoRa(object):
        if(t_len>6):
           if(data[1].encode('hex')=="86"):
              t_DataLen=ord(data[2])
-             if(t_DataLen>2 and t_DataLen<=16):
+             if(t_DataLen>2 and t_DataLen<=17):
                for i in range(3,t_DataLen-2+2+1):
                  try:
                      data2.append(ord(data[i]))
-                     if self.debug == True:
-                        print data[i]
+                     #if self.debug == True:
+                     #   print data[i]
                  except:
                      print("except")
                      break
@@ -348,8 +350,9 @@ class LoRa(object):
         #   print(data.encode('hex'))
         return data
 
+
     # 寫入長資料
-    def FunLora_5_writeString(self,data_array):
+    def FunLora_5_writeString2(self,data_array):
         #TX_Data=data_array
         t_Len=len(data_array)
         t_lenCurrent=0
@@ -369,6 +372,25 @@ class LoRa(object):
 
 
 
+    counter = 101234567890123
+    # 寫入長資料
+    def FunLora_5_writeString(self,data_array):
+        while True:
+            # 設定寫入和頻段
+            # print("\n[7]:FunLora_3_TX")
+            self.FunLora_3_TX();
+            # 寫入資料
+            # print("\n[10]:FunLora_5_write16bytesArray")Fun_ArrayIsSame
+            #LoRa2.FunLora_5_writeString("abcdefghijklmnopqrstuvwxyz0123456789");
+            self.FunLora_5_write16bytesArray(str(self.counter));
+            self.counter = self.counter + 1
+            print(self.counter)
+            time.sleep(0.1)
+
+
+
+
+
 
 
     # 寫入並等待對方回應
@@ -377,35 +399,6 @@ class LoRa(object):
 
 
 
-
-    def Fun_ArrayIsSame(self,A,B):
-
-        if(len(A)>0 and len(B)>0 ):
-          if(len(A)!=len(B)):
-            if self.debug == True:
-              print("False")
-            return False
-          else:
-            IsSame=True
-            i=0
-            for t1 in A:
-              t2=B[i]
-              #print("A data[%d]=%s,  Hex->%s"%(i,t1,t1.encode('hex')))
-              #print("B data[%d]=%s,  Hex->%s"%(i,t2,t2.encode('hex')))
-              #print("A data[%d]=%s,  "%(i,t1 ))
-              #print("B data[%d]=%s,   "%(i,t2 ))
-              if(t1!=t2):
-                if self.debug == True:
-                  print("False")
-                return False
-              i=i+1
-            if self.debug == True:
-              print("True")
-            return True  
-        else:
-          if self.debug == True:
-            print("False")
-          return False   # No data
 
     def Fun_ArrayCopy(self, A):
         t_len=len(A)
@@ -416,6 +409,36 @@ class LoRa(object):
 
 
 
+
+    def Fun_ArrayIsSame(self, A, B):
+        q = Queue.Queue()
+        t = threading.Thread(target=self.Fun_ArrayIsSame_thread, args=(q, A, B))
+        t.daemon = True
+        t.start()
+
+        s = q.get()
+        return s
+
+
+    def Fun_ArrayIsSame_thread(self,q, A, B):
+        if (len(A) > 0 and len(B) > 0):
+            if (len(A) != len(B)):
+                q.put(False)
+                return False
+            else:
+                IsSame = True
+                i = 0
+                for t1 in A:
+                    t2 = B[i]
+                    if (t1 != t2):
+                        q.put(False)
+                        return False
+                    i = i + 1
+                q.put(True)
+                return True
+        else:
+            q.put(False)
+            return False  # No data
 
 
 
