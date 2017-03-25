@@ -22,11 +22,12 @@ from serial import SerialException
 import time
 import sys
 import glob
-
+import datetime
 
 
 class LoRaL2(ifroglab.LoRa):   
     lastData=[]
+    debugL2=True
     def __init__(self,GatewayNoode):
         self.mode=GatewayNoode
         #:V  1.找這台機器有幾個LoRa , 設定其中之一為Gateway。
@@ -43,7 +44,8 @@ class LoRaL2(ifroglab.LoRa):
       print("firmware Version= %d" % self.firmwareVersion)
       print("deviceID= %d" % self.deviceID)
       if (self.firmwareVersion==0):                       # failed, this port is not a LoRa device
-          return False
+        sys.exit()
+        return False
       print("Init, FunLora_1_Init()")         # 重置 & 初始化
       self.FunLora_1_Init()
 
@@ -58,13 +60,48 @@ class LoRaL2(ifroglab.LoRa):
       #讀取資料
       counter=0
       while True:
-        data=self.FunLora_6_readPureData();
+        #data=self.FunLora_6_readPureData()
+        time.sleep(0.1)
+        data=self.FunLora_6_read()
         if(len(data)>0):
           if(self.Fun_ArrayIsSame(self.lastData,data)==False):
             self.lastData = list(data)
-            counter=counter+1   
-            print(data)   
-            print(counter)
+            counter=counter+1
+            if self.debugL2==True:
+              print(counter)
+              print(data)
+              #print ','.join('{:02x}'.format(x) for x in data)
+
+
+    def FunLora_Node01_FindGateway(self):
+      # 2.設定default, read 模式，等待Node。  
+      # 讀取設定狀態
+      self.FunLora_2_ReadSetup();
+      # 設定讀取和頻段
+      self.FunLora_3_TX();
+      #跟Gateway 
+      counter=0
+      while True:
+        #data=[ 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112]
+        #寫入資料
+        #print("\n[10]:FunLora_5_write16bytesArray")
+        self.FunLora_5_write16bytesArray(str(counter));
+        #ts = time.time()
+        #st = datetime.datetime.fromtimestamp(ts).strftime('%m-%d %H:%M:%S')
+        #print st
+        #data2=self.FunLora_5_write16bytesArray(st);
+        #if(len(data)>0):
+        #  if(self.Fun_ArrayIsSame(self.lastData,data)==False):
+        #    self.lastData = list(data)
+        counter=counter+1
+        if self.debugL2 == True:
+          #print ','.join('{:02x}'.format(x) for x in counter)
+          print(counter)
+        time.sleep(0.5)
+
+
+
+
 
 
 

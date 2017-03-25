@@ -14,11 +14,7 @@ import ifroglab
 import time
 import serial
 
-def Fun_CRC(data):
-    crc=0
-    for i in data:
-        crc=crc^i
-    return crc
+
 
 LoRa = ifroglab.LoRa()
 
