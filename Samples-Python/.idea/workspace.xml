@@ -19,37 +19,75 @@
     <favorites_list name="Samples-Python" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="ap-Lib-7-lora-ReadLongString.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Ver2/02-iFrogLabLevel1-Lib/ap-Lib-7-lora-ReadLongString.py">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="ap-01-gateway_init.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-01-gateway_init.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="315">
-              <caret line="57" column="0" selection-start-line="57" selection-start-column="0" selection-end-line="57" selection-end-column="0" />
+              <caret line="76" column="3" selection-start-line="76" selection-start-column="3" selection-end-line="76" selection-end-column="3" />
+              <folding>
+                <element signature="e#365#382#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ap-01-node_init.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-01-node_init.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="315">
+              <caret line="82" column="29" selection-start-line="82" selection-start-column="29" selection-end-line="82" selection-end-column="29" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ifroglabL2.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ifroglabL2.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="122">
+              <caret line="113" column="13" selection-start-line="113" selection-start-column="13" selection-end-line="113" selection-end-column="28" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ifroglab.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ifroglab.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="269">
+              <caret line="328" column="37" selection-start-line="328" selection-start-column="37" selection-end-line="328" selection-end-column="37" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="ap-Lib-7-lora-WriteLongString.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Ver2/02-iFrogLabLevel1-Lib/ap-Lib-7-lora-WriteLongString.py">
+        <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-Lib-7-lora-WriteLongString.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-14">
-              <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
-              <folding>
-                <element signature="e#365#380#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="371">
+              <caret line="50" column="11" selection-start-line="50" selection-start-column="11" selection-end-line="51" selection-end-column="70" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ifroglab.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Ver2/02-iFrogLabLevel1-Lib/ifroglab.py">
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/README.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="251">
-              <caret line="458" column="30" selection-start-line="458" selection-start-column="30" selection-end-line="458" selection-end-column="30" />
-              <folding>
-                <element signature="e#594#607#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="165">
+              <caret line="11" column="37" selection-start-line="11" selection-start-column="37" selection-end-line="11" selection-end-column="37" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="readme.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/readme.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="17" column="59" selection-start-line="17" selection-start-column="36" selection-end-line="17" selection-end-column="59" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -59,21 +97,28 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ifroglabL2.py" />
-        <option value="$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-gateway-01.py" />
-        <option value="$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ifroglab.py" />
-        <option value="$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-node-01.py" />
         <option value="$PROJECT_DIR$/Ver2/02-iFrogLabLevel1-Lib/ap-Lib-6-lora-ReadLongData.py" />
         <option value="$PROJECT_DIR$/Ver2/02-iFrogLabLevel1-Lib/ap-Lib-6-lora-WriteLongData.py" />
+        <option value="$PROJECT_DIR$/Ver2/02-iFrogLabLevel1-Lib/ap-Lib-7-lora-WriteLongString.py" />
         <option value="$PROJECT_DIR$/Ver2/02-iFrogLabLevel1-Lib/ap-Lib-7-lora-ReadLongString.py" />
         <option value="$PROJECT_DIR$/Ver2/02-iFrogLabLevel1-Lib/ifroglab.py" />
+        <option value="$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-Lib-7-lora-WriteLongString.py" />
+        <option value="$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-Lib-7-lora-ReadLongString.py" />
+        <option value="$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-node-01.py" />
+        <option value="$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-gateway-01.py" />
+        <option value="$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/README.md" />
+        <option value="$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/readme.txt" />
+        <option value="$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-01-gateway_init.py" />
+        <option value="$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-01-node_init.py" />
+        <option value="$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ifroglabL2.py" />
+        <option value="$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ifroglab.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="131" />
+    <option name="x" value="457" />
     <option name="y" value="23" />
-    <option name="width" value="1251" />
+    <option name="width" value="1447" />
     <option name="height" value="873" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
@@ -101,8 +146,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -124,6 +167,10 @@
               <option name="myItemId" value="Ver2" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="03-iFrogLabLevel2-Lib" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -138,37 +185,18 @@
               <option name="myItemId" value="Ver2" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="02-iFrogLabLevel1-Lib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
   </component>
-  <component name="RunManager" selected="Python.ap-Lib-7-lora-ReadLongString">
-    <configuration default="false" name="ap-gateway-01" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="Samples-Python" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-gateway-01.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="Python.ap-Lib-7-lora-ReadLongString (1)">
     <configuration default="false" name="ap-Lib-6-lora-WriteLongData" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -233,6 +261,23 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="Samples-Python" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Ver2/02-iFrogLabLevel1-Lib/ap-Lib-7-lora-ReadLongString.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="ap-Lib-7-lora-ReadLongString (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="Samples-Python" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-Lib-7-lora-ReadLongString.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
@@ -372,19 +417,19 @@
       <method />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Python.ap-gateway-01" />
-      <item index="1" class="java.lang.String" itemvalue="Python.ap-Lib-6-lora-WriteLongData" />
-      <item index="2" class="java.lang.String" itemvalue="Python.ap-Lib-6-lora-ReadLongData" />
-      <item index="3" class="java.lang.String" itemvalue="Python.ifroglab" />
-      <item index="4" class="java.lang.String" itemvalue="Python.ap-Lib-7-lora-ReadLongString" />
+      <item index="0" class="java.lang.String" itemvalue="Python.ap-Lib-6-lora-WriteLongData" />
+      <item index="1" class="java.lang.String" itemvalue="Python.ap-Lib-6-lora-ReadLongData" />
+      <item index="2" class="java.lang.String" itemvalue="Python.ifroglab" />
+      <item index="3" class="java.lang.String" itemvalue="Python.ap-Lib-7-lora-ReadLongString" />
+      <item index="4" class="java.lang.String" itemvalue="Python.ap-Lib-7-lora-ReadLongString (1)" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.ap-Lib-7-lora-ReadLongString" />
-        <item index="1" class="java.lang.String" itemvalue="Python.ap-Lib-6-lora-ReadLongData" />
-        <item index="2" class="java.lang.String" itemvalue="Python.ap-Lib-6-lora-WriteLongData" />
-        <item index="3" class="java.lang.String" itemvalue="Python.ifroglab" />
-        <item index="4" class="java.lang.String" itemvalue="Python.ap-gateway-01" />
+        <item index="0" class="java.lang.String" itemvalue="Python.ap-Lib-7-lora-ReadLongString (1)" />
+        <item index="1" class="java.lang.String" itemvalue="Python.ap-Lib-7-lora-ReadLongString" />
+        <item index="2" class="java.lang.String" itemvalue="Python.ap-Lib-6-lora-ReadLongData" />
+        <item index="3" class="java.lang.String" itemvalue="Python.ap-Lib-6-lora-WriteLongData" />
+        <item index="4" class="java.lang.String" itemvalue="Python.ifroglab" />
       </list>
     </recent_temporary>
   </component>
@@ -402,25 +447,25 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="131" y="23" width="1251" height="873" extended-state="0" />
+    <frame x="457" y="23" width="1447" height="873" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25019985" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2771251" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32938644" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26119402" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -437,6 +482,18 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Ver2/02-iFrogLabLevel1-Lib/ifroglab.py</url>
+          <line>475</line>
+          <option name="timeStamp" value="49" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-Lib-7-lora-ReadLongString.py</url>
+          <line>55</line>
+          <option name="timeStamp" value="53" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
@@ -444,42 +501,36 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="44" />
+      <option name="time" value="55" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ifroglabL2.py">
+    <entry file="file://$PROJECT_DIR$/Ver2/02-iFrogLabLevel1-Lib/ap-Lib-7-lora-ReadLongString.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="94" column="27" selection-start-line="94" selection-start-column="27" selection-end-line="94" selection-end-column="39" />
+        <state relative-caret-position="855">
+          <caret line="57" column="0" selection-start-line="57" selection-start-column="0" selection-end-line="57" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ver2/02-iFrogLabLevel1-Lib/ap-Lib-7-lora-WriteLongString.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
           <folding>
-            <element signature="e#595#608#0" expanded="false" />
+            <element signature="e#365#380#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ifroglab.py">
+    <entry file="file://$PROJECT_DIR$/Ver2/02-iFrogLabLevel1-Lib/ifroglab.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="376">
-          <caret line="391" column="0" selection-start-line="391" selection-start-column="0" selection-end-line="391" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-gateway-01.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="256">
-          <caret line="79" column="49" selection-start-line="79" selection-start-column="49" selection-end-line="79" selection-end-column="49" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-node-01.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="77" column="9" selection-start-line="77" selection-start-column="9" selection-end-line="77" selection-end-column="9" />
-          <folding />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#594#607#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -495,7 +546,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-450">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -503,7 +553,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="71" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -511,7 +560,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="241">
           <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -519,7 +567,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="466">
           <caret line="50" column="11" selection-start-line="50" selection-start-column="11" selection-end-line="50" selection-end-column="11" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -527,37 +574,140 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="326">
           <caret line="55" column="0" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
-          <folding>
-            <element signature="e#456#471#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Ver2/02-iFrogLabLevel1-Lib/ap-Lib-7-lora-ReadLongString.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="57" column="0" selection-start-line="57" selection-start-column="0" selection-end-line="57" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Ver2/02-iFrogLabLevel1-Lib/ap-Lib-7-lora-WriteLongString.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-14">
-          <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+        <state relative-caret-position="240">
+          <caret line="49" column="9" selection-start-line="49" selection-start-column="9" selection-end-line="49" selection-end-column="9" />
           <folding>
-            <element signature="e#365#380#0" expanded="true" />
+            <element signature="e#365#380#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Ver2/02-iFrogLabLevel1-Lib/ifroglab.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="251">
-          <caret line="458" column="30" selection-start-line="458" selection-start-column="30" selection-end-line="458" selection-end-column="30" />
+        <state relative-caret-position="449">
+          <caret line="495" column="0" selection-start-line="495" selection-start-column="0" selection-end-line="495" selection-end-column="0" />
           <folding>
             <element signature="e#594#607#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ver2/02-iFrogLabLevel1-Lib/ap-Lib-7-lora-ReadLongString.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-Lib-6-lora-ReadLongData.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="22" selection-start-line="0" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-Lib-6-lora-WriteLongData.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="16" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-Lib-7-lora-ReadLongString.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="101">
+          <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-node-01.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="461">
+          <caret line="83" column="0" selection-start-line="83" selection-start-column="0" selection-end-line="83" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-gateway-01.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="56">
+          <caret line="71" column="50" selection-start-line="71" selection-start-column="50" selection-end-line="71" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="37" selection-start-line="11" selection-start-column="37" selection-end-line="11" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/iLoRa_Level_2.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/readme.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="59" selection-start-line="17" selection-start-column="36" selection-end-line="17" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-01-gateway_init.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="76" column="3" selection-start-line="76" selection-start-column="3" selection-end-line="76" selection-end-column="3" />
+          <folding>
+            <element signature="e#365#382#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-Lib-7-lora-WriteLongString.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="371">
+          <caret line="50" column="11" selection-start-line="50" selection-start-column="11" selection-end-line="51" selection-end-column="70" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ap-01-node_init.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="82" column="29" selection-start-line="82" selection-start-column="29" selection-end-line="82" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ifroglabL2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="122">
+          <caret line="113" column="13" selection-start-line="113" selection-start-column="13" selection-end-line="113" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ver2/03-iFrogLabLevel2-Lib/ifroglab.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="269">
+          <caret line="328" column="37" selection-start-line="328" selection-start-column="37" selection-end-line="328" selection-end-column="37" />
+          <folding />
         </state>
       </provider>
     </entry>

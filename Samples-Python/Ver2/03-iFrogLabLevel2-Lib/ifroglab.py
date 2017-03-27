@@ -8,7 +8,7 @@
 # * 接地GND,          GND        ,Pin 1        
 # * 接收反應Host_IRQ,  null       , Pin 2        
 # * UART,             RX         ,UART_RX  Pin 7 
-# * UART,             TX         ,UART_TX  Pin 8 
+# * UART,             TX         ,UART_TX  Pin 8
 
 
 # python ap12-SendReceive-data.py -u /dev/tty.usbserial-A700eGFx -r 115200 -a T  -s a1,2,3,4,5 -b /dev/tty.ttyAMA0 -m 9600
@@ -22,8 +22,10 @@ import time
 import sys
 import glob
 
-
-
+import Queue
+import threading
+import urllib2
+import time
 #import sys, getopt
 #import time
 #import numpy
@@ -37,26 +39,15 @@ class LoRa(object):
     sleep=0
     firmwareVersion=0
     waitCount=99999
+    segLen=16
+    lastData = []
 
     def __init__(self):
         #self.name = name
         #self.number = number
         #self.balance = balance
         self.a1=1
-    
-    def deposit(self, amount):
-        if amount <= 0:
-            raise ValueError('amount must be positive')
-        self.balance += amount
-    
-    def withdraw(self, amount):
-        if amount > self.balance:
-            raise RuntimeError('balance not enough')
-        self.balance -= amount
-    
-    def __str__(self):
-        return 'Account({0}, {1}, {2})'.format(self.name, self.number, self.balance)/Users/powenko/Desktop/powenko/github/IL-LORA1272/Samples-Python/Ver2/ifroglab.py
-    
+
 
 
     def serial_allPorts(self):
@@ -283,10 +274,15 @@ class LoRa(object):
        if(t_len>6):
           if(data[1].encode('hex')=="86"):
              t_DataLen=ord(data[2])
-             for i in range(3,3+t_DataLen-2):
-                 data2.append(ord(data[i]))
-                 if self.debug == True:
-                     print data[i]
+             if(t_DataLen>2 and t_DataLen<=18):
+               for i in range(3,t_DataLen-2+2+1):
+                 try:
+                     data2.append(ord(data[i]))
+                     #if self.debug == True:
+                     #   print data[i]
+                 except:
+                     print("except")
+                     break
        return data2   
 
 
@@ -298,21 +294,41 @@ class LoRa(object):
        data=self.FunLora_ChipSendByte(array1)
        return data
 
+    """
     # 讀取LoRa 傳過來的資料
     def FunLora_6_read(self):
        array1=[0xC1,0x6,0x0,0]
        array1[3]=self.Fun_CRC(array1)
        data=self.FunLora_ChipSendByte(array1)
        return data
+    """
+
     # 寫入
-    
-    def FunLora_5_write16bytesArray(self,data_array):
+    def FunLora_5_write16bytesArrayString(self,data_array):
         TX_Data=data_array
         ##[0x01,0x02,0x03]
         CMD_Data=[0xc1,0x05]
         CMD_Data.append(len(TX_Data))
         for i3 in data_array:
            CMD_Data.append(ord(i3))
+        CRC=self.Fun_CRC(CMD_Data)
+        CMD_Data.append(CRC)
+        while True:
+          data=self.FunLora_ChipSendByte(CMD_Data)
+          time.sleep(self.sleep)
+          if len(data)!=6:                            # 確認回傳的是　c1aa01553f
+            break
+        return data
+
+
+    # 寫入
+    def FunLora_5_write16bytesArray(self,data_array):
+        TX_Data=data_array
+        ##[0x01,0x02,0x03]
+        CMD_Data=[0xc1,0x05]
+        CMD_Data.append(len(TX_Data))
+        for i3 in data_array:
+           CMD_Data.append(i3)
         CRC=self.Fun_CRC(CMD_Data)
         CMD_Data.append(CRC)
         while True:
@@ -338,54 +354,14 @@ class LoRa(object):
           time.sleep(self.sleep)
           if len(data)!=6:                            # 確認回傳的是　c1aa01553f
             break
-        if self.debug==True:
-           print(data.encode('hex'))    
+        #if self.debug==True:
+        #   print(data.encode('hex'))
         return data
 
-    # 寫入
-    def FunLora_5_writeString(self,data_array):
-        #TX_Data=data_array
-        t_Len=len(data_array)
-        t_lenCurrent=0
-        t_seg_len=14
-        t_segments=t_Len/t_seg_len
-        if (t_Len%t_seg_len)>0:                               #處理餘數
-          t_segments=t_segments+1
-        for t_segment in range(0, t_segments):
-            CMD_Data=[]
-            for t_x in range(0, t_seg_len):
-                CMD_Data.append(ord(data_array[t_lenCurrent]))
-                t_lenCurrent=t_lenCurrent+1
-                if t_lenCurrent >= t_Len:                     #處理餘數
-                   break
-            print(CMD_Data)
-            self.FunLora_5_write16bytes(CMD_Data)
-
-
-    # 寫入並等待對方回應
-    # def FunLora_5_writeStringWaitTillResponse(self,data_array):
 
 
 
 
-
-    def Fun_ArrayIsSame(self,A,B):
-        if(len(A)>0 and len(B)>0 ):
-          if(len(A)!=len(B)):
-            return True
-          else:
-            IsSame=True
-            i=0
-            for t1 in A:
-              t2=B[i]
-              #print("data[%d]=%s,  Hex->%s"%(i,t1,t1.encode('hex')))
-              #print("data[%d]=%s,  Hex->%s"%(i,t2,t2.encode('hex')))
-              if(t1!=t2):
-                return False
-              i=i+1    
-            return True  
-        else:
-           return False   # No data  
 
     def Fun_ArrayCopy(self, A):
         t_len=len(A)
@@ -394,7 +370,166 @@ class LoRa(object):
             B.append(i)
         return B
 
+    def Fun_ArrayToString(self, A):
+        t_len = len(A)
+        B = ""
+        for i in A:
+            #B.append(i)
+            B=B+str(unichr(i))
+        return B
 
+    def Fun_ArrayIsSame(self, A, B):
+        q = Queue.Queue()
+        t = threading.Thread(target=self.Fun_ArrayIsSame_thread, args=(q, A, B))
+        t.daemon = True
+        t.start()
+
+        s = q.get()
+        return s
+
+
+    def Fun_ArrayIsSame_thread(self,q, A, B):
+        if (len(A) > 0 and len(B) > 0):
+            if (len(A) != len(B)):
+                q.put(False)
+                return False
+            else:
+                IsSame = True
+                i = 0
+                for t1 in A:
+                    t2 = B[i]
+                    if (t1 != t2):
+                        q.put(False)
+                        return False
+                    i = i + 1
+                q.put(True)
+                return True
+        else:
+            q.put(False)
+            return False  # No data
+
+
+    counter = 101234567890123
+
+
+
+
+    # 寫入長資料
+    def FunLora_5_writeString(self, iString):
+        data_array=iString+'\n'
+        t_Len = len(data_array)
+        t_lenCurrent = 0
+        t_seg_len = self.segLen
+        t_segments = t_Len / t_seg_len
+        if (t_Len % t_seg_len) > 0:  # 處理餘數
+            t_segments = t_segments + 1
+        for t_segment in range(0, t_segments):
+            CMD_Data = []
+            for t_x in range(0, t_seg_len):
+                #CMD_Data.append(ord(data_array[t_lenCurrent]))
+                CMD_Data.append(data_array[t_lenCurrent])
+                t_lenCurrent = t_lenCurrent + 1
+                if t_lenCurrent >= t_Len:  # 處理餘數
+                    break
+            print(CMD_Data)
+            self.FunLora_3_TX()
+            self.FunLora_5_write16bytesArray(CMD_Data);
+            #time.sleep(0.005)
+
+    # 寫入長資料
+    def FunLora_5_write(self, data_array):
+        #data_array=iString+'\n'
+        data_array.append(10)
+        t_Len = len(data_array)
+        t_lenCurrent = 0
+        t_seg_len = self.segLen
+        t_segments = t_Len / t_seg_len
+        if (t_Len % t_seg_len) > 0:  # 處理餘數
+            t_segments = t_segments + 1
+        for t_segment in range(0, t_segments):
+            CMD_Data = []
+            for t_x in range(0, t_seg_len):
+                #CMD_Data.append(ord(data_array[t_lenCurrent]))
+                CMD_Data.append(data_array[t_lenCurrent])
+                t_lenCurrent = t_lenCurrent + 1
+                if t_lenCurrent >= t_Len:  # 處理餘數
+                    break
+            print(CMD_Data)
+            self.FunLora_3_TX()
+            self.FunLora_5_write16bytesArray(CMD_Data);
+            #time.sleep(0.005)
+
+    # 讀 長資料
+    def FunLora_5_read_v1(self):
+        LoRa.debug = False
+        counter = 0
+        allData = []
+        lastData = []
+        while True:
+            # 讀取資料
+            data = self.FunLora_6_readPureData()
+            if self.Fun_ArrayIsSame(data, lastData) == False:
+                lastData = self.Fun_ArrayCopy(data)
+                #lastData = self.Fun_ArrayToString(data)
+                t_len = len(data)
+                if t_len >= 1:
+                    for i in data:
+                        allData.append(i)
+                        #allData = allData + lastData
+                    if data[t_len - 1] == 10:
+                        del data[-1]
+                        # print ','.join('{:02x}'.format(x) for x in data)
+                        return allData
+
+
+    def FunLora_6_read(self):
+
+        allData = []
+        while True:
+            # 讀取資料
+            data = self.FunLora_6_readPureData()
+            if self.Fun_ArrayIsSame(data, self.lastData) == False:
+                self.lastData = self.Fun_ArrayCopy(data)
+                #print ','.join('{:02x}'.format(x) for x in data)
+                t_len = len(data)
+                if t_len >= 1:
+                    for i in data:
+                        allData.append(i)
+                    if data[t_len - 1] == 10:
+                        #print("allData")
+                        # print ','.join('{:02x}'.format(x) for x in allData)
+                        return allData
+
+
+    # 讀 長資料
+    def FunLora_5_readString(self):
+        LoRa.debug = False
+        counter = 0
+        allData=""
+        lastData = []
+        while True:
+            # 讀取資料
+            data = self.FunLora_6_readPureData()
+            if self.Fun_ArrayIsSame(data, lastData) == False:
+                #lastData = self.Fun_ArrayCopy(data)
+                t_len=len(data)
+                if t_len >= 1:
+                  lastData = self.Fun_ArrayToString(data)
+                  #for i in data:
+                  #allData.append(i)
+                  allData=allData+lastData
+                  if  data[t_len-1]==10:
+                     del data[-1]
+                     #print ','.join('{:02x}'.format(x) for x in data)
+                     return allData
+
+
+
+    lastTime=0
+    def TimeStamp(self):
+        ts = time.time()
+        print "Time Stamp:%s" %(ts- self.lastTime)
+        self.lastTime=ts
 
 
 

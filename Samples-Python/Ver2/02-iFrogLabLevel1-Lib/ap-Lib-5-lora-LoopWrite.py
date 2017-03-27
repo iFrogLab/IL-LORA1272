@@ -57,7 +57,7 @@ while True:
   LoRa2.FunLora_3_TX();
   # 寫入資料
   #print("\n[10]:FunLora_5_write16bytesArray")
-  LoRa2.FunLora_5_write16bytesArray(str(counter));
+  LoRa2.FunLora_5_write16bytesArrayString(str(counter));
   counter=counter+1
   print(counter)
   time.sleep(0.02)

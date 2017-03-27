@@ -62,7 +62,7 @@ data=LoRa.FunLora_6_read();
 
 i=0	
 for t1 in data:
-   print("data[%d]=%s,  Hex->%s"%(i,t1,t1.encode('hex')))
+   print("data[%d]= %s"%(i,t1))
    i=i+1
 
 
@@ -81,10 +81,11 @@ data=LoRa.FunLora_7_readCounter()
 #讀取資料
 counter=0
 lastData=[]
+LoRa.debug=False
 while True:
-    data=LoRa.FunLora_6_readPureData(); 　　#  取得收到的純資料
+    data=LoRa.FunLora_6_readPureData()#取得收到的純資料
     if(len(data)>0):
-        if(self.Fun_ArrayIsSame(lastData,data)==False):  #  僅顯示出不同的資料
+        if(LoRa.Fun_ArrayIsSame(lastData,data)==False):  #  僅顯示出不同的資料
             lastData = list(data)
             counter=counter+1   
             print(data)   

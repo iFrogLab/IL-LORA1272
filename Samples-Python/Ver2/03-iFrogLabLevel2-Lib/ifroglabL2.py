@@ -72,8 +72,8 @@ class LoRaL2(ifroglab.LoRa):
               print(data)
               #print ','.join('{:02x}'.format(x) for x in data)
 
-
-    def FunLora_Node01_FindGateway(self):
+    """
+    def FunLora_Node01_FindGateway_v1(self):
       # 2.設定default, read 模式，等待Node。  
       # 讀取設定狀態
       self.FunLora_2_ReadSetup();
@@ -99,7 +99,32 @@ class LoRaL2(ifroglab.LoRa):
           print(counter)
         time.sleep(0.5)
 
+    """
 
+    def LoRaL2_Node_01_FindGateway(self):
+      # 讀取設定狀態
+      #print("\n[4]:FunLora_2_ReadSetup");
+      self.FunLora_2_ReadSetup();
+      self.FunLora_3_TX();
+
+      counter = 0
+      while True:
+        #self.FunLora_5_writeString("abcdefghijklmnopqrstuvwxyz0123456789");
+        array1=[0,1,2,3,4,5,6,7,8,9,11,12,13,14,15,16,17,18,19,20,21,22,23,24,10]
+        self.FunLora_5_write(array1);
+        counter = counter + 1
+        print(counter)
+        # time.sleep(0.05)
+
+    def LoRaL2_GateWay_01_FineNode(self):
+      print("\n[4]:FunLora_2_ReadSetup");
+      self.FunLora_2_ReadSetup();
+      # 設定讀取和頻段
+      self.FunLora_3_RX();
+      while True:
+        allData = self.FunLora_6_read()
+        #checkArray=[[]]
+        print ','.join('{:02x}'.format(x) for x in allData)
 
 
 

@@ -40,6 +40,7 @@ class LoRa(object):
     firmwareVersion=0
     waitCount=99999
     segLen=16
+    lastData = []
 
     def __init__(self):
         #self.name = name
@@ -293,22 +294,41 @@ class LoRa(object):
        data=self.FunLora_ChipSendByte(array1)
        return data
 
-
+    """
     # 讀取LoRa 傳過來的資料
     def FunLora_6_read(self):
        array1=[0xC1,0x6,0x0,0]
        array1[3]=self.Fun_CRC(array1)
        data=self.FunLora_ChipSendByte(array1)
        return data
+    """
+
     # 寫入
-    
-    def FunLora_5_write16bytesArray(self,data_array):
+    def FunLora_5_write16bytesArrayString(self,data_array):
         TX_Data=data_array
         ##[0x01,0x02,0x03]
         CMD_Data=[0xc1,0x05]
         CMD_Data.append(len(TX_Data))
         for i3 in data_array:
            CMD_Data.append(ord(i3))
+        CRC=self.Fun_CRC(CMD_Data)
+        CMD_Data.append(CRC)
+        while True:
+          data=self.FunLora_ChipSendByte(CMD_Data)
+          time.sleep(self.sleep)
+          if len(data)!=6:                            # 確認回傳的是　c1aa01553f
+            break
+        return data
+
+
+    # 寫入
+    def FunLora_5_write16bytesArray(self,data_array):
+        TX_Data=data_array
+        ##[0x01,0x02,0x03]
+        CMD_Data=[0xc1,0x05]
+        CMD_Data.append(len(TX_Data))
+        for i3 in data_array:
+           CMD_Data.append(i3)
         CRC=self.Fun_CRC(CMD_Data)
         CMD_Data.append(CRC)
         while True:
@@ -350,8 +370,13 @@ class LoRa(object):
             B.append(i)
         return B
 
-
-
+    def Fun_ArrayToString(self, A):
+        t_len = len(A)
+        B = ""
+        for i in A:
+            #B.append(i)
+            B=B+str(unichr(i))
+        return B
 
     def Fun_ArrayIsSame(self, A, B):
         q = Queue.Queue()
@@ -387,39 +412,6 @@ class LoRa(object):
     counter = 101234567890123
 
 
-    # 寫入長資料
-    def FunLora_5_writeString_v1(self, data_array):
-        while True:
-            # 設定寫入和頻段
-            # print("\n[7]:FunLora_3_TX")
-            self.FunLora_3_TX();
-            # 寫入資料
-            # print("\n[10]:FunLora_5_write16bytesArray")Fun_ArrayIsSame
-            # LoRa2.FunLora_5_writeString("abcdefghijklmnopqrstuvwxyz0123456789");
-            self.FunLora_5_write16bytesArray(str(self.counter));
-            self.counter = self.counter + 1
-            print(self.counter)
-            time.sleep(0.1)
-
-    # 寫入長資料
-    def FunLora_5_writeString2(self, data_array):
-            # TX_Data=data_array
-            t_Len = len(data_array)
-            t_lenCurrent = 0
-            t_seg_len = self.segLen
-            t_segments = t_Len / t_seg_len
-            if (t_Len % t_seg_len) > 0:  # 處理餘數
-                t_segments = t_segments + 1
-            for t_segment in range(0, t_segments):
-                CMD_Data = []
-                for t_x in range(0, t_seg_len):
-                    CMD_Data.append(ord(data_array[t_lenCurrent]))
-                    t_lenCurrent = t_lenCurrent + 1
-                    if t_lenCurrent >= t_Len:  # 處理餘數
-                        break
-                self.FunLora_3_TX();
-                self.FunLora_5_write16bytes(CMD_Data)
-
 
 
     # 寫入長資料
@@ -441,24 +433,91 @@ class LoRa(object):
                     break
             print(CMD_Data)
             self.FunLora_3_TX()
-            self.FunLora_5_write16bytesArray(CMD_Data);
+            self.FunLora_5_write16bytesArrayString(CMD_Data);
+            #time.sleep(0.005)
 
+    # 寫入長資料
+    def FunLora_5_write(self, data_array):
+        #data_array=iString+'\n'
+        data_array.append(10)
+        t_Len = len(data_array)
+        t_lenCurrent = 0
+        t_seg_len = self.segLen
+        t_segments = t_Len / t_seg_len
+        if (t_Len % t_seg_len) > 0:  # 處理餘數
+            t_segments = t_segments + 1
+        for t_segment in range(0, t_segments):
+            CMD_Data = []
+            for t_x in range(0, t_seg_len):
+                #CMD_Data.append(ord(data_array[t_lenCurrent]))
+                CMD_Data.append(data_array[t_lenCurrent])
+                t_lenCurrent = t_lenCurrent + 1
+                if t_lenCurrent >= t_Len:  # 處理餘數
+                    break
+            print(CMD_Data)
+            self.FunLora_3_TX()
+            self.FunLora_5_write16bytesArray(CMD_Data);
+            #time.sleep(0.005)
 
     # 讀 長資料
-    def FunLora_5_readString(self):
+    def FunLora_5_read_v1(self):
         LoRa.debug = False
         counter = 0
-        allData=[]
+        allData = []
         lastData = []
         while True:
             # 讀取資料
             data = self.FunLora_6_readPureData()
             if self.Fun_ArrayIsSame(data, lastData) == False:
                 lastData = self.Fun_ArrayCopy(data)
+                #lastData = self.Fun_ArrayToString(data)
+                t_len = len(data)
+                if t_len >= 1:
+                    for i in data:
+                        allData.append(i)
+                        #allData = allData + lastData
+                    if data[t_len - 1] == 10:
+                        del data[-1]
+                        # print ','.join('{:02x}'.format(x) for x in data)
+                        return allData
+
+
+    def FunLora_6_read(self):
+
+        allData = []
+        while True:
+            # 讀取資料
+            data = self.FunLora_6_readPureData()
+            if self.Fun_ArrayIsSame(data, self.lastData) == False:
+                self.lastData = self.Fun_ArrayCopy(data)
+                #print ','.join('{:02x}'.format(x) for x in data)
+                t_len = len(data)
+                if t_len >= 1:
+                    for i in data:
+                        allData.append(i)
+                    if data[t_len - 1] == 10:
+                        #print("allData")
+                        # print ','.join('{:02x}'.format(x) for x in allData)
+                        return allData
+
+
+    # 讀 長資料
+    def FunLora_5_readString(self):
+        LoRa.debug = False
+        counter = 0
+        allData=""
+        lastData = []
+        while True:
+            # 讀取資料
+            data = self.FunLora_6_readPureData()
+            if self.Fun_ArrayIsSame(data, lastData) == False:
+                #lastData = self.Fun_ArrayCopy(data)
                 t_len=len(data)
                 if t_len >= 1:
-                  for i in data:
-                      allData.append(i)
+                  lastData = self.Fun_ArrayToString(data)
+                  #for i in data:
+                  #allData.append(i)
+                  allData=allData+lastData
                   if  data[t_len-1]==10:
                      del data[-1]
                      #print ','.join('{:02x}'.format(x) for x in data)

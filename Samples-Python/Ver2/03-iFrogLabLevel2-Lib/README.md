@@ -1,5 +1,5 @@
-請在Node 上設備執行 python ap-node-01.py
-請在gateway上設備執行 python ap-gateway-01.py
+請在Node 上設備執行 python ap-01-node_init.py
+請在gateway上設備執行 python ap-01-node_gateway.py
 
 #  IL-LORA1272 is for ifroglab  LoRa module development sample code and tools.
 IL-LORA1272 is ifroglab product, please see http://www.ifroglab.com/?p=7086

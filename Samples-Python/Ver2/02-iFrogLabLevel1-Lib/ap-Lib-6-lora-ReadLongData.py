@@ -58,7 +58,8 @@ while True:
     data = LoRa.FunLora_6_readPureData()
     if LoRa.Fun_ArrayIsSame(data, lastData) == False:
         lastData = LoRa.Fun_ArrayCopy(data)
-        print ','.join('{:02x}'.format(x) for x in data)
+        print ''.join(unichr(x) for x in data)
+        #print ','.join('{:02x}'.format(x) for x in data)
 
 
 # 關閉
