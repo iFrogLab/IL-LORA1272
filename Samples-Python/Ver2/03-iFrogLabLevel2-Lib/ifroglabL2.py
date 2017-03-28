@@ -44,6 +44,8 @@ class LoRaL2(ifroglab.LoRa):
       print("firmware Version= %d" % self.firmwareVersion)
       print("deviceID= %d" % self.deviceID)
       if (self.firmwareVersion==0):                       # failed, this port is not a LoRa device
+        print("This port cannot find iFrogLab LoRa device.")
+        self.FunLora_close()
         sys.exit()
         return False
       print("Init, FunLora_1_Init()")         # 重置 & 初始化
@@ -72,61 +74,138 @@ class LoRaL2(ifroglab.LoRa):
               print(data)
               #print ','.join('{:02x}'.format(x) for x in data)
 
-    """
-    def FunLora_Node01_FindGateway_v1(self):
-      # 2.設定default, read 模式，等待Node。  
-      # 讀取設定狀態
-      self.FunLora_2_ReadSetup();
-      # 設定讀取和頻段
-      self.FunLora_3_TX();
-      #跟Gateway 
-      counter=0
-      while True:
-        #data=[ 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112]
-        #寫入資料
-        #print("\n[10]:FunLora_5_write16bytesArray")
-        self.FunLora_5_write16bytesArray(str(counter));
-        #ts = time.time()
-        #st = datetime.datetime.fromtimestamp(ts).strftime('%m-%d %H:%M:%S')
-        #print st
-        #data2=self.FunLora_5_write16bytesArray(st);
-        #if(len(data)>0):
-        #  if(self.Fun_ArrayIsSame(self.lastData,data)==False):
-        #    self.lastData = list(data)
-        counter=counter+1
-        if self.debugL2 == True:
-          #print ','.join('{:02x}'.format(x) for x in counter)
-          print(counter)
-        time.sleep(0.5)
 
-    """
 
+    # [ ] ​Step 1: 啟動時
+    #    　　　Node 先透過廣播的方法，把自己的4個bytes 的ID對外宣布，透過　default 頻段，發出廣播，並傳出是node 1 還是gateway 0,
+    #    　　　例如:  Node-> broadcast : 0x71, 01, node=0,    ID, ActionID=1,
+    #.                                  0x71, 01, node=00,  Node ID3,   Node ID2,   Node ID1,   Node ID0, ActionID=1 CRC
     def LoRaL2_Node_01_FindGateway(self):
+      array1 = [0x71, 0x01, 0, 0, 0, 0, 0, 1]
+      if (self.deviceID > 0):
+        for i in range(0, 4):
+          array1[i + 3] = self.deviceIDArray[i]
+      ts1 = time.time()
+      while True:
+        data=self.LoRaL2_BoardCase_Send(array1,True, 10,True)   #傳送資料，並等帶回傳資料，沒有的話再傳一次
+        if(len(data)>0):   # 判是否是正確得資料
+          # gatway broadcast->Node   0x72, 01, 1, Gateway ID[0~3], Freq[2], Freq[1], Freq[0], CRC
+          if(data[0]==0x72):   # and data[1]==1 and data[2]==1):
+             print("Get Gateway ID~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+             self.FunLora_close()
+             sys.exit()
+        ts2 = time.time()
+        #if(ts2-ts1>10):                                          #再發出一次訊號
+        print("Message 1: Time out 10 Sec, cannot find Gateway, please make sure gateway is around this device.")
+
+
+
+
+    def LoRaL2_BoardCase_Send(self,i_array,WaitforResponse,waitingTime,CheckIsSame):
       # 讀取設定狀態
       #print("\n[4]:FunLora_2_ReadSetup");
+      array1 = i_array[:]
       self.FunLora_2_ReadSetup();
-      self.FunLora_3_TX();
-
       counter = 0
+      ts1 = time.time()
       while True:
-        #self.FunLora_5_writeString("abcdefghijklmnopqrstuvwxyz0123456789");
-        array1=[0,1,2,3,4,5,6,7,8,9,11,12,13,14,15,16,17,18,19,20,21,22,23,24,10]
-        self.FunLora_5_write(array1);
+        self.FunLora_3_TX();
+        result=self.FunLora_10_write_AndCheckKey(array1);
         counter = counter + 1
-        print(counter)
-        # time.sleep(0.05)
+        counter2 = 0
+        ts2 = time.time()
+        if WaitforResponse==False:        # 不用等　回傳的資料
+          return
+        else:                             # 是否需要等待有回傳的資料
+          time.sleep(0.1)
+          while True:
+            print(counter)
+            self.FunLora_3_RX();
+            data = self.LoRaL2_BoardCase_Receive()
+            ts3 = time.time()
+            counter2 = counter2 + 1
+            time.sleep(1)
+            if (data != None):
+              if CheckIsSame==True:
+                 if (self.Fun_ArrayIsSame(i_array, data) == False):
+                   #print("Get return data")
+                   return data
+              else:
+                 return data
+            if(ts3-ts2>60):                                          #再發出一次訊號
+              break
+              return None
+
+
+
+    def LoRaL2_BoardCase_Receive(self):
+      # 讀取設定狀態
+      self.FunLora_2_ReadSetup();
+      self.FunLora_3_RX();
+      ts = time.time()
+      print "Time Stamp:%s" % (ts - self.lastTime)
+      self.lastTime = ts
+      while True:
+         allData = self.FunLora_10_read_AndCheckKey()
+         if allData!=None and (len(allData)>0):
+           return  allData
+         if(ts - time.time()>1):
+           print("no data")
+           return None
+
+
+
 
     def LoRaL2_GateWay_01_FineNode(self):
-      print("\n[4]:FunLora_2_ReadSetup");
+      #print("\n[4]:FunLora_2_ReadSetup");
       self.FunLora_2_ReadSetup();
       # 設定讀取和頻段
       self.FunLora_3_RX();
       while True:
-        allData = self.FunLora_6_read()
+        allData = self.FunLora_10_read_AndCheckKey()
         #checkArray=[[]]
-        print ','.join('{:02x}'.format(x) for x in allData)
+        if allData==None or len(allData)==0:
+          print("No new Data")
+        elif  len(allData)>=2:
+          if(self.LoRaL2_GateWay_02_Process71_01(allData)==True):
+            print("Get an new Node.")
+            time.sleep(2)
 
 
+
+
+
+
+    # gatway broadcast->Node   0x72, 01, 1, Gateway ID[0~3],Node ID[0~3], Freq[2], Freq[1], Freq[0], CRC
+    def LoRaL2_GateWay_02_Process71_01(self,allData):
+       if allData[0] == 0x71 and allData[1] == 0x01 and allData[2] == 0x00:
+         print("Message 2: a new Node want to join to Geteway.")
+         #array1 = [0x72, 0x01, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+         array1 = [0x72, 0x01, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+         if (self.deviceID > 0):
+           for i in range(0, 4):   # setup Gateway ID
+             array1[i + 3] = self.deviceIDArray[i]
+           for i in range(0, 4):  # setup Gateway ID
+             array1[i + 3+4] = allData[i+3]
+           #array1[i + 3 + 4+1]  =  self.Freq[0]    # Freq
+           #array1[i + 3 + 4+2]  =  self.Freq[1]    # Freq
+           #array1[i + 3 + 4+3]  =  self.Freq[2]    # Freq
+         ts1 = time.time()
+         #while True:
+         for i in range(0,200):
+           data = self.LoRaL2_BoardCase_Send(array1, False,0,False)  # 傳送資料，並等帶回傳資料，沒有的話再傳一次
+           time.sleep(0.1)
+         #if (len(data) > 0):  # 判是否是正確得資料
+         #  # gatway broadcast->Node   0x72, 01, 1, Gateway ID[0~3], Freq[2], Freq[1], Freq[0], CRC
+         #  if (data[0] == 0x72 and data[1] == 1 and data[2] == 1):
+         #    print("Get Gateway ID~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+         #ts2 = time.time()
+         #if (ts2 - ts1 > 10):  # 再發出一次訊號
+         #  print("Message 1: Time out 10 Sec, cannot find Gateway, please make sure gateway is around this device.")
+         return True
+       else:
+         print ','.join('{:02x}'.format(x) for x in allData)
+         return None
 
 
 

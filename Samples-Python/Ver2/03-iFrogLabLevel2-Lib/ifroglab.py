@@ -34,6 +34,7 @@ import time
 
 class LoRa(object):   
     deviceID=0
+    deviceIDArray=[]
     waitTillRespnseTime=5
     debug=True
     sleep=0
@@ -41,6 +42,8 @@ class LoRa(object):
     waitCount=99999
     segLen=16
     lastData = []
+    Freq=[0x65,0x6C,0x0f]
+
 
     def __init__(self):
         #self.name = name
@@ -202,14 +205,21 @@ class LoRa(object):
        # get Device ID // deviceID
        t1=0
        num=0xffffff;
-       if(len(data)>5):
+       self.deviceIDArray=[]
+       if(len(data)>5+3):
+          j=0
           for i in range(5,len(data)-1):
-            #print(num)
-            t1=t1+((int(data[i].encode('hex'),16))*num)
-            num=num/0xff;    
-            #print(data[i].encode('hex'))
-            #print(t1)
-          self.deviceID=t1; 
+             t1=t1+((int(data[i].encode('hex'),16))*num)
+             num=num/0xff
+             t2=int(data[i].encode('hex'),16)
+             self.deviceIDArray.append(t2)
+             j=j+1
+             #print(data[i].encode('hex'))
+             #print(t1)
+          self.deviceID=t1;
+          if self.deviceID==0:
+              print("This port cannot find iFrogLab LoRa device.")
+              sys.exit()()
           #get Chip ID // firmwareVersion
           self.firmwareVersion=int(data[4].encode('hex'),16)
        return data
@@ -254,7 +264,7 @@ class LoRa(object):
 
     # 設定寫入和頻段
     def FunLora_3_TX(self):
-       array1=[0xC1,3,5,2,1,0x65,0x6C,0x0f,0]
+       array1=[0xC1,3,5,2,1,self.Freq[0],self.Freq[1],self.Freq[2],0]
        array1[8]=self.Fun_CRC(array1)
        data=self.FunLora_ChipSendByte(array1)
        return data
@@ -279,11 +289,16 @@ class LoRa(object):
                  try:
                      data2.append(ord(data[i]))
                      #if self.debug == True:
-                     #   print data[i]
+                     #   #print ','.join('{:02x}'.format(x) for x in data)
+                     #   print hex(data2[i])
                  except:
                      print("except")
-                     break
-       return data2   
+                     return None
+               if self.debug == True:
+                  print ','.join('{:02x}'.format(x) for x in data2)
+                  #   print hex(data2[i])
+               return data2
+       return None
 
 
 
@@ -454,10 +469,12 @@ class LoRa(object):
                 t_lenCurrent = t_lenCurrent + 1
                 if t_lenCurrent >= t_Len:  # 處理餘數
                     break
-            print(CMD_Data)
+            # print(CMD_Data)
             self.FunLora_3_TX()
             self.FunLora_5_write16bytesArray(CMD_Data);
             #time.sleep(0.005)
+
+
 
     # 讀 長資料
     def FunLora_5_read_v1(self):
@@ -483,21 +500,17 @@ class LoRa(object):
 
 
     def FunLora_6_read(self):
-
         allData = []
         while True:
             # 讀取資料
             data = self.FunLora_6_readPureData()
             if self.Fun_ArrayIsSame(data, self.lastData) == False:
                 self.lastData = self.Fun_ArrayCopy(data)
-                #print ','.join('{:02x}'.format(x) for x in data)
                 t_len = len(data)
                 if t_len >= 1:
                     for i in data:
                         allData.append(i)
                     if data[t_len - 1] == 10:
-                        #print("allData")
-                        # print ','.join('{:02x}'.format(x) for x in allData)
                         return allData
 
 
@@ -533,5 +546,67 @@ class LoRa(object):
 
 
 
+
+    # 寫入長資料
+    def FunLora_10_write_AndCheckKey(self, data_array):
+      #data_array=iString+'\n'
+      t_Len2=len(data_array)
+      if t_Len2>253:
+        print("error 3: data cannot biger then 253 bytes")
+      else:
+        data_array.insert(0, t_Len2)
+        data_array.append(10)
+        t_Len = len(data_array)
+        t_lenCurrent = 0
+        t_seg_len = self.segLen
+        t_segments = t_Len / t_seg_len
+        if (t_Len % t_seg_len) > 0:  # 處理餘數
+            t_segments = t_segments + 1
+        for t_segment in range(0, t_segments):
+            CMD_Data = []
+            for t_x in range(0, t_seg_len):
+                #CMD_Data.append(ord(data_array[t_lenCurrent]))
+                CMD_Data.append(data_array[t_lenCurrent])
+                t_lenCurrent = t_lenCurrent + 1
+                if t_lenCurrent >= t_Len:  # 處理餘數
+                    break
+            print(CMD_Data)
+            self.FunLora_3_TX()
+            self.FunLora_5_write16bytesArray(CMD_Data);
+            #time.sleep(0.005)
+
+    def FunLora_10_read_AndCheckKey(self):
+          allData = []
+          ts = time.time()
+          while True:
+              # 讀取資料
+              self.FunLora_3_RX();
+              data = self.FunLora_6_readPureData()
+              if data!=None:
+                  t_len = len(data)
+                  if t_len >= 1:
+                      #if self.Fun_ArrayIsSame(data, self.lastData) == False:
+                      self.lastData = self.Fun_ArrayCopy(data)
+                      if t_len >= 1:
+                         for i in data:
+                            allData.append(i)
+                         t1=len(allData)-2
+                         t2=allData[0]
+                         if allData[t_len - 1] == 10 and allData[0]==t1:
+                            # del allData[0]
+                            #del allData[-1]
+                            allData2 = []
+                            for i in range(1,len(allData)-1):
+                                allData2.append(allData[i])
+                            return allData2
+                         else:
+                             if(len(allData)>256):
+                               allData = []
+                             ts2 = time.time()
+                             if(ts2-ts>2):
+                               allData = []
+                      ts3 = time.time()
+                      if (ts2 - ts > 4):
+                         return None
 
 

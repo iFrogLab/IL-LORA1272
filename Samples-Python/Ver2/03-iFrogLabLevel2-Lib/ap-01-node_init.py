@@ -68,6 +68,7 @@ print("List All Ports, serial_ports()")
 serPorts=LoRa.serial_allPorts()
 print(serPorts)
 portName=serPorts[-2]
+LoRa.debug=True
 
 # 打開Port
 print("Open Port, FunLora_init()")
@@ -75,7 +76,10 @@ if(LoRa.FunLora_init(portName)==False):
 	print("error code 1:cannot find the LoRa device")
 
 
-# 找Gateway 
+# 找Gateway
+#[ ] ​Step 1: 啟動時
+#    　　　Node 先透過廣播的方法，把自己的4個bytes 的ID對外宣布，透過　default 頻段，發出廣播，並傳出是node 1 還是gateway 0,
+#    　　　例如:  Node-> broadcast : 0x71, 01, node=0, ID, ActionID=1, CRC,
 LoRa.LoRaL2_Node_01_FindGateway()
 
 
