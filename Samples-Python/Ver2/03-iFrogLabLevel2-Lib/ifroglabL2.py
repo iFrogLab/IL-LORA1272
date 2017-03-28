@@ -102,13 +102,15 @@ class LoRaL2(ifroglab.LoRa):
 
 
     def LoRaL2_BoardCase_Send(self,i_array,WaitforResponse,waitingTime,CheckIsSame):
+      self.debug=False
       # 讀取設定狀態
       #print("\n[4]:FunLora_2_ReadSetup");
+      #self.FunLora_1_Init()
       array1 = i_array[:]
-      self.FunLora_2_ReadSetup();
       counter = 0
       ts1 = time.time()
       while True:
+        self.FunLora_2_ReadSetup();
         self.FunLora_3_TX();
         result=self.FunLora_10_write_AndCheckKey(array1);
         counter = counter + 1
@@ -120,11 +122,11 @@ class LoRaL2(ifroglab.LoRa):
           time.sleep(0.1)
           while True:
             print(counter)
+            self.FunLora_2_ReadSetup();
             self.FunLora_3_RX();
             data = self.LoRaL2_BoardCase_Receive()
             ts3 = time.time()
             counter2 = counter2 + 1
-            time.sleep(1)
             if (data != None):
               if CheckIsSame==True:
                  if (self.Fun_ArrayIsSame(i_array, data) == False):
@@ -132,9 +134,10 @@ class LoRaL2(ifroglab.LoRa):
                    return data
               else:
                  return data
-            if(ts3-ts2>60):                                          #再發出一次訊號
+            if(ts3-ts2>2):                                          #再發出一次訊號
               break
               return None
+            time.sleep(0.1)
 
 
 
@@ -143,7 +146,8 @@ class LoRaL2(ifroglab.LoRa):
       self.FunLora_2_ReadSetup();
       self.FunLora_3_RX();
       ts = time.time()
-      print "Time Stamp:%s" % (ts - self.lastTime)
+      if self.debugL2==True:
+        print "Time Stamp:%s" % (ts - self.lastTime)
       self.lastTime = ts
       while True:
          allData = self.FunLora_10_read_AndCheckKey()
@@ -157,6 +161,8 @@ class LoRaL2(ifroglab.LoRa):
 
 
     def LoRaL2_GateWay_01_FineNode(self):
+      self.debug=False
+      self.debugL2=False
       #print("\n[4]:FunLora_2_ReadSetup");
       self.FunLora_2_ReadSetup();
       # 設定讀取和頻段
@@ -187,12 +193,12 @@ class LoRaL2(ifroglab.LoRa):
              array1[i + 3] = self.deviceIDArray[i]
            for i in range(0, 4):  # setup Gateway ID
              array1[i + 3+4] = allData[i+3]
-           #array1[i + 3 + 4+1]  =  self.Freq[0]    # Freq
-           #array1[i + 3 + 4+2]  =  self.Freq[1]    # Freq
-           #array1[i + 3 + 4+3]  =  self.Freq[2]    # Freq
+           #array1[ 3 + 4+ 4+0]  =  self.Freq[0]    # Freq
+           #array1[ 3 + 4+ 4+1]  =  self.Freq[1]    # Freq
+           #array1[ 3 + 4+ 4+2]  =  self.Freq[2]    # Freq
          ts1 = time.time()
          #while True:
-         for i in range(0,200):
+         for i in range(0,20):
            data = self.LoRaL2_BoardCase_Send(array1, False,0,False)  # 傳送資料，並等帶回傳資料，沒有的話再傳一次
            time.sleep(0.1)
          #if (len(data) > 0):  # 判是否是正確得資料
@@ -204,7 +210,8 @@ class LoRaL2(ifroglab.LoRa):
          #  print("Message 1: Time out 10 Sec, cannot find Gateway, please make sure gateway is around this device.")
          return True
        else:
-         print ','.join('{:02x}'.format(x) for x in allData)
+         if self.debugL2==True:
+            print ','.join('{:02x}'.format(x) for x in allData)
          return None
 
 

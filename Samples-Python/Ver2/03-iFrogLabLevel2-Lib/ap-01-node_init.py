@@ -68,7 +68,7 @@ print("List All Ports, serial_ports()")
 serPorts=LoRa.serial_allPorts()
 print(serPorts)
 portName=serPorts[-2]
-LoRa.debug=True
+LoRa.debug=False
 
 # 打開Port
 print("Open Port, FunLora_init()")

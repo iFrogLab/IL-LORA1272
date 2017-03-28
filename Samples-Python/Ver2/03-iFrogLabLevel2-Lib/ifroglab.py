@@ -541,7 +541,8 @@ class LoRa(object):
     lastTime=0
     def TimeStamp(self):
         ts = time.time()
-        print "Time Stamp:%s" %(ts- self.lastTime)
+        if self.debug == True:
+          print "Time Stamp:%s" %(ts- self.lastTime)
         self.lastTime=ts
 
 
@@ -570,7 +571,8 @@ class LoRa(object):
                 t_lenCurrent = t_lenCurrent + 1
                 if t_lenCurrent >= t_Len:  # 處理餘數
                     break
-            print(CMD_Data)
+            if self.debug == True:
+               print(CMD_Data)
             self.FunLora_3_TX()
             self.FunLora_5_write16bytesArray(CMD_Data);
             #time.sleep(0.005)
