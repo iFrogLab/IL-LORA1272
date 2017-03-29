@@ -25,7 +25,10 @@ import glob
 import datetime
 
 
-class LoRaL2(ifroglab.LoRa):   
+class LoRaL2(ifroglab.LoRa):
+    IDnodes=[]
+    IDServer = []
+    IDNodeIndex=0
     lastData=[]
     debugL2=True
     def __init__(self,GatewayNoode):
@@ -90,8 +93,18 @@ class LoRaL2(ifroglab.LoRa):
         data=self.LoRaL2_BoardCase_Send(array1,True, 10,True)   #傳送資料，並等帶回傳資料，沒有的話再傳一次
         if(len(data)>0):   # 判是否是正確得資料
           # gatway broadcast->Node   0x72, 01, 1, Gateway ID[0~3], Freq[2], Freq[1], Freq[0], CRC
-          if(data[0]==0x72):   # and data[1]==1 and data[2]==1):
+          if(data[0]==0x72 and data[1]==0x1 and data[2]==0x1 ):   # and data[1]==1 and data[2]==1):
              print("Get Gateway ID~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+             self.IDServer=[]
+             self.IDServer.append(data[3])
+             self.IDServer.append(data[4])
+             self.IDServer.append(data[5])
+             self.IDServer.append(data[6])
+             self.IDNodeIndex=data[7]
+             print("IDNodeIndex= %s" % str(self.IDNodeIndex))
+             print("Server ID=  " )
+             print ':'.join('{:02x}'.format(x) for x in self.IDServer)
+
              self.FunLora_close()
              sys.exit()
         #ts2 = time.time()                                       #再發出一次訊號
@@ -129,7 +142,6 @@ class LoRaL2(ifroglab.LoRa):
             if (data != None):
               if CheckIsSame==True:
                  if (self.Fun_ArrayIsSame(i_array, data) == False):
-                   print("Get return data")
                    return data
               else:
                  return data
@@ -174,6 +186,8 @@ class LoRaL2(ifroglab.LoRa):
         elif  len(allData)>=2:
           if(self.LoRaL2_GateWay_02_Process71_01(allData)==True):
             print("Get an new Node.")
+            #m_nodesObj=['foo', {'bar': ('baz', None, 1.0, 2)}]
+            #print(m_nodeObj)
             time.sleep(2)
 
 
@@ -181,33 +195,44 @@ class LoRaL2(ifroglab.LoRa):
 
 
 
-    # gatway broadcast->Node   0x72, 01, 1, Gateway ID[0~3],Node ID[0~3], Freq[2], Freq[1], Freq[0], CRC
+    # gatway broadcast->Node   0x72, 01, Gateway ID[0~3],Node ID[0~3], Freq[2], Freq[1], Freq[0]
+    # gatway broadcast->Node   0x72, 01, Gateway ID[0~3],Node ID index[0], Freq[2], Freq[1], Freq[0]
     def LoRaL2_GateWay_02_Process71_01(self,allData):
        if allData[0] == 0x71 and allData[1] == 0x01 and allData[2] == 0x00:
          print("Message 2: a new Node want to join to Geteway.")
-         #array1 = [0x72, 0x01, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
-         array1 = [0x72, 0x01, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+         NodeID=[]
+         NodeIDNumer=0
+         #array1 = [0x72, 0x01, 1, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0]
+         array1 = [0x72, 0x01, 1, 0, 0, 0, 0, 0, 0, 0, 0]
          if (self.deviceID > 0):
-           for i in range(0, 4):   # setup Gateway ID
-             array1[i + 3] = self.deviceIDArray[i]
            for i in range(0, 4):  # setup Gateway ID
-             array1[i + 3+4] = allData[i+3]
-           #array1[ 3 + 4+ 4+0]  =  self.Freq[0]    # Freq
-           #array1[ 3 + 4+ 4+1]  =  self.Freq[1]    # Freq
-           #array1[ 3 + 4+ 4+2]  =  self.Freq[2]    # Freq
-         ts1 = time.time()
-         #while True:
-         for i in range(0,20):
+             array1[i + 3] = self.deviceIDArray[i]
+           for i in range(0, 4):  # add Node ID
+             #array1[i + 3+4] = allData[i+3]
+             NodeID.append(allData[i+3])
+             #if self.debugL2 == True:
+           print ':'.join('{:02x}'.format(x) for x in NodeID)
+           array1[ 3 + 4+ 1+0]  =  self.Freq[0]    # Freq
+           array1[ 3 + 4+ 1+1]  =  self.Freq[1]    # Freq
+           array1[ 3 + 4+ 1+2]  =  self.Freq[2]    # Freq
+           if(len(self.IDnodes)==0):
+              self.IDnodes.append(self.deviceIDArray)   #加上Server
+           j=0
+           isFind=False
+           for i in self.IDnodes:  # add Node ID
+               if (self.Fun_ArrayIsSame(NodeID, i) == True):
+                 isFind=True
+                 break
+               j=j+1
+           if(isFind==True):
+               array1[0 + 3 + 4] = j
+           else:
+               self.IDnodes.append(NodeID)      # 加上Node
+               array1[0 + 3 + 4] = j
+         for i in range(0,5):
            data = self.LoRaL2_BoardCase_Send(array1, False,0,False)  # 傳送資料，並等帶回傳資料，沒有的話再傳一次
-           time.sleep(0.1)
-         #if (len(data) > 0):  # 判是否是正確得資料
-         #  # gatway broadcast->Node   0x72, 01, 1, Gateway ID[0~3], Freq[2], Freq[1], Freq[0], CRC
-         #  if (data[0] == 0x72 and data[1] == 1 and data[2] == 1):
-         #    print("Get Gateway ID~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-         #ts2 = time.time()
-         #if (ts2 - ts1 > 10):  # 再發出一次訊號
-         #  print("Message 1: Time out 10 Sec, cannot find Gateway, please make sure gateway is around this device.")
-         return True
+           time.sleep(0.08)
+         return NodeIDNumer
        else:
          if self.debugL2==True:
             print ','.join('{:02x}'.format(x) for x in allData)
