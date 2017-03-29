@@ -85,7 +85,7 @@ class LoRaL2(ifroglab.LoRa):
       if (self.deviceID > 0):
         for i in range(0, 4):
           array1[i + 3] = self.deviceIDArray[i]
-      ts1 = time.time()
+      #ts1 = time.time()
       while True:
         data=self.LoRaL2_BoardCase_Send(array1,True, 10,True)   #傳送資料，並等帶回傳資料，沒有的話再傳一次
         if(len(data)>0):   # 判是否是正確得資料
@@ -94,8 +94,7 @@ class LoRaL2(ifroglab.LoRa):
              print("Get Gateway ID~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
              self.FunLora_close()
              sys.exit()
-        ts2 = time.time()
-        #if(ts2-ts1>10):                                          #再發出一次訊號
+        #ts2 = time.time()                                       #再發出一次訊號
         print("Message 1: Time out 10 Sec, cannot find Gateway, please make sure gateway is around this device.")
 
 
@@ -130,14 +129,14 @@ class LoRaL2(ifroglab.LoRa):
             if (data != None):
               if CheckIsSame==True:
                  if (self.Fun_ArrayIsSame(i_array, data) == False):
-                   #print("Get return data")
+                   print("Get return data")
                    return data
               else:
                  return data
-            if(ts3-ts2>2):                                          #再發出一次訊號
+            if(ts3-ts2>1):                                          #再發出一次訊號
               break
               return None
-            time.sleep(0.1)
+            time.sleep(0.05)
 
 
 
