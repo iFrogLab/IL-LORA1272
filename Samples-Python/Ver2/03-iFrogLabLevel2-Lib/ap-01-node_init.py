@@ -68,6 +68,7 @@ print("List All Ports, serial_ports()")
 serPorts=LoRa.serial_allPorts()
 print(serPorts)
 portName=serPorts[-2]
+
 LoRa.debug=False
 
 # 打開Port
@@ -80,7 +81,26 @@ if(LoRa.FunLora_init(portName)==False):
 #[ ] ​Step 1: 啟動時
 #    　　　Node 先透過廣播的方法，把自己的4個bytes 的ID對外宣布，透過　default 頻段，發出廣播，並傳出是node 1 還是gateway 0,
 #    　　　例如:  Node-> broadcast : 0x71, 01, node=0, ID, ActionID=1, CRC,
-LoRa.LoRaL2_Node_01_FindGateway()
+if(LoRa.LoRaL2_Node_01_FindGateway()==True):
+	with open("readme.txt", "rb") as binary_file:
+		# Read the whole file at once
+		data = binary_file.read()
+		#print(data)
+		b_array = bytearray(data)
+		#print(b_array)
+		print(b_array[100])
+        #with open("readme.txt", "r+") as f:
+	    #imgData = f.read()
+		#fileData = imgData.encode('hex')
+		LoRa.LoRaL2_Node_02_Send(b_array)
+	    #f.seek(0)
+	    #f.write(output)
+	    #f.truncate()
+        #f.close()
+
+
+
+
 
 
 ## 等待資料進來

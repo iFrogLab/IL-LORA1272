@@ -94,6 +94,7 @@ if(LoRa.FunLora_init(portName)==False):
 	print("error code 1:cannot find the LoRa device")
 
 
+LoRa.debug=False
 # 等待資料進來
 LoRa.LoRaL2_GateWay_01_FineNode()
 
