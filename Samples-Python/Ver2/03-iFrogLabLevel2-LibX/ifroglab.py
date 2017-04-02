@@ -157,8 +157,9 @@ class LoRa(object):
     # 送byte 到　Chip 上
     def FunLora_ChipSendByte(self,array1):    
       try:
-        #if self.debug==True:
-        #    print ''.join('{:02x}'.format(x) for x in array1)
+        if self.debug==True:
+            #print array1
+            print ''.join('{:02x}'.format(x) for x in array1)
         self.ser.write(serial.to_bytes(array1))
         time.sleep(0.04)
         bytesToRead = self.ser.inWaiting()
@@ -168,8 +169,8 @@ class LoRa(object):
            i=i+1
            if len(data)>0 or i>self.waitCount:
                break
-        #if self.debug==True:
-        #    print(data.encode('hex'))
+        if self.debug==True:
+            print(data.encode('hex'))
       except (OSError, serial.SerialException):
         pass
       return data
@@ -271,6 +272,34 @@ class LoRa(object):
 
 
 
+        # 讀取LoRa 傳過來的資料去掉CRC, RSSI 等別的資料
+    def FunLora_6_readPureData(self):
+       array1=[0xC1,0x6,0x0,0]
+       array1[3]=self.Fun_CRC(array1)
+       data=self.FunLora_ChipSendByte(array1)
+       data2=[]
+       t_len=len(data)
+       t_DataLen=0
+       i=0
+       if(t_len>6):
+          if(data[1].encode('hex')=="86"):
+             t_DataLen=ord(data[2])
+             if(t_DataLen>2 and t_DataLen<=18):
+               for i in range(3,t_DataLen-2+2+1):
+                 try:
+                     data2.append(ord(data[i]))
+                     #if self.debug == True:
+                     #   #print ','.join('{:02x}'.format(x) for x in data)
+                     #   print hex(data2[i])
+                 except:
+                     print("except")
+                     return None
+               if self.debug == True:
+                  print ','.join('{:02x}'.format(x) for x in data2)
+                  #   print hex(data2[i])
+               return data2
+       return None
+
 
 
     # 讀取LoRa 是否有新的資料 (　限firmwareVersion>=5 才有的功能)
@@ -307,7 +336,7 @@ class LoRa(object):
         return data
 
 
-    # 寫入16 bytes
+    # 寫入
     def FunLora_5_write16bytesArray(self,data_array):
         TX_Data=data_array
         ##[0x01,0x02,0x03]
@@ -449,6 +478,7 @@ class LoRa(object):
 
     # 讀 長資料
     def FunLora_5_read_v1(self):
+        LoRa.debug = False
         counter = 0
         allData = []
         lastData = []
@@ -486,6 +516,7 @@ class LoRa(object):
 
     # 讀 長資料
     def FunLora_5_readString(self):
+        LoRa.debug = False
         counter = 0
         allData=""
         lastData = []
@@ -517,36 +548,9 @@ class LoRa(object):
 
 
 
-        # 讀取LoRa 傳過來的資料去掉CRC, RSSI 等別的資料
-    def FunLora_6_readPureData(self):
-       array1=[0xC1,0x6,0x0,0]
-       array1[3]=self.Fun_CRC(array1)
-       data=self.FunLora_ChipSendByte(array1)
-       data2=[]
-       t_len=len(data)
-       t_DataLen=0
-       i=0
-       if(t_len>6):
-          if(data[1].encode('hex')=="86"):
-             t_DataLen=ord(data[2])
-             if(t_DataLen>2 and t_DataLen<=18):
-               for i in range(3,t_DataLen-2+2+1):
-                 try:
-                     data2.append(ord(data[i]))
-                     #if self.debug == True:
-                     #   #print ','.join('{:02x}'.format(x) for x in data)
-                     #   print hex(data2[i])
-                 except:
-                     print("except")
-                     return None
-               if self.debug == True:
-                  print ','.join('{:02x}'.format(x) for x in data2)
-                  #   print hex(data2[i])
-               return data2
-       return None
-
     # 寫入長資料
     def FunLora_10_write_AndCheckKey(self, data_array):
+      #data_array=iString+'\n'
       t_Len2=len(data_array)
       if t_Len2>253:
         print("error 3: data cannot biger then 253 bytes")
@@ -573,143 +577,77 @@ class LoRa(object):
             self.FunLora_5_write16bytesArray(CMD_Data);
             #time.sleep(0.005)
 
-    def FunLora_10_read_AndCheckKey(self):
+    def FunLora_10_read_AndCheckKey_v1(self):
           allData = []
           ts = time.time()
           while True:
               # 讀取資料
-              #self.FunLora_3_RX();
-              data = self.FunLora_11_readPureData()
+              self.FunLora_3_RX();
+              data = self.FunLora_6_readPureData()
               if data!=None:
                   t_len = len(data)
                   if t_len >= 1:
                       #if self.Fun_ArrayIsSame(data, self.lastData) == False:
                       self.lastData = self.Fun_ArrayCopy(data)
                       if t_len >= 1:
-                         return  data;
+                         for i in data:
+                            allData.append(i)
+                         t1=len(allData)-2
+                         t2=allData[0]
+                         if allData[t_len - 1] == 10 and allData[0]==t1:
+                            # del allData[0]
+                            #del allData[-1]
+                            allData2 = []
+                            for i in range(1,len(allData)-1):
+                                allData2.append(allData[i])
+                            return allData2
+                         else:
+                             if(len(allData)>256):
+                               allData = []
+                             ts2 = time.time()
+                             if(ts2-ts>2):
+                               allData = []
                       ts3 = time.time()
                       if (ts2 - ts > 4):
                          return None
 
 
-    # 寫入長資料
-    def FunLora_11_WritePureData(self, data_array):
-      t_Len2=len(data_array)
-      if t_Len2>253:
-        print("error 3: data cannot biger then 253 bytes")
-      else:
-        t_Len = len(data_array)
-        t_lenCurrent = 0
-        t_seg_len = self.segLen
-        t_segments = t_Len / t_seg_len
-        if (t_Len % t_seg_len) > 0:  # 處理餘數
-            t_segments = t_segments + 1
-        for t_segment in range(0, t_segments):
-            CMD_Data = []
-            for t_x in range(0, t_seg_len):
-                #CMD_Data.append(ord(data_array[t_lenCurrent]))
-                CMD_Data.append(data_array[t_lenCurrent])
-                t_lenCurrent = t_lenCurrent + 1
-                if t_lenCurrent >= t_Len:  # 處理餘數
-                    break
-            self.FunLora_13_write16bytesArrayNo10(CMD_Data);
-
-
-    def FunLora_11_readPureData_v1(self):
-        allData = []
-        ts = time.time()
-        # 讀取資料
-        #self.FunLora_2_ReadSetup();
-        while True:
-            data = self.FunLora_12_readPureDataKernal()
-            if data != None:
-                return data
-                t_len = len(data)
-                if t_len >= 1:
-                   return data
-                ts3 = time.time()
-                if (ts3 - ts > 0.9):
-                   return None
-            time.sleep(0.04)  #0.04
 
 
 
-        # 讀取LoRa 傳過來的資料去掉CRC, RSSI 等別的資料
-    def FunLora_12_readPureDataKernal(self):
-       array1=[0xC1,0x6,0x0,0]
-       array1[3]=self.Fun_CRC(array1)
-       data=self.FunLora_ChipSendByte(array1)
-       t_len=len(data)
-       if(t_len>6):
-          if(data[1].encode('hex')=="86"):
-             t_DataLen=ord(data[2])
-             if(t_DataLen>2 and t_DataLen<=18):
-               data2 = []
-               for i in range(3,t_DataLen-2+2+1):
-                 try:
-                     data2.append(ord(data[i]))
-                 except:
-                     print("except")
-                     return None
-               if self.debug == True:
-                  print ','.join('{:02x}'.format(x) for x in data2)
-               return data2
-       return None
+    def FunLora_10_read_AndCheckKey(self):
+          allData = []
+          ts = time.time()
+          while True:
+              # 讀取資料
+              self.FunLora_3_RX();
+              data = self.FunLora_6_readPureData()
+              time.sleep(0.05)
+              if data!=None:
+                  t_len = len(data)
+                  if t_len >= 1:
+                      #if self.Fun_ArrayIsSame(data, self.lastData) == False:
+                      self.lastData = self.Fun_ArrayCopy(data)
+                      if t_len >= 1:
+                         for i in data:
+                            allData.append(i)
+                         t1=len(allData)-2
+                         t2=allData[0]
+                         if allData[t_len - 1] == 10 and allData[0]==t1:
+                            # del allData[0]
+                            #del allData[-1]
+                            allData2 = []
+                            for i in range(1,len(allData)-1):
+                                allData2.append(allData[i])
+                            return allData2
+                         else:
+                            if(len(allData)>256):
+                              allData = []
+                            ts2 = time.time()
+                            if(ts2-ts>2):
+                              allData = []
+                      ts3 = time.time()
+                      if (ts2 - ts > 1):
+                         return None
 
 
-    def FunLora_11_readPureData(self):
-        allData = []
-        ts = time.time()
-        # 讀取資料
-        #self.FunLora_2_ReadSetup();
-        array1 = [0xC1, 0x6, 0x0, 0]
-        array1[3] = self.Fun_CRC(array1)
-        while True:
-            #data = self.FunLora_12_readPureDataKernal()
-            data = self.FunLora_ChipSendByte(array1)
-            #t_len = len(data)
-            if (len(data) > 6):
-                if (data[1].encode('hex') == "86"):
-                    t_DataLen = ord(data[2])
-                    if (t_DataLen > 2 and t_DataLen <= 18):
-                        data2 = []
-                        for i in range(3, t_DataLen - 2 + 2 + 1):
-                            try:
-                                data2.append(ord(data[i]))
-                            except:
-                                print("except")
-                                #return None
-                        #if self.debug == True:
-                        #    print ','.join('{:02x}'.format(x) for x in data2)
-                        #return data2
-                        #return None
-                        #data=data2
-                        #if data2 != None:
-                        return data2
-                #t_len = len(data)
-                #if t_len >= 1:
-                #   return data
-                #ts3 = time.time()
-                #if (ts3 - ts > 0.9):
-                #   return None
-            else:
-                time.sleep(0.04)  #0.04
-
-
-
-    # 寫入16 bytes
-    def FunLora_13_write16bytesArrayNo10(self,data_array):
-        TX_Data=data_array
-        ##[0x01,0x02,0x03]
-        CMD_Data=[0xc1,0x05]
-        CMD_Data.append(len(TX_Data))
-        for i3 in data_array:
-           CMD_Data.append(i3)
-        CRC=self.Fun_CRC(CMD_Data)
-        CMD_Data.append(CRC)
-        while True:
-          data=self.FunLora_ChipSendByte(CMD_Data)
-          time.sleep(self.sleep)
-          if len(data)!=6:                            # 確認回傳的是　c1aa01553f
-            break
-        return data

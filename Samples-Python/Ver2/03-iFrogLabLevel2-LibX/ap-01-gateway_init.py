@@ -14,9 +14,6 @@
 import ifroglabL2
 import time
 import serial
-import zlib
-import bz2
-
 
 #: 1.找這台機器有幾個LoRa , 設定其中之一為Gateway。
 #: 2.設定default, read 模式，等待Node。
@@ -98,7 +95,6 @@ if(LoRa.FunLora_init(portName)==False):
 
 
 LoRa.debug=False
-LoRa.debugL2=False
 # 等待資料進來
 LoRa.LoRaL2_GateWay_01_FineNode()
 

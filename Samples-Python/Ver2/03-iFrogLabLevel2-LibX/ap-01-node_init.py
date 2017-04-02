@@ -13,8 +13,6 @@
 
 
 import ifroglabL2
-import zlib
-import bz2
 
 """
 LoRa2 = ifroglab.LoRa()
@@ -59,32 +57,9 @@ LoRa2.FunLora_close()
 """
 
 
-def fun1():
-    with open("testNode.txt", "rb") as binary_file:
-		# Read the whole file at once
-		data = binary_file.read()
-		print 'original length:', len(data)
-		print 'zlib compressed length:', len(zlib.compress(data))
-		print 'bz2 compressed length:', len(bz2.compress(data))
-		t1=zlib.compress(data)
-		t2=zlib.decompress(t1)
-		#b_array = bytearray(zlib.compress(data))
-		#print(data)
-		b_array = bytearray(zlib.compress(data))
-		f = open("test.txt", mode="wb")
-		# Write string str to file.
-		#str = "".join(map(chr, t1))
-		f.write(b_array)
-		f.close()
-		lines=str(b_array)
-		t3 = zlib.decompress(lines)
-		print(t3)
 
 
 
-
-
-fun1()
 
 LoRa = ifroglabL2.LoRaL2("node")
 
@@ -94,31 +69,34 @@ serPorts=LoRa.serial_allPorts()
 print(serPorts)
 portName=serPorts[-2]
 
-LoRa.debug=True
+LoRa.debug=False
 
 # 打開Port
 print("Open Port, FunLora_init()")
 if(LoRa.FunLora_init(portName)==False):
 	print("error code 1:cannot find the LoRa device")
 
-LoRa.debug=False
-LoRa.debugL2=False
+
 # 找Gateway
 #[ ] ​Step 1: 啟動時
 #    　　　Node 先透過廣播的方法，把自己的4個bytes 的ID對外宣布，透過　default 頻段，發出廣播，並傳出是node 1 還是gateway 0,
 #    　　　例如:  Node-> broadcast : 0x71, 01, node=0, ID, ActionID=1, CRC,
 if(LoRa.LoRaL2_Node_01_FindGateway()==True):
-	with open("testNode.txt", "rb") as binary_file:
+	with open("readme.txt", "rb") as binary_file:
 		# Read the whole file at once
 		data = binary_file.read()
-		print 'original length:', len(data)
-		print 'zlib compressed length:', len(zlib.compress(data))
-		print 'bz2 compressed length:', len(bz2.compress(data))
-		t1=zlib.compress(data)
-		t2=zlib.decompress(t1)
-		b_array = bytearray(zlib.compress(data))
-		#b_array = bytearray(data)
+		#print(data)
+		b_array = bytearray(data)
+		#print(b_array)
+		#print(b_array[100])
+        #with open("readme.txt", "r+") as f:
+	    #imgData = f.read()
+		#fileData = imgData.encode('hex')
 		LoRa.LoRaL2_Node_02_Send(b_array)
+	    #f.seek(0)
+	    #f.write(output)
+	    #f.truncate()
+        #f.close()
 
 
 
