@@ -495,6 +495,7 @@ class LoRaL2(ifroglab.LoRa):
                             Node_index = allData[1]
                             Data_Index = allData[2]
                             t1 = self.IDnodes_SendData[Node_index]
+
                             if (len(t1) == 0 or (len(t1) / self.segLenL2) != (Data_Index + 1)):
                                 for i in range(3, tlen):
                                     t1.append(allData[i])

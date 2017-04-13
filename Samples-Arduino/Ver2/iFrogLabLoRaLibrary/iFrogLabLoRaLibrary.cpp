@@ -100,7 +100,7 @@ byte* iFrogLabLoRaLibrary::GetChipIDAll()
     }
     j++;
    }
-  }　
+  }
   Message_error();
   return data;
 }
