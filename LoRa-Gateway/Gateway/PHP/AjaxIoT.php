@@ -7,10 +7,38 @@ require 'connect.php';
 
 try
 {
- //mysql_error(); 
+	if($_GET["action"] == "savefrequency")
+	{
+		$str1=$_GET["frequency"];
+		$fp = fopen('frequency.txt', 'w+');
+		fwrite($fp, $str1);
+		fclose($fp);
+		$jTableResult = array();
+		$jTableResult['Result'] = "OK";
+		//$jTableResult['TotalRecordCount'] = $recordCount;
+		$jTableResult['Records']=$_GET["frequency"];
+		if(isset($_GET['print'])) {
+		     if($_GET["print"]=="no"){
+			 }
+		}else{
+			print json_encode($jTableResult);
+		}
 
-	//Getting records (listAction)  
-	if($_GET["action"] == "list")
+	}else if($_GET["action"] == "loadfrequency")
+	{	//Return result to jTable
+		/*
+		$jTableResult = array();
+		$jTableResult['Result'] = "OK";
+		//$jTableResult['TotalRecordCount'] = $recordCount;
+		//$jTableResult['Records'] = $rows;
+		if(isset($_GET['print'])) {
+		     if($_GET["print"]=="no"){
+			 }
+		}else{
+			print json_encode($jTableResult);
+		}
+*/
+	}else if($_GET["action"] == "list")
 	{
 	    //Get record count
 		$result = po_mysql_query($con,"SELECT COUNT(*) AS RecordCount FROM ".$IoTTable.";");

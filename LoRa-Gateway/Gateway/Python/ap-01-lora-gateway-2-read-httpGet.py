@@ -15,6 +15,8 @@ import time
 import os
 import serial
 import httplib
+import getopt
+import sys
 
 # 檢查碼計算
 def Fun_CRC(data):
@@ -39,7 +41,35 @@ def Fun_HTTPGet(iURL,iURLPath):
         if httpClient:
            httpClient.close()
 
-def Fun_main():
+
+
+
+def main(argv):
+    inputfile = ''
+    outputfile = ''
+    try:
+      opts, args = getopt.getopt(argv,"hi:o:",["ifile=","ofile="])
+    except getopt.GetoptError:
+      #print 'ap-01-lora-gateway-2-read-httpGet.py -i <frequency>  '
+      #sys.exit(2)
+      print("LoRa Fregency is 915.00")
+      Fun_main("915.00")
+    for opt, arg in opts:
+      if opt == '-h':
+         print 'ap-01-lora-gateway-2-read-httpGet.py -i 920.00  '
+         sys.exit()
+      elif opt in ("-i", "--ifile"):
+         inputfile = arg
+    if inputfile=="":
+        inputfile="915.00"     
+    print 'LoRa Fregency is ', inputfile
+    Fun_main(inputfile)
+
+
+
+def Fun_main(frequency):
+    float_frequency = float(frequency)
+    print(frequency)
     LoRa = ifroglab.LoRa()
 
     # 打開Port
@@ -61,7 +91,7 @@ def Fun_main():
 
     # 設定寫入和頻段
     print("\n[7]:FunLora_3_TX")
-    LoRa.FunLora_3_TX();
+    LoRa.FunLora_3_TX2(float_frequency);
 
     #寫入資料：通知大家，Gateway 啟動了
     print("\n[10]:FunLora_5_write16bytesArray")
@@ -69,7 +99,7 @@ def Fun_main():
 
     # 設定讀取和頻段
     print("\n[7]:FunLora_3_RX")
-    LoRa.FunLora_3_RX();
+    LoRa.FunLora_3_RX2(float_frequency);
 
     #讀取資料
     print("\n[8]:FunLora_6_read")
@@ -109,6 +139,11 @@ def Fun_main():
 
 
 # Start Main Program
-Fun_main()
+#Fun_main()
+
+if __name__ == "__main__":
+   main(sys.argv[1:])
+
+
 
 

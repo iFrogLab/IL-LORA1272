@@ -22,8 +22,6 @@ import time
 import sys
 import glob
 
-
-
 #import sys, getopt
 #import time
 #import numpy
@@ -271,9 +269,39 @@ class LoRa:
        data=self.FunLora_ChipSendByte(array1)
        return data
 
+    def FunLoRa_FloatTo3Bytes(self,frequency):
+      array3=[0x01,0x65,0x6c]
+      #if(frequency!=915.00):
+      t0=frequency*100
+      t1=int(t0)
+      #print t1
+      #print format(t1, '02x') #16760
+      ta1=t1/(0x10000)
+      array3[0]=ta1
+      print ta1
+      ta2=t1-((0x10000)*ta1)
+      ta2=ta2/(0x100)
+      array3[1]=ta2
+      #print ta2
+      print format(ta2, '02x')
+      ta3=t1-((0x10000)*ta1)-(ta2*(0x100))
+      array3[2]=ta3
+      #print array3[2]
+      print format(ta3, '02x')
+      return array3
+        
+
     # 設定讀取和頻段
     def FunLora_3_RX(self):
        array1=[0xC1,3,5,3,1,0x65,0x6C,0xf,0]
+       array1[8]=self.Fun_CRC(array1)
+       data=self.FunLora_ChipSendByte(array1)
+       return data
+
+    # 設定讀取和頻段
+    def FunLora_3_RX2(self,frequency):
+       array2=self.FunLoRa_FloatTo3Bytes(frequency)
+       array1=[0xC1,3,5,3,array2[0],array2[1],array2[2],0xf,0]
        array1[8]=self.Fun_CRC(array1)
        data=self.FunLora_ChipSendByte(array1)
        return data
@@ -287,10 +315,18 @@ class LoRa:
 
     # 設定寫入和頻段
     def FunLora_3_TX(self):
-       array1=[0xC1,3,5,2,1,0x65,0x6C,0xf,0]
+       array1=[0xC1,3,5,2,array2[0],array2[1],array2[2],0xf,0]
        array1[8]=self.Fun_CRC(array1)
        data=self.FunLora_ChipSendByte(array1)
        return data
+
+    # 設定寫入和頻段
+    def FunLora_3_TX2(self,frequency):
+       array2=self.FunLoRa_FloatTo3Bytes(frequency)
+       array1=[0xC1,3,5,2,1,0x65,0x6C,0xf,0]
+       array1[8]=self.Fun_CRC(array1)
+       data=self.FunLora_ChipSendByte(array1)
+       return data   
 
     # 寫入測試
     def FunLora_5_write_test(self):
