@@ -1,8 +1,6 @@
 
-#. 01_2017CES_TsuNaMi  是ifroglab 在2017 CES 展所做的範例和原始程式，執行效果請看這裡 https://youtu.be/2BQ6b_Eo_j8
 
 #. 02-LoRa_LED_Blink 是透過"lorawrite.ino"程式，控制"loraread.ino"上面的LED燈光的明和暗，使用時請在"lorawrite.ino"程式，用Arduino 的Serial Monitor 送出"a" 和 "b" 的字元，來控制LED 燈。
-
 
 
 

@@ -16,7 +16,7 @@ void setup()  {
         ; // wait for serial port to connect. Needed for native USB port only
   }
   
-  byte TXRX=3;  // Mode : Sleep(0x00)、StandBy(0x01)、Tx(0x02)、Rx(0x03)。  
+  byte TXRX=2;  // Mode : Sleep(0x00)、StandBy(0x01)、Tx(0x02)、Rx(0x03)。  
   // Freq : 輸入915.00MHz先轉成91500再轉16進位方式填入0x1656C -> 0x01 0x65 0x6C，SX1272範圍(860.00 ~ 1020.00MHz)，SX1276範圍(137.00 ~ 1020.00MHz)。
   byte Freq1=0x01;
   byte Freq2=0x65;
@@ -36,29 +36,20 @@ void setup()  {
   Serial.println("--------------------------");
   Serial.println("");
   
+  //LoRa.WriteMode();    //寫入資料
+  
+  
 }
 
+byte c='a';
 void loop()  { 
-  LoRa.ReadMode();    //讀取模式切換
-  byte* data2=LoRa.Read16bytesBroadcast();
-  Serial.println("--------------------------");
-  Serial.println(data2[0],HEX);
-  Serial.println(data2[1],HEX);
-  Serial.println(data2[2],HEX);
-  Serial.println(data2[3],HEX);
-  Serial.println(data2[4],HEX);
-  Serial.println(data2[5],HEX);
-  Serial.println(data2[6],HEX);
-  Serial.println(data2[7],HEX);
-  Serial.println(data2[8],HEX);
-  Serial.println(data2[9],HEX);
-  Serial.println(data2[10],HEX);
-  Serial.println(data2[11],HEX);
-  Serial.println(data2[12],HEX);
-  Serial.println(data2[13],HEX);
-  Serial.println(data2[14],HEX);
-  Serial.println(data2[15],HEX);
-  delay(1000);
+  if (Serial.available() > 0) {
+    c = Serial.read();
+    Serial.println(c);
+    byte t1[]={c};
+    LoRa.Write16bytesBroadcast(t1,1);
+    delay(1000);
+  }
 }
 
 
