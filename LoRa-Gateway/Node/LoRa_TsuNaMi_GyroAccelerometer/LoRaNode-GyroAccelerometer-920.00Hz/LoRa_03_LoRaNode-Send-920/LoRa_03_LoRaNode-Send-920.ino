@@ -163,10 +163,21 @@ void LoRa_setup(){
 
   byte TXRX=2;  // Mode : Sleep(0x00)、StandBy(0x01)、Tx(0x02)、Rx(0x03)。  
   // Freq : 輸入915.00MHz先轉成91500再轉16進位方式填入0x1656C -> 0x01 0x65 0x6C，SX1272範圍(860.00 ~ 1020.00MHz)，SX1276範圍(137.00 ~ 1020.00MHz)。
+  /*
+  byte Freq1=0x01;
+  byte Freq2=0x65;
+  byte Freq3=0x6c;
+  */
+  
   // Freq : 輸入920.00MHz先轉成92000再轉16進位方式填入0x16760 -> 0x01 0x67 0x60，SX1272範圍(860.00 ~ 1020.00MHz)，SX1276範圍(137.00 ~ 1020.00MHz)。
-  byte Freq1=0x01; //0x01;
-  byte Freq2=0x60; //0x65;
-  byte Freq3=0x60; // 0x6c;
+  
+  byte Freq1=0x01; 
+  byte Freq2=0x67; 
+  byte Freq3=0x60; 
+  
+
+
+  
   byte Power =0x3;  // Power:125k(0x01)、250k(0x2)、500k(0x3)。Default 500K。 
   
   byte* data=LoRa.Setup(TXRX, Freq1, Freq2, Freq3, Power);
@@ -346,7 +357,8 @@ void loop() {
         #ifdef OUTPUT_READABLE_YAWPITCHROLL
         
               //LoRa.WriteMode();    //寫入資料
-            byte LoRa_Data[]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+            //byte LoRa_Data[]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+            byte LoRa_Data[]=  {0,0,0,0,0,0,0,0,0, 0, 0, 0, 0, 0, 0, 0};
             // display Euler angles in degrees
             mpu.dmpGetQuaternion(&q, fifoBuffer);
             mpu.dmpGetGravity(&gravity, &q);
