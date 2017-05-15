@@ -207,6 +207,7 @@ void iFrogLabLoRaLibrary::Write16bytesBroadcast(byte t1[],byte len){
   //複製字串
   t2[2]=len;
   //Fun_AddArray(iData,t2,(len*2)+2,3);
+  Fun_AddArray(t1,t2,len,3);
 
   //算CRC
   CRC=Fun_CRC(t2,3+len);  
