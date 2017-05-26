@@ -412,8 +412,8 @@ class LoRa(object):
         for t_segment in range(0, t_segments):
             CMD_Data = []
             for t_x in range(0, t_seg_len):
-                CMD_Data.append(ord(data_array[t_lenCurrent]))
-                #CMD_Data.append(data_array[t_lenCurrent])
+                #CMD_Data.append(ord(data_array[t_lenCurrent]))
+                CMD_Data.append(data_array[t_lenCurrent])
                 t_lenCurrent = t_lenCurrent + 1
                 if t_lenCurrent >= t_Len:  # 處理餘數
                     break
