@@ -18,8 +18,6 @@ ap-Lib-5-lora-LoopWrite.py
 import ifroglab
  
 
-
-
 LoRa = ifroglab.LoRa()
 
 
@@ -61,8 +59,7 @@ while True:
      print ','.join('{:02x}'.format(x) for x in data)
      #print(" recive data: %s"% str)
      #print(data)
-  #time.sleep(0.01)
-
+  #time.sleep(1)
 
 
 # 關閉

@@ -27,7 +27,7 @@ LoRa2 = ifroglab.LoRa()
 print("List All Ports, serial_ports()")
 serPorts=LoRa2.serial_allPorts()
 print(serPorts)
-portName=serPorts[-2]
+portName=serPorts[-1]
 
 
 
@@ -60,7 +60,7 @@ while True:
   LoRa2.FunLora_5_write16bytesArrayString(str(counter));
   counter=counter+1
   print(counter)
-  time.sleep(0.02)
+  time.sleep(1)
 
 # 關閉
 LoRa2.FunLora_close()
