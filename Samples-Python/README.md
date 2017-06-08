@@ -18,6 +18,7 @@ iFrogLab  Lora 868/900/915 MHz SX1272 module compatible
 <h2>Descrption:</h2>
 *. 01-command: RX/TX Serial Port command, please see http://www.powenko.com/download_release/ifroglab/UARTCmd_SocLora160413-iFrogLab.pdf
 
-*. 02-iFrogLabLevel1-Lib: Basic LoRA
-*. 03-iLoRaLib-Protocol: iFrogLab iLoRa protocal samples code
+*. 02-iFrogLabLevel1-Lib: use python libiray, easy to use, send and receive.
+
+*. 03-iLoRaLib-Protocol: iFrogLab iLoRa protocal 1 sample code.
 
