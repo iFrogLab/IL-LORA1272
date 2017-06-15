@@ -22,3 +22,11 @@ ap-Lib-5-lora-LoopWrite.py
 確認，二個LoRa 可以送出長資料，請注意　結束資料最後加上\n
 ap-Lib-6-lora-WriteLongData.py
 ap-Lib-6-lora-ReadLongData.py
+
+
+注意：
+如果無法順利使用時，請注意以下的設定。
+在程式ser=LoRa.FunLora_initByName(portName) 調整一下
+如果在windows 的話，在設備COM2
+
+

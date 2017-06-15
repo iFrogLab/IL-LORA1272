@@ -16,6 +16,7 @@ ap-Lib-5-lora-LoopRead.py
 ap-Lib-5-lora-LoopWrite.py
 """
 import ifroglab
+import time
  
 
 LoRa = ifroglab.LoRa()
@@ -51,15 +52,13 @@ counter=0
 lastData=[]
 while True:
   #讀取資料
-  #print("\n[8]:FunLora_6_read")
+  print("\n[8]:FunLora_6_read")
   #data=LoRa.FunLora_6_read();
   data=LoRa.FunLora_6_readPureData()
-  if LoRa.Fun_ArrayIsSame(data, lastData)==False:
-     lastData=LoRa.Fun_ArrayCopy(data)
-     print ','.join('{:02x}'.format(x) for x in data)
-     #print(" recive data: %s"% str)
-     #print(data)
-  #time.sleep(1)
+  #if LoRa.Fun_ArrayIsSame(data, lastData)==False:
+  lastData=LoRa.Fun_ArrayCopy(data)
+  print ','.join('{:02x}'.format(x) for x in data) 
+  time.sleep(1)
 
 
 # 關閉
