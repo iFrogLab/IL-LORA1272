@@ -6,7 +6,7 @@
 #endif
 
 #include "iFrogLabLoRaLibrary.h"
-
+#define DeTimeout 999999/100
 //SoftwareSerial mySerial(10, 11);
 iFrogLabLoRaLibrary::iFrogLabLoRaLibrary(int RX, int TX, int DataReady)
 {
@@ -27,9 +27,7 @@ iFrogLabLoRaLibrary::iFrogLabLoRaLibrary(int RX, int TX, int DataReady)
       while (!Serial) {
             ; // wait for serial port to connect. Needed for native USB port only
       }
-  		 
   	}
-
 }
 
 //////////////////////////
@@ -39,9 +37,7 @@ void iFrogLabLoRaLibrary::Fun_AddArray(byte source[],byte target[],int sourceLen
    }
    return ;
 }
-
 byte iFrogLabLoRaLibrary::Fun_CRC(byte t1[], int len){
-  
   byte CRC =0;
   for(int i=0;i<len;i++){
     CRC=CRC^t1[i]; // xor
@@ -50,7 +46,8 @@ byte iFrogLabLoRaLibrary::Fun_CRC(byte t1[], int len){
 }
 
 void iFrogLabLoRaLibrary::Fun_PrintArray(byte t1[], byte len){
-  //Serial.print("Fun_PrintArray: ");
+	
+  Serial.print("Fun_PrintArray: ");
   if(m_Debug==1){
     Serial.print("Send:  ");
     for(byte i=0;i<len;i++){
@@ -62,13 +59,9 @@ void iFrogLabLoRaLibrary::Fun_PrintArray(byte t1[], byte len){
 
 }
 
-void iFrogLabLoRaLibrary::Message_error()
+byte* iFrogLabLoRaLibrary::GetChipIDAll()
 {
-  Serial.println("Error:");
-  Serial.println("Cannot find the iFrogLab LoRa device, please check hardware, RX, TX, 3.3V, GND.  ");
-  Serial.println("mroe detail, please see hhttp://www.ifroglab.com/?p=7086 ");
-}
-byte* iFrogLabLoRaLibrary::GetChipIDAll(){
+
   byte CRC = 0; 
   byte t1[] = {0x80,0,0,CRC};
   CRC=Fun_CRC(t1,3);
@@ -78,7 +71,7 @@ byte* iFrogLabLoRaLibrary::GetChipIDAll(){
   Fun_PrintArray(t1,4);
   if(m_Debug==1) Serial.print("Recive: ");
   i=0;
-  for(int j=0;j<999999;j++){
+  for(int j=0;j<DeTimeout;j++){
    if (mySerial->available()) {
     byte t1=mySerial->read();
     if(m_Debug==1){
@@ -106,15 +99,15 @@ byte* iFrogLabLoRaLibrary::GetChipIDAll(){
     j++;
    }
   }
-
+  Message_error();
+  return data;
+}
+void iFrogLabLoRaLibrary::Message_error()
+{
   Serial.println("Error:");
   Serial.println("Cannot find the iFrogLab LoRa device, please check hardware, RX, TX, 3.3V, GND.  ");
   Serial.println("mroe detail, please see hhttp://www.ifroglab.com/?p=7086 ");
-  return data;
 }
-
-
-
 int iFrogLabLoRaLibrary::GetChipID()
 {
   GetChipIDAll();
@@ -128,19 +121,43 @@ int iFrogLabLoRaLibrary::GetFirmwareVersion()
 int iFrogLabLoRaLibrary::GetDeviceID()
 {
   GetChipIDAll();
-  int byte5=(int)data[5];
-  byte5=byte5*(2^(8*3));
-  int byte6=(int)data[6];
-  byte6=byte6*(2^(8*2));
-  int byte7=(int)data[7];
-  byte7=byte7*(2^(8*1));
-  int byte8=(int)data[8];
-  int t1=byte5+byte6+byte7+byte8;
+  int t1=(data[5]<<(8*3))+(data[6]<<(8*2))+(data[7]<<8)+(data[8]);
   return t1;
 }
 
 
 byte* iFrogLabLoRaLibrary::Setup(byte TXRX,byte Freq1,byte Freq2,byte Freq3,byte Power){
+
+
+
+
+
+  //Serial.begin(9600);
+  byte* data=GetChipIDAll();
+  
+  Serial.print("\nChip:");
+  Serial.println(data[3],HEX);
+    
+  Serial.print("FW_Ver:");
+  m_FW_Ver=data[4];
+  Serial.println(data[4],HEX);
+  Serial.println(m_FW_Ver,HEX);
+  
+  Serial.print("Unique number:");
+  Serial.print(data[5],HEX);
+  Serial.print(data[6],HEX);
+  Serial.print(data[7],HEX);
+  Serial.println(data[8],HEX);
+  m_UniqueNumber=data[5]*0x1000000+ data[6]*0x10000+ data[7]*0x100+data[8]*0x1;
+  Serial.println(m_UniqueNumber,HEX);
+  if (m_FW_Ver>=6 && m_UniqueNumber>0x1000000){
+  }else if (m_FW_Ver<=5 && m_UniqueNumber<400){
+  }else{
+    Serial.print("this program only work in ifroglab LoRa Products, please see www.ifroglab.com");
+    return;
+  }
+
+
   // byte t1[] = {0xc1,0x03,0x05,TXRX,0x01,0x65,0x6c,0x3};
   m_TXRX=TXRX;
   m_Freq1=Freq1;
@@ -157,7 +174,7 @@ byte* iFrogLabLoRaLibrary::Setup(byte TXRX,byte Freq1,byte Freq2,byte Freq3,byte
     Serial.print("Recive: ");
   }
   i=0;
-  for(int j=0;j<999999;j++){
+  for(int j=0;j<DeTimeout;j++){
    if (mySerial->available()) {
     byte t1=mySerial->read();
     Serial.print(t1, HEX);
@@ -176,16 +193,15 @@ byte* iFrogLabLoRaLibrary::Setup(byte TXRX,byte Freq1,byte Freq2,byte Freq3,byte
    }
   }
 
-  Serial.println("Error:");
-  Serial.println("Cannot find the iFrogLab LoRa device, please check hardware, RX, TX, 3.3V, GND.  ");
-  Serial.println("mroe detail, please see hhttp://www.ifroglab.com/?p=7086 ");
+  Message_error();
 }
 
 void iFrogLabLoRaLibrary::WriteMode(){
   m_TXRX=0x02;
   Setup(m_TXRX,m_Freq1,m_Freq2,m_Freq3,m_Power);
 }
-void iFrogLabLoRaLibrary::Write16bytesBroadcast(byte t1[],byte len){
+
+void iFrogLabLoRaLibrary::Write16bytesBroadcast(byte iData[],byte len){
   WriteMode();
 
   byte t2[16+1+3];
@@ -196,9 +212,9 @@ void iFrogLabLoRaLibrary::Write16bytesBroadcast(byte t1[],byte len){
 
   
   // 定義碼
-  byte t1A[] = {0xc1,0x05,len};
+  byte t1[] = {0xc1,0x05,len};
   char charBuf[len*2+10];
-  Fun_AddArray(t1A,t2,3,0);
+  Fun_AddArray(t1,t2,3,0);
 
   // 字串轉char
   //char charBuf2[len*2];
@@ -206,8 +222,7 @@ void iFrogLabLoRaLibrary::Write16bytesBroadcast(byte t1[],byte len){
   
   //複製字串
   t2[2]=len;
-  //Fun_AddArray(iData,t2,(len*2)+2,3);
-  Fun_AddArray(t1,t2,len,3);
+  Fun_AddArray(iData,t2,(len*2)+2,3);
 
   //算CRC
   CRC=Fun_CRC(t2,3+len);  
@@ -217,6 +232,8 @@ void iFrogLabLoRaLibrary::Write16bytesBroadcast(byte t1[],byte len){
   mySerial->write(t2,3+(len)+1);
   Fun_PrintArray(t2,3+(len)+1);
   if(m_Debug==1) Serial.print("Recive: ");
+
+ 
   i=0;
   for(int j=0;j<999999;j++){
    if (mySerial->available()) {
@@ -235,20 +252,24 @@ void iFrogLabLoRaLibrary::Write16bytesBroadcast(byte t1[],byte len){
     }
    }
   }
-  // Message_error();
-  Serial.println("Error:");
-  Serial.println("Cannot find the iFrogLab LoRa device, please check hardware, RX, TX, 3.3V, GND.  ");
-  Serial.println("mroe detail, please see hhttp://www.ifroglab.com/?p=7086 ");
+  
+  Message_error();
+
 }
 void iFrogLabLoRaLibrary::ReadMode(){
+
   m_TXRX=0x03;
   Setup(m_TXRX,m_Freq1,m_Freq2,m_Freq3,m_Power);
+  delay(40);
 }
 
-  byte*  iFrogLabLoRaLibrary::Read16bytesBroadcast(){
 
 
+
+byte*  iFrogLabLoRaLibrary::Read16bytesBroadcast(){
+  m_Debug=1;
   ReadMode();
+  ReadClear();
 
   //byte t2[16+1+3];
   byte CRC = 0; 
@@ -268,10 +289,22 @@ void iFrogLabLoRaLibrary::ReadMode(){
   Fun_PrintArray(t1,4);
   if(m_Debug==1) Serial.print("Recive: ");
 
+  /*
+  for(int j=0;j<DeTimeout;j++){
+    if (mySerial->available()) {
+      byte t1=mySerial->read();
+      if(m_Debug==1) {
+        Serial.print(t1, HEX);
+        Serial.print(",");
+      }
+    }
+  }
+  */
+
  
   i=0;
   int k=0;
-  for(int j=0;j<999999;j++){
+  for(int j=0;j<DeTimeout;j++){
    if (mySerial->available()) {
     byte t1=mySerial->read();
     if(m_Debug==1) {
@@ -281,32 +314,55 @@ void iFrogLabLoRaLibrary::ReadMode(){
     data[i]=t1;
     i=i+1;
     if(i>=2){
-      if(i>=3 && i<(readLen+2) ){
-        data2[k]=t1;
-        k=k+1;
-      }
-      if(i==3) {
-        readLen=data[2];
-        if(data[1]==0xFF ) {  
-          if(m_Debug==1)Serial.println("\n Error!");  
-          return NULL;  
-        }else if(data[1]!=0x86 ) { 
-          if(m_Debug==1) Serial.println("\n Error!");   
-          return NULL;  
-        }else {  
-          if(m_Debug==1) Serial.println("\n OK"); 
+
+      if(i>=3) {
+        if(data[0]==0xc1 && data[1]==0x86){
+          int tlen=data[2];
+          /*Serial.print("(");
+          Serial.print(tlen, HEX);
+          Serial.print("-");
+          Serial.print(i, HEX);
+          Serial.print(")");*/
+          if(i>=2+1+tlen+1){
+             for(int x=0;x<tlen;x++){
+               data2[x]=data[3+x];
+             } 
+             ReadClear();
+             return data2;
+          }
+        }else{
+          Serial.println("");  
+          Serial.println("Error!");   
+          ReadClear();
+          return;
         }
-      }else if(i>=3+readLen+1)   {
-        if(m_Debug==1){
-          Serial.println(" ");
-          Serial.println("\n------------------");
-        }
-        return data2;
       }
     }
    }
   }
+  Serial.println("");  
+  Message_error();
+  
+}
+
+
+
+void  iFrogLabLoRaLibrary::ReadClear(){
+ Serial.println("");
+ for(int j=0;j<DeTimeout/10;j++){
+    if (mySerial->available()) {
+      byte t1=mySerial->read();
+      if(m_Debug==1) {
+        Serial.print(t1, HEX);
+        Serial.print(",");
+      }
+    }
+  }
+        
+}
   
 
-  Message_error();
-}
+
+
+////////////////////////////////////////////////////
+

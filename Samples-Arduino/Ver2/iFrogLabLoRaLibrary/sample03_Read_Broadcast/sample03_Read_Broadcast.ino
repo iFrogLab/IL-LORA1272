@@ -35,17 +35,12 @@ void setup()  {
   Serial.println("");
   Serial.println("--------------------------");
   Serial.println("");
-  
-}
-
-void loop()  { 
-  LoRa.ReadMode();    //讀取模式切換
-  delay(10);
-  byte* data2=LoRa.Read16bytesBroadcast();
+  //LoRa.WriteMode();    //寫入資料
+  // byte t1[]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+   byte* data2=LoRa.Read16bytesBroadcast();
   Serial.println("--------------------------");
   Serial.println(data2[0],HEX);
   Serial.println(data2[1],HEX);
-  /*
   Serial.println(data2[2],HEX);
   Serial.println(data2[3],HEX);
   Serial.println(data2[4],HEX);
@@ -59,9 +54,11 @@ void loop()  {
   Serial.println(data2[12],HEX);
   Serial.println(data2[13],HEX);
   Serial.println(data2[14],HEX);
-  Serial.println(data2[15],HEX);*/
- 
-  delay(1000);
+  Serial.println(data2[15],HEX);
+  
+}
+
+void loop()  { 
 }
 
 
