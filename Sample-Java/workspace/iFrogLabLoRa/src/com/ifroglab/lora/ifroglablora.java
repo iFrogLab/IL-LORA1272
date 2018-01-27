@@ -79,8 +79,13 @@ public class ifroglablora extends Frame implements ActionListener {
 			  {"Receive data ","收到的資料"},  
 			  {"Hex (0x00 to 0xff) for E.g 0x01,0x0a","16進位數字 (0x00 to 0xff) 例如：0x01,0x0a"}, 
 			  {"Decimal (0-255) E.g:1,2,255 　","10進位 (0-255)  例如: 1,2,255 "},
-			  {"Text (UTF-8):","UTF-8  文字"}, 
+			  {"Text (UTF-8):","UTF-8  文字"},   //35
 			  {"File:","檔案"}, 
+			  {"",""},
+			  {"",""},
+			  {"",""},
+			  {"English","English"}, //40
+			  {"Traditional Chinese","繁體中文"}, 
 			  
 			  
 	};
@@ -653,11 +658,36 @@ public class ifroglablora extends Frame implements ActionListener {
 	}
 	/////////////////////////////////////////
 /////////////////////////////////////////
-
-
 	class ThreadRecevieText extends Thread
 	{ 
-	  public ThreadRecevieText(TextArea iRecevieText)
+	  public ThreadRecevieText(TextArea iComRrecevieText)
+	  { 
+		  mRrecevieText = iComRrecevieText;
+	       generator = new Random();
+	  }
+
+	  public void run()
+	  { 
+	   try
+	   {
+	     while (!interrupted())
+	     { 
+	      int i = Math.abs(generator.nextInt());
+	  	  mRrecevieText.setText(new Integer(i).toString()+"\n"+mRrecevieText.getText());
+	      sleep(100);
+	     }
+	   }
+	   catch (InterruptedException exception) {}
+	  }
+
+	  // private JComboBox combo;
+	  private Random generator;
+	  private TextArea mRrecevieText;
+	}
+
+	class ThreadRecevieText2 extends Thread
+	{ 
+	  public void ThreadRecevieText(TextArea iRecevieText)
 	  { 
 	    mRrecevieText = iRecevieText;
 	    generator = new Random();
@@ -666,10 +696,8 @@ public class ifroglablora extends Frame implements ActionListener {
 
 	  public void run()
 	  { 
-	  
 	     while (!interrupted())
-	     { 
-
+	     {
 		    try {
 		    	
 		   // 	byte[] dataCounter=mloralib.FunLora_7_counter();
@@ -682,12 +710,12 @@ public class ifroglablora extends Frame implements ActionListener {
 				    		int len=(int)data[2];
 				    		if(data.length<=len+3){
 					    		byte[] data2 = new byte[len];
-					    		for(int i=0;i<len;i++){
+					    		for(int i=0;i<len-1;i++){
 					    			data2[i]=data[3+i];
 					    		}
-					    	//	String tRecHex=mloralib.FunBytesToHex(data2);
-					    	//	System.out.println("收到資料COM Port<-"+tRecHex);   
-					    //	  	mRrecevieText.setText(mRrecevieText.getText()+tRecHex+"\n");
+					    		String tRecHex=mloralib.FunBytesToHex(data2);
+					    		System.out.println("收到資料COM Port<-"+tRecHex);   
+					    	  	mRrecevieText.setText(mRrecevieText.getText()+tRecHex+"\n");
 				    		}
 				    	}
 		    //		}
