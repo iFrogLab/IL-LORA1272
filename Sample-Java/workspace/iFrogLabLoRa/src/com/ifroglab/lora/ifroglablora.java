@@ -14,20 +14,15 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 import com.fazecast.jSerialComm.SerialPort;
 
 //import gnu.io.*;
 //An AWT program inherits from the top-level container java.awt.Frame
-public class ifroglablora extends Frame implements ActionListener {
+public class ifroglablora extends Frame {
 		
-	private Frame mainFrame;       // GUI Frame
-	private Label labelMessage;    // Declare a Label component 
-	private Label labelLoRaStatus;    // Declare a Label component 
-	private TextField tfCount; // Declare a TextField component 
-	private Button btnCount;   // Declare a Button component
-	private int count = 0;     // Counter's value
 	
 	// LoRa 相關變數
 	private loralib mloralib;
@@ -45,6 +40,17 @@ public class ifroglablora extends Frame implements ActionListener {
 	private  int tUITop=30;
 	private  TextArea recevieText;  //顯示接收得資料
 	private  TextArea sendText;     //顯示送出的資料
+	private  Choice mChoiceRecevieDisplay;   // 目標顯示，是要文字
+
+	private Frame mainFrame;       // GUI Frame
+	private Label labelMessage;    // Declare a Label component 
+	private Label labelLoRaStatus;    // Declare a Label component 
+	private TextField tfCount; // Declare a TextField component 
+	private Button btnCount;   // Declare a Button component
+	
+	// 程式專用
+	//private int count = 0;     // Counter's value
+	
 	//private  Label headerLabel;
 	
 	// 多國語言
@@ -82,9 +88,9 @@ public class ifroglablora extends Frame implements ActionListener {
 			  {"",""},  //30
 			  {"Clear","清除"},  
 			  {"Receive data ","收到的資料"},  
+			  {"Text (UTF-8):","UTF-8  文字"},
 			  {"Hex (0x00 to 0xff) for E.g 0x01,0x0a","16進位數字 (0x00 to 0xff) 例如：0x01,0x0a"}, 
-			  {"Decimal (0-255) E.g:1,2,255 　","10進位 (0-255)  例如: 1,2,255 "},
-			  {"Text (UTF-8):","UTF-8  文字"},   //35
+			  {"Decimal (0-255) E.g:1,2,255 　","10進位 (0-255)  例如: 1,2,255 "}, //35
 			  {"File:","檔案"}, 
 			  {"",""},
 			  {"",""},
@@ -113,7 +119,7 @@ public class ifroglablora extends Frame implements ActionListener {
 	          System.exit(0);
 	       }        
 	   });
-	   mainFrame.setSize(600,450);  
+	   mainFrame.setSize(600,470);  
 	   mainFrame.setMinimumSize(new Dimension(600,450));
 	   mainFrame.setMaximumSize(new Dimension(600,450));
 	   
@@ -222,7 +228,7 @@ public class ifroglablora extends Frame implements ActionListener {
 	   labelMessage.setSize(mainFrame.size().width-250,25);
 	   labelMessage.setBackground(Color.lightGray );
 	   mainFrame.add(labelMessage);  
-	   labelMessage.setLocation(0, mainFrame.size().height-25+tUITop);
+	   labelMessage.setLocation(0, mainFrame.size().height-25);
 	   // END 4   
 	    // Begin 05,                 添加Step 1 的文字 "LoRa 是否打開ˋ"
 	   labelLoRaStatus = new Label();
@@ -231,7 +237,7 @@ public class ifroglablora extends Frame implements ActionListener {
 	   labelLoRaStatus.setSize(250,25);
 	   labelLoRaStatus.setBackground(Color.lightGray );
 	   mainFrame.add(labelLoRaStatus);  
-	   labelLoRaStatus.setLocation(mainFrame.size().width-250, mainFrame.size().height-25+tUITop);
+	   labelLoRaStatus.setLocation(mainFrame.size().width-250, mainFrame.size().height-25);
 	   // END 5   
 	   // Begin 5,                 添加Step 1 一條區分線
 	   Label lineLabel = new Label();
@@ -339,7 +345,7 @@ public class ifroglablora extends Frame implements ActionListener {
 			        	 mDeviceID=mloralib.GetDeviceID();
 			        	 if(mDeviceID.length()>0){
 			        		 startButton.setLabel(mStr[25][lan]);  // 成功的話，就改變按鈕的文字為「關閉LoRa」
-				        	 labelLoRaStatus.setText(mStr[26][lan]+mDeviceID); //LoRa使用中
+				        	 labelLoRaStatus.setText(mStr[26][lan]+mDeviceID+"韌體"+ Integer.toString(mloralib.GetFirmwareVersion())); //LoRa使用中
 				        	 mloralib.ReadMode(  Freq1, Freq2, Freq3, Power);  //{ TXRX,0x01,0x65,0x6c,0x3);             // 設定LoRa為讀取模式
 				        	// mloralib.serial_serialEvent_Open();
 				        	 TreadStop();					  	  // 關閉　LoRa　Reciver 資料
@@ -434,6 +440,14 @@ public class ifroglablora extends Frame implements ActionListener {
 		        	    	 //byte[] data = tSendTextString.getBytes();
 		        	    	 // byte[] data = {1};
 		        	    	 mloralib.FunLora_5_write16bytesArray(data);
+		        	    	 try {
+								//TimeUnit.SECONDS.sleep(1);
+								TimeUnit.MILLISECONDS.sleep(10);
+							} catch (InterruptedException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+		        	    	 
 		        	    	 mloralib.ReadMode(Freq1, Freq2, Freq3, Power); 
 		        	    	 TreadStart();
 		         }
@@ -453,20 +467,25 @@ public class ifroglablora extends Frame implements ActionListener {
 		     
 		     
 		     // Begin 03,               添加Step 3  Text (ASCII)  , Hex  ,File
-		      final Choice LoRaModeRecevieChoice=new Choice();  
-		      LoRaModeRecevieChoice.setBounds(100,100, 180,30);  
-		      LoRaModeRecevieChoice.add(mStr[33][lan]);             
-		      LoRaModeRecevieChoice.add(mStr[34][lan]);             
-		      LoRaModeRecevieChoice.add(mStr[35][lan]);             
-		      LoRaModeRecevieChoice.add(mStr[36][lan]); 
-		      mainFrame.add(LoRaModeRecevieChoice);  
-		      LoRaModeRecevieChoice.setLocation(125, y+160+tUITop);
-		      LoRaModeRecevieChoice.addItemListener(new ItemListener(){
+		     mChoiceRecevieDisplay=new Choice();  
+		     mChoiceRecevieDisplay.setBounds(100,100, 180,30);  
+		     mChoiceRecevieDisplay.add(mStr[33][lan]);             
+		     mChoiceRecevieDisplay.add(mStr[34][lan]);             
+		     mChoiceRecevieDisplay.add(mStr[35][lan]);             
+		     mChoiceRecevieDisplay.add(mStr[36][lan]); 
+		      mainFrame.add(mChoiceRecevieDisplay);  
+		      mChoiceRecevieDisplay.setLocation(125, y+160+tUITop);
+		      mChoiceRecevieDisplay.addItemListener(new ItemListener(){
 				@Override
 				public void itemStateChanged(ItemEvent e) {
 		            String data = "Recevie: " 
-		            + LoRaModeRecevieChoice.getItem(LoRaModeRecevieChoice.getSelectedIndex());
+		            + mChoiceRecevieDisplay.getItem(mChoiceRecevieDisplay.getSelectedIndex());
 		            labelMessage.setText(data);	
+		        	
+		            recevieText.setText("");
+		            TreadStop();
+		            TreadStart();
+		            
 				}
 		      });
 		      // END 03
@@ -500,20 +519,20 @@ public class ifroglablora extends Frame implements ActionListener {
 		     mainFrame.add(recevieText);  
 		     recevieText.setLocation(10, y+190+tUITop);
 		      // END 05	     
-		      // Begin 05,               添加Step 3  Text (ASCII)  , Hex  ,File
-		      Choice taregtDevice=new Choice();  
-		      taregtDevice.setBounds(100,100, 180,30);  
-		      taregtDevice.add(mStr[16][lan]);             
-		      taregtDevice.add(mStr[17][lan]);             
-		      taregtDevice.add(mStr[18][lan]); 
-		      mainFrame.add(taregtDevice);  
-		      taregtDevice.setLocation(415, y+35+(LoRaModeChoice.size().height/2+tUITop));
-		      taregtDevice.addItemListener(new ItemListener(){
+		      // Begin 05,            
+		     Choice ChoiceTargetDevice=new Choice();  
+		     ChoiceTargetDevice.setBounds(100,100, 180,30);  
+		     ChoiceTargetDevice.add(mStr[16][lan]);             
+		     ChoiceTargetDevice.add(mStr[17][lan]);             
+		     ChoiceTargetDevice.add(mStr[18][lan]); 
+		      mainFrame.add(ChoiceTargetDevice);  
+		      ChoiceTargetDevice.setLocation(415, y+35+(LoRaModeChoice.size().height/2+tUITop));
+		      ChoiceTargetDevice.addItemListener(new ItemListener(){
 				@Override
 				public void itemStateChanged(ItemEvent e) {
 		            String data = "Setup: " 
-		            + LoRaModeChoice.getItem(LoRaModeChoice.getSelectedIndex());
-		            labelMessage.setText(data);	
+		            + ChoiceTargetDevice.getItem(ChoiceTargetDevice.getSelectedIndex());
+		            labelMessage.setText(data);
 				}
 		      });
 		      // END 05	     
@@ -648,7 +667,7 @@ public class ifroglablora extends Frame implements ActionListener {
 			mThreadRecevieText=null;
 		}
 		
-		mThreadRecevieText = new ThreadRecevieText(recevieText,mloralib);
+		mThreadRecevieText = new ThreadRecevieText(recevieText,mloralib,mChoiceRecevieDisplay);
 		mThreadRecevieText.start();
 		////////////
 		/*
@@ -685,6 +704,7 @@ public class ifroglablora extends Frame implements ActionListener {
 	      // or simply "new AWTCounter();" for an anonymous instance   
 	}
 	
+	/*
 	// ActionEvent handler - Called back upon button-click.
 	@Override
 	public void actionPerformed(ActionEvent evt) {
@@ -692,18 +712,21 @@ public class ifroglablora extends Frame implements ActionListener {
 	   // Display the counter value on the TextField tfCount
 	   tfCount.setText(count + ""); // Convert int to String
 	}
+	*/
 	/////////////////////////////////////////
 /////////////////////////////////////////
 
 	
 	class ThreadRecevieText extends Thread
 	{ 
-	  public ThreadRecevieText(TextArea iComRrecevieText,loralib iloralib)
+	  public ThreadRecevieText(TextArea iComRrecevieText,loralib iloralib,Choice iChoiceRecevieDisplay)
 	  { 
 		  mRrecevieText = iComRrecevieText;
 	      generator = new Random();
 	      threadloralib=iloralib;
           mloralib.ReadMode(Freq1, Freq2, Freq3, Power); 
+          //String t1=iChoiceRecevieDisplay.getItem(iChoiceRecevieDisplay.getSelectedIndex());
+          mChoiceRecevieDisplayIndex=iChoiceRecevieDisplay.getSelectedIndex();
 	  }
 
 	  public void run()
@@ -712,26 +735,40 @@ public class ifroglablora extends Frame implements ActionListener {
 	   {
 	     while (!interrupted())
 	     { 
-			//long tCounter=mloralib.FunLora_7_counter_long();           //   DOTO: 韌體還沒有做
-		    //System.out.println("tCounter="+Long.toString(tCounter));   // 
-				  byte[] data=mloralib.FunLora_6_readPureData();
-			    	  if(data!=null && data.length>4 &&  data[0]==(byte)0xc1 &&    data[1]==(byte)0x86 ){
-			    		int len=(int)data[2]-2-2;  //18
-			    		if(data.length==len+6+2){ //15 22  /// 8+1  3 
-				    		byte[] data2 = new byte[len];
-				    		for(int i2=0;i2<len;i2++){
-				    			byte t1=data[3+i2];
-				    			data2[i2]=t1;
+			long tCounter=mloralib.FunLora_7_counter_long();           //   DOTO: 韌體還沒有做
+			if(tCounter!=mCounter) {
+  		       System.out.println("tCounter="+Long.toString(tCounter));   
+ 		       mCounter=tCounter;
+					  byte[] data=mloralib.FunLora_6_readPureData();
+				    	  if(data!=null && data.length>4 &&  data[0]==(byte)0xc1 &&    data[1]==(byte)0x86 ){
+				    		int len=(int)data[2]-2;  //18
+				    		if(data.length==len+6 && len>0){ //15 22  /// 8+1  3 
+					    		byte[] data2 = new byte[len];
+					    		for(int i2=0;i2<len;i2++){
+					    			byte t1=data[3+i2];
+					    			data2[i2]=t1;
+					    		}
+				    			if(oldData==null || Arrays.equals(oldData, data2)==false) {
+						    	 	String tRecHex="";
+						    	 	try {
+							    	 	if(mChoiceRecevieDisplayIndex==0) {   //文字
+							    	 		tRecHex = new String(data2, "UTF-8");
+							    	 	}else if(mChoiceRecevieDisplayIndex==1) {   //16進位數字
+								    	 		tRecHex=mloralib.FunBytesToHex(data2);
+							    	 	}else if(mChoiceRecevieDisplayIndex==2) {   //10進位數字
+							    	 		tRecHex=mloralib.FunBytesToHex(data2);
+							    	 	}
+						    	 	}catch (UnsupportedEncodingException e) {}
+						    	    System.out.println("收到資料COM Port<-"+tRecHex);   
+						    	    if(oldData!=null) {
+					    	    			recevieText.setText(tRecHex+"\n"+recevieText.getText());  //避免顯示上次USB 記憶體上的舊資料
+						    	    }
+							    	oldData=data2.clone();
+				    			}
 				    		}
-			    			if(oldData==null || Arrays.equals(oldData, data2)==false) {
-					    	 	String tRecHex=mloralib.FunBytesToHex(data2);
-					    	    System.out.println("收到資料COM Port<-"+tRecHex);   
-					    	    recevieText.setText(tRecHex+"\n"+recevieText.getText());
-					    	    oldData=data2.clone();
-			    			}
-			    		}
-			    	  }
-		      sleep(20);
+				    	  }
+			      sleep(20);
+			}
 	     }
 	   }
 	   catch (InterruptedException exception) {}
@@ -742,7 +779,11 @@ public class ifroglablora extends Frame implements ActionListener {
 	  private TextArea mRrecevieText;
 	  private loralib threadloralib;
 	  private byte[] oldData;
+	  private long mCounter;
+	  private int mChoiceRecevieDisplayIndex;
 	}
+
+
 	
 	
 	

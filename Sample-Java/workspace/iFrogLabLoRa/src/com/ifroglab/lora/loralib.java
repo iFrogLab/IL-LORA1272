@@ -194,7 +194,10 @@ public class loralib {
 	}
 	// 韌體版本
 	public int GetFirmwareVersion(){
-	    byte[] tDeviceData=GetChipIDAll();
+	    byte[] tDeviceData=GetChipIDAll();    
+	    // 沒有Couter          808006C106010000E323 
+	    //  有Couter           808006C106010000D515
+	    // 20180115拿到的新LoRa 808006C106010000D212
 		if(tDeviceData.length>9){
 			if(tDeviceData[0]==(byte)0x80  && tDeviceData[1]==(byte)0x80 ){	// 確認資料正確
 				return tDeviceData[4];
