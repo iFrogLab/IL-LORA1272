@@ -53,25 +53,6 @@ public class loralib {
 	   return true;
 	}
 
-	public void serial_serialEvent_Close() {
-		comPort.removeDataListener();
-	}
-	public void serial_serialEvent_Open() {
-		serial_serialEvent_Close();
-		comPort.addDataListener(new SerialPortDataListener() {
-			   @Override
-			   public int getListeningEvents() { return SerialPort.LISTENING_EVENT_DATA_AVAILABLE; }
-			   @Override
-			   public void serialEvent(SerialPortEvent event)
-			   {
-			      if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE)
-			         return;
-			      byte[] newData = new byte[comPort.bytesAvailable()];
-			      int numRead = comPort.readBytes(newData, newData.length);
-			      System.out.println("--------------------Read " + numRead + " bytes.");
-			   }
-			});
-    }
 	public  ArrayList<String> serial_allPorts() {
 	    mLoRaSerialPort.clear();                                                           //清除原本的資料
 	    mLoRaSerialPortString.clear();                                                     //清除原本的資料
@@ -121,7 +102,12 @@ public class loralib {
 		  m_TXRX=0x02;
 		  Setup(m_TXRX,Freq1,Freq2,Freq3,Power);
 	}
+
+
 	public byte[]write(byte[] array1){
+		return writeCheckLength(array1,0);
+	}
+	public byte[]writeCheckLength(byte[] array1,int iLen){
 		ArrayList<Byte> readBuffer = new ArrayList<Byte>();
 		try {
 			if(comPort!=null && comPort.isOpen()==true){		
@@ -140,9 +126,11 @@ public class loralib {
 					      totalnum=totalnum+numRead2;
 					      System.out.println("Read " + numRead2 + " bytes.");
 					      for(int j=0;j<readBuffer2.length;j++){
-					    	  readBuffer.add(readBuffer2[j]);
+					    	  	readBuffer.add(readBuffer2[j]);
 					      }
-					      //if(totalnum>=ResultLen) break;
+					      if(iLen!=0){
+					    	  if(totalnum>=iLen) break;
+					      }
 				      }else{
 						  TimeUnit.MILLISECONDS.sleep(1);
 						 // sleep(0.001);
@@ -187,6 +175,11 @@ public class loralib {
     // 送byte 到　Chip 上
     public byte[] FunLora_ChipSendByte(byte[] array1){
     	  byte[] data2=write(array1);
+    	  return data2;
+    }
+    // 送byte 到　Chip 上
+    public byte[] FunLora_ChipSendByteCheckLength(byte[] array1,int iLen){
+    	  byte[] data2=writeCheckLength(array1,iLen);
     	  return data2;
     }
 	// Chip 編號
@@ -252,7 +245,8 @@ public class loralib {
 				comPort.setBaudRate(115200);
 				comPort.openPort();
 				//comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 1000, 1000);
-				comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 0, 0);
+				//comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 0, 0);
+				comPort.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, 0, 0);
 			}
 		    //byte[] array1={(byte) 0x80,0x00,0x00,0};
 		    //array1[3]=Fun_CRC(array1);
@@ -334,6 +328,24 @@ public class loralib {
 		byte[] data2=FunLora_ChipSendByte(CMD_Data); 
 		return data2;
 	}
+	public long FunLora_7_counter_long(){
+		long tCounter=0;
+		int len=4;
+		byte[] CMD_Data = new byte[len];
+		CMD_Data[0]=(byte)0xc1;
+		CMD_Data[1]=(byte)0x07;
+		CMD_Data[2]=(byte)0x00;
+		CMD_Data[len-1]=Fun_CRC(CMD_Data);
+	
+		//return null;
+	   	byte[] data2=FunLora_ChipSendByteCheckLength(CMD_Data,6); 
+	   	
+	   	if(data2!=null && data2.length>=6){
+	   		tCounter=(byte)(data2[3]*0xff)+(byte)data2[4];
+	   	}
+		return tCounter;
+	}
+	
 	public byte[] FunLora_7_counter(){
 		int len=4;
 		byte[] CMD_Data = new byte[len];

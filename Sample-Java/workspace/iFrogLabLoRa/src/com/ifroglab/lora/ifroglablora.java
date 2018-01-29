@@ -6,6 +6,7 @@ package com.ifroglab.lora;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -13,6 +14,8 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+
 import com.fazecast.jSerialComm.SerialPort;
 
 //import gnu.io.*;
@@ -34,12 +37,14 @@ public class ifroglablora extends Frame implements ActionListener {
 	private byte Freq2=0x65;
 	private byte Freq3=0x6c;
 	private byte Power=0x3;  //{ TXRX,0x01,0x65,0x6c,0x3); 
+	private long mCounter;
 
 	
 	// UI
 	private  Choice mUIComPortName; //Step 1  Com 設備列表
 	private  int tUITop=30;
-	private  TextArea recevieText;
+	private  TextArea recevieText;  //顯示接收得資料
+	private  TextArea sendText;     //顯示送出的資料
 	//private  Label headerLabel;
 	
 	// 多國語言
@@ -86,6 +91,7 @@ public class ifroglablora extends Frame implements ActionListener {
 			  {"",""},
 			  {"English","English"}, //40
 			  {"Traditional Chinese","繁體中文"}, 
+			  {"Send a lot of data","送大量資料"}, 
 			  
 			  
 	};
@@ -209,12 +215,7 @@ public class ifroglablora extends Frame implements ActionListener {
 	      }
 	   });
 	   // END 03
-	   
-	   
-	   
-
-
-	    // Begin 04,                 添加Step 1 的文字 "狀態ˋ"
+	   // Begin 04,                 添加Step 1 的文字 "狀態ˋ"
 	   labelMessage = new Label();
 	   labelMessage.setAlignment(Label.LEFT);
 	   labelMessage.setText("Status:");     // "Select LoRa device"
@@ -232,7 +233,6 @@ public class ifroglablora extends Frame implements ActionListener {
 	   mainFrame.add(labelLoRaStatus);  
 	   labelLoRaStatus.setLocation(mainFrame.size().width-250, mainFrame.size().height-25+tUITop);
 	   // END 5   
-	   
 	   // Begin 5,                 添加Step 1 一條區分線
 	   Label lineLabel = new Label();
 	   lineLabel.setAlignment(Label.LEFT);
@@ -242,7 +242,6 @@ public class ifroglablora extends Frame implements ActionListener {
 	   mainFrame.add(lineLabel);  
 	   lineLabel.setLocation(0, 75+tUITop);
 	   // END 5
-	   
 	   // 基本設定
 	   ui_Setp1_listPorts();                                  // 找出LoRa USB COM ports 設備
 	   
@@ -251,7 +250,7 @@ public class ifroglablora extends Frame implements ActionListener {
 		@SuppressWarnings("deprecation")
 		public void ui_Step2(Frame mainFrame) {
 			  int y=60;
-		      // Begin 01,                添加Step 1 的文字 "Step1"
+		      // Begin 01,                添加Step 2 的文字 "Step1"
 		      Label l1 = new Label();
 		      l1.setAlignment(Label.LEFT);
 		      l1.setText(mStr[5][lan]);    //"Step1"
@@ -260,7 +259,7 @@ public class ifroglablora extends Frame implements ActionListener {
 		      l1.setLocation(10, y+20+tUITop);
 		      // END 01
 	
-		      // Begin 2,                 添加Step 1 的文字 "Select LoRa device"
+		      // Begin 2,                 添加Step 2 的文字 "Select LoRa device"
 		      Label l2 = new Label();
 		      l2.setAlignment(Label.LEFT);
 		      l2.setText(mStr[6][lan]);     // "Select LoRa device"
@@ -268,7 +267,6 @@ public class ifroglablora extends Frame implements ActionListener {
 		      mainFrame.add(l2);  
 		      l2.setLocation(10, y+40+tUITop);
 		      // END 2
-		      
 		      // Begin 3,                 添加Step 2 的文字 "設備狀態"
 		      Label l3 = new Label();
 		      l3.setAlignment(Label.LEFT);
@@ -277,7 +275,6 @@ public class ifroglablora extends Frame implements ActionListener {
 		      mainFrame.add(l3);  
 		      l3.setLocation(130, y+20+tUITop);
 		      // END 3
-		      
 		      // Begin 4,                 添加Step 2 的文字 MAC ID:
 		      Label l4 = new Label();
 		      l4.setAlignment(Label.LEFT);
@@ -286,8 +283,6 @@ public class ifroglablora extends Frame implements ActionListener {
 		      mainFrame.add(l4);  
 		      l4.setLocation(300, y+40+tUITop);
 		      // END 4
-		      
-	
 		      // Begin 5,                 添加Step 2 的文字 Fireware Version
 		      Label l5 = new Label();
 		      l5.setAlignment(Label.LEFT);
@@ -296,8 +291,7 @@ public class ifroglablora extends Frame implements ActionListener {
 		      mainFrame.add(l5);  
 		      l5.setLocation(130, y+40+tUITop);
 		      // END 5
-		      
-		      // Begin 06,               添加Step 1  Com 設備列表
+		      // Begin 06,               添加Step 2  Com 設備列表
 		      final Choice LoRaModeChoice=new Choice();  
 		      LoRaModeChoice.setBounds(100,100, 180,30);  
 		      LoRaModeChoice.add(mStr[11][lan]);             
@@ -313,9 +307,7 @@ public class ifroglablora extends Frame implements ActionListener {
 		            labelMessage.setText(data);	
 				}
 		      });
-	
 		      // END 06
-	
 		      // Begin 07, 添加Step 2  設定的按鈕 
 		      Button preferencesButton = new Button(mStr[14][lan]);    //"reflash"
 		      preferencesButton.setBounds(100,100, 100,30); 
@@ -323,25 +315,22 @@ public class ifroglablora extends Frame implements ActionListener {
 		      preferencesButton.setLocation(410,y+50+tUITop+(preferencesButton.size().height/2));
 		      preferencesButton.addActionListener(new ActionListener() {
 		         public void actionPerformed(ActionEvent e) {
-		        	 labelMessage.setText(mStr[12][lan]);  
-		        	 
+		        	 	labelMessage.setText(mStr[12][lan]);  
 		         }
 		      });
 		      // END 07
-		      
-
 		      // Begin 08, 添加Step 2  啟動LoRa的按鈕 
 		      final Button startButton = new Button(mStr[24][lan]);    //"reflash"
 		      startButton.setBounds(100,100, 115,30); 
 		      mainFrame.add(startButton);
 		      startButton.setLocation(300,y+50+(startButton.size().height/2+tUITop));
 		      startButton.addActionListener(new ActionListener() {
-		         public void actionPerformed(ActionEvent e) {
+		         public void actionPerformed(ActionEvent e) {        // 當按下[步驟2；啟動LoRa 按鍵] 
 		        	 if(mDeviceID.length()>0){                 // 如果已經開啟LoRa 設備的話
 			        	 labelMessage.setText(mStr[25][lan]); //  按鈕顯示「開啟LoRa」　
 			        	 labelLoRaStatus.setText(mStr[27][lan]); //LoRa未開啟
 			        	 startButton.setLabel(mStr[24][lan]);
-			        	 mloralib.serial_serialEvent_Close();
+			        //	 mloralib.serial_serialEvent_Close();
 			        	 mDeviceID="";
 			        	 TreadStop();					  	  // 關閉　LoRa　Reciver 資料
 			        	 mloralib.FunLora_close();
@@ -352,9 +341,7 @@ public class ifroglablora extends Frame implements ActionListener {
 			        		 startButton.setLabel(mStr[25][lan]);  // 成功的話，就改變按鈕的文字為「關閉LoRa」
 				        	 labelLoRaStatus.setText(mStr[26][lan]+mDeviceID); //LoRa使用中
 				        	 mloralib.ReadMode(  Freq1, Freq2, Freq3, Power);  //{ TXRX,0x01,0x65,0x6c,0x3);             // 設定LoRa為讀取模式
-				        	 mloralib.serial_serialEvent_Open();
-
-				           
+				        	// mloralib.serial_serialEvent_Open();
 				        	 TreadStop();					  	  // 關閉　LoRa　Reciver 資料
 				        	 TreadStart();					  	  // 打開　LoRa　Reciver 資料
 			        	 }
@@ -362,7 +349,29 @@ public class ifroglablora extends Frame implements ActionListener {
 		         }
 		      });
 		      // END 08
-
+		      // Begin 10 添加Step 2  LoRa的送資料的測試按鈕 
+		      final Button sendAlotOfDatastartButton = new Button(mStr[42][lan]);    //"reflash"
+		      sendAlotOfDatastartButton.setBounds(80,100, 115,30); 
+		      mainFrame.add(sendAlotOfDatastartButton);
+		      sendAlotOfDatastartButton.setLocation(500,y+50+(startButton.size().height/2+tUITop));
+		      sendAlotOfDatastartButton.addActionListener(new ActionListener() {
+		         public void actionPerformed(ActionEvent e) {        // 當按下[步驟2；啟動LoRa 按鍵] 
+		        	 	//TreadStop();					  	  // 關閉　LoRa　Reciver 資料
+		        	 	mloralib.WriteMode(  Freq1, Freq2, Freq3, Power);  //{ TXRX,0x01,0x65,0x6c,0x3);             // 設定LoRa為讀取模式
+					byte tCounter=0;
+		        	 	for(int i=0;i<=5;i++) {
+	    		        	   try {
+		    		        	 byte[] data={tCounter,2,3,4};
+		    		        	 mloralib.FunLora_5_write16bytesArray(data);
+		    		        	 tCounter++;
+						 TimeUnit.SECONDS.sleep(1);
+					   } catch (InterruptedException e1) {
+						 e1.printStackTrace();
+					   }
+					}
+		         }
+		      });
+		      // END 08
 		      // Begin 9,                 添加Step 1 一條區分線
 		      Label lineLabel = new Label();
 		      lineLabel.setAlignment(Label.LEFT);
@@ -383,11 +392,10 @@ public class ifroglablora extends Frame implements ActionListener {
 		     mainFrame.add(l1);  
 		     l1.setLocation(10, y+30+tUITop);
 		      // END 01
-		     
-		      // Begin 2,                 添加Step 1 的文字 "Select LoRa device"
+		      // Begin 2,                 添加Step 3 的文字 "傳送的資料"
 		      Label l2 = new Label();
 		      l2.setAlignment(Label.LEFT);
-		      l2.setText(mStr[19][lan]);     // "Select LoRa device"
+		      l2.setText(mStr[19][lan]);     // "傳送的資料"
 		      l2.setSize(120,30);
 		      mainFrame.add(l2);  
 		      l2.setLocation(10, y+50+tUITop);
@@ -411,7 +419,6 @@ public class ifroglablora extends Frame implements ActionListener {
 				}
 		      });
 		      // END 03
-		      
 		      // Begin 04, 添加Step 3 「送出」的按鈕 
 		      Button buttonSend = new Button(mStr[20][lan]);    
 		      buttonSend.setBounds(100,100, 120,30); 
@@ -419,11 +426,16 @@ public class ifroglablora extends Frame implements ActionListener {
 		      buttonSend.setLocation(300,y+35+(buttonSend.size().height/2+tUITop));
 		      buttonSend.addActionListener(new ActionListener() {
 		         public void actionPerformed(ActionEvent e) {
-		        	 labelMessage.setText(mStr[3][lan]); //"Searching"
-		        	 mloralib.WriteMode(Freq1, Freq2, Freq3, Power); 
-		        	 byte[] data={1,2,3,4};
-		        	 mloralib.FunLora_5_write16bytesArray(data);
-		        	
+		        		 TreadStop();
+		        		 labelMessage.setText(mStr[3][lan]); //"Searching"
+		        		 mloralib.WriteMode(Freq1, Freq2, Freq3, Power); 
+		        	    	 String tSendTextString=sendText.getText();
+		        	    	 byte[] data = tSendTextString.getBytes(StandardCharsets.UTF_8); //UTF-8
+		        	    	 //byte[] data = tSendTextString.getBytes();
+		        	    	 // byte[] data = {1};
+		        	    	 mloralib.FunLora_5_write16bytesArray(data);
+		        	    	 mloralib.ReadMode(Freq1, Freq2, Freq3, Power); 
+		        	    	 TreadStart();
 		         }
 		      });
 		      // END 04
@@ -431,7 +443,7 @@ public class ifroglablora extends Frame implements ActionListener {
 		      
 		     // Begin 04,                添加Step 3 的文字 "Step1"
 		    // Label l2 = new Label();
-		     TextArea sendText = new TextArea("",5,30);		     
+		     sendText = new TextArea("",5,30);		     
 		     sendText.setText(mStr[19][lan]);    //"Step3"
 		     sendText.setSize(580,80);
 		     mainFrame.add(sendText);  
@@ -466,11 +478,12 @@ public class ifroglablora extends Frame implements ActionListener {
 		      buttonClear.setLocation(300,y+160+tUITop);
 		      buttonClear.addActionListener(new ActionListener() {
 		         public void actionPerformed(ActionEvent e) {
-		        	 labelMessage.setText(mStr[31][lan]); 
+		        	 	labelMessage.setText(mStr[31][lan]); 
+		   		     recevieText.setText("");    // 「清除」 添加Step 3 顯示 接收的資料
+		        	    
 		         }
 		      });
 		      // END 04
-
 		      // Begin 2,  添加Step 3 「接收資料」的文字 
 		      Label l3 = new Label();
 		      l3.setAlignment(Label.LEFT);
@@ -479,20 +492,14 @@ public class ifroglablora extends Frame implements ActionListener {
 		      mainFrame.add(l3);  
 		      l3.setLocation(10, y+160+tUITop);
 		      // END 2
-		      
-		          
-		     
-		      
-		     // Begin 05,                添加Step 1 的文字 "Step1"
+		     // Begin 05,                添加Step 3 顯示 接收的資料
 		     // Label l2 = new Label();
 		     recevieText = new TextArea("",5,30);
-		     recevieText.setText("");    //"Step3"
+		     recevieText.setText("");    
 		     recevieText.setSize(580,80);
 		     mainFrame.add(recevieText);  
 		     recevieText.setLocation(10, y+190+tUITop);
 		      // END 05	     
-		     
-		      
 		      // Begin 05,               添加Step 3  Text (ASCII)  , Hex  ,File
 		      Choice taregtDevice=new Choice();  
 		      taregtDevice.setBounds(100,100, 180,30);  
@@ -640,8 +647,37 @@ public class ifroglablora extends Frame implements ActionListener {
 			mThreadRecevieText.stop();
 			mThreadRecevieText=null;
 		}
-		mThreadRecevieText = new ThreadRecevieText(recevieText);
+		
+		mThreadRecevieText = new ThreadRecevieText(recevieText,mloralib);
 		mThreadRecevieText.start();
+		////////////
+		/*
+		long tCounter=mloralib.FunLora_7_counter_long();
+	    System.out.println("tCounter="+Long.toString(tCounter));   
+		if(mCounter!=tCounter){
+			mCounter=tCounter; 
+			for(int i=0;i<100;i++){
+				byte[] data=mloralib.FunLora_6_readPureData();
+		    	if(data!=null && data.length>4 &&  data[0]==(byte)0xc1 &&    data[1]==(byte)0x86 ){
+		    		int len=(int)data[2]-2;  //18
+		    		if(data.length==len+6){ // 10  6
+		    			// C18612 00 00 00 00 00    00 00 00 55
+			    		byte[] data2 = new byte[len];
+			    		for(int i2=0;i2<len;i2++){
+			    			byte t1=data[3+i2];
+			    			data2[i2]=t1;
+			    		}
+			    	 	String tRecHex=mloralib.FunBytesToHex(data2);
+			    	    System.out.println("收到資料COM Port<-"+tRecHex);   
+			    	    recevieText.setText(recevieText.getText()+tRecHex+"\n");
+		    		}
+		    	}
+			}
+		}
+		  
+    	*/
+		
+		///////////
 	}
 	public static void main(String[] args) {
 	   // Invoke the constructor to setup the GUI, by allocating an instance
@@ -658,12 +694,16 @@ public class ifroglablora extends Frame implements ActionListener {
 	}
 	/////////////////////////////////////////
 /////////////////////////////////////////
+
+	
 	class ThreadRecevieText extends Thread
 	{ 
-	  public ThreadRecevieText(TextArea iComRrecevieText)
+	  public ThreadRecevieText(TextArea iComRrecevieText,loralib iloralib)
 	  { 
 		  mRrecevieText = iComRrecevieText;
-	       generator = new Random();
+	      generator = new Random();
+	      threadloralib=iloralib;
+          mloralib.ReadMode(Freq1, Freq2, Freq3, Power); 
 	  }
 
 	  public void run()
@@ -672,9 +712,26 @@ public class ifroglablora extends Frame implements ActionListener {
 	   {
 	     while (!interrupted())
 	     { 
-	      int i = Math.abs(generator.nextInt());
-	  	  mRrecevieText.setText(new Integer(i).toString()+"\n"+mRrecevieText.getText());
-	      sleep(100);
+			//long tCounter=mloralib.FunLora_7_counter_long();           //   DOTO: 韌體還沒有做
+		    //System.out.println("tCounter="+Long.toString(tCounter));   // 
+				  byte[] data=mloralib.FunLora_6_readPureData();
+			    	  if(data!=null && data.length>4 &&  data[0]==(byte)0xc1 &&    data[1]==(byte)0x86 ){
+			    		int len=(int)data[2]-2-2;  //18
+			    		if(data.length==len+6+2){ //15 22  /// 8+1  3 
+				    		byte[] data2 = new byte[len];
+				    		for(int i2=0;i2<len;i2++){
+				    			byte t1=data[3+i2];
+				    			data2[i2]=t1;
+				    		}
+			    			if(oldData==null || Arrays.equals(oldData, data2)==false) {
+					    	 	String tRecHex=mloralib.FunBytesToHex(data2);
+					    	    System.out.println("收到資料COM Port<-"+tRecHex);   
+					    	    recevieText.setText(tRecHex+"\n"+recevieText.getText());
+					    	    oldData=data2.clone();
+			    			}
+			    		}
+			    	  }
+		      sleep(20);
 	     }
 	   }
 	   catch (InterruptedException exception) {}
@@ -683,62 +740,9 @@ public class ifroglablora extends Frame implements ActionListener {
 	  // private JComboBox combo;
 	  private Random generator;
 	  private TextArea mRrecevieText;
+	  private loralib threadloralib;
+	  private byte[] oldData;
 	}
-
-	class ThreadRecevieText2 extends Thread
-	{ 
-	  public void ThreadRecevieText(TextArea iRecevieText)
-	  { 
-	    mRrecevieText = iRecevieText;
-	    generator = new Random();
-	    mCounter=0;
-	  }
-
-	  public void run()
-	  { 
-	     while (!interrupted())
-	     {
-		    try {
-		    	
-		   // 	byte[] dataCounter=mloralib.FunLora_7_counter();
-	
-		   // 	if(dataCounter.length>4 &&  dataCounter[0]==(byte)0xc1 &&    dataCounter[1]==(byte)0x87 ){
-		    //		long Counter=(long)dataCounter[3]*(long)0x100+(long)dataCounter[4];
-		    //		if(mCounter!=Counter){
-		    	    	byte[] data=mloralib.FunLora_6_readPureData();
-				    	if(data!=null && data.length>4 &&  data[0]==(byte)0xc1 &&    data[1]==(byte)0x86 ){
-				    		int len=(int)data[2];
-				    		if(data.length<=len+3){
-					    		byte[] data2 = new byte[len];
-					    		for(int i=0;i<len-1;i++){
-					    			data2[i]=data[3+i];
-					    		}
-					    		String tRecHex=mloralib.FunBytesToHex(data2);
-					    		System.out.println("收到資料COM Port<-"+tRecHex);   
-					    	  	mRrecevieText.setText(mRrecevieText.getText()+tRecHex+"\n");
-				    		}
-				    	}
-		    //		}
-		    //	}
-		    	
-				sleep(10);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-	  	 
-	    	 
-	     }
-	   
-	  }
-
-	  private TextArea mRrecevieText;
-	  private Random generator;
-	  private long mCounter;
-	}
-	
-	
 	
 	
 	

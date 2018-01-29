@@ -2,5 +2,5 @@ LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/arch
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/os=macosx
 configDescList=org.eclipse.launchbar.core.descriptorType.default\:ifroglablora
 eclipse.preferences.version=1
-org.eclipse.launchbar.core.descriptorType.default\:ifroglablora/activeLaunchMode=run
+org.eclipse.launchbar.core.descriptorType.default\:ifroglablora/activeLaunchMode=debug
 org.eclipse.launchbar.core.descriptorType.default\:ifroglablora/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local
