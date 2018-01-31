@@ -10,7 +10,6 @@ INDEX VERSION 1.130+/Users/powenko/Desktop/powenko/github/IL-LORA1272/Sample-Jav
 1570747694.index
 3351034188.index
 4274028564.index
-3383030680.index
 2214973242.index
 2873823296.index
 3099949926.index

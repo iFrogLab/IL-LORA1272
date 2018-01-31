@@ -1605,3 +1605,6 @@ org.eclipse.jdi.TimeoutException: Timeout occurred while waiting for packet 4270
 	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:653)
 	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:590)
 	at org.eclipse.equinox.launcher.Main.run(Main.java:1499)
+
+!ENTRY org.eclipse.jdt.launching 4 150 2018-01-30 16:54:32.176
+!MESSAGE The archive: /iFrogLabLoRa/lib/RXTXcomm.jar which is referenced by the classpath, does not exist.

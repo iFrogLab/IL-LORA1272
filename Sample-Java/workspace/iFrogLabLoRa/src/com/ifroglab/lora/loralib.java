@@ -73,7 +73,7 @@ public class loralib {
 			    		 }
 			    	// }
 		    	 }
-			}else if((OS.startsWith("Linux")==true) || (OS.startsWith("Windows")==true) ) { 
+			}else if(OS.startsWith("Linux")==true)  { 
 				 if(mSerialPort[length-1].getDescriptivePortName().startsWith("USB-UART LP")==true){   //用USB的名稱來判斷
 				    	// if(mSerialPort[length-1].getDescriptivePortName().startsWith("USB-UART LP")==true){   //用USB的名稱來判斷
 					    	 if(CheckPIDVID(mSerialPort[length-1])==true){
@@ -82,6 +82,16 @@ public class loralib {
 				    		 }
 				    	// }
 			    	 }
+			
+			}else if(OS.startsWith("Windows")==true)  { 
+				 //if(mSerialPort[length-1].getDescriptivePortName().startsWith("USB-UART LP")==true){   //用USB的名稱來判斷
+				    	// if(mSerialPort[length-1].getDescriptivePortName().startsWith("USB-UART LP")==true){   //用USB的名稱來判斷
+					    	 if(CheckPIDVID(mSerialPort[length-1])==true){
+					    		 mLoRaSerialPort.add(0,mSerialPort[length-1]);
+					    		 mLoRaSerialPortString.add(0,mSerialPort[length-1].getSystemPortName());
+				    		 }
+				    	// }
+			    //	 }
 			
 			}
 		    length=length-1;
@@ -305,7 +315,7 @@ public class loralib {
 
     		  
     // 寫入
-	public byte[] FunLora_5_write16bytesArray(byte[] data_array){
+	public byte[] FunLora_5_write16bytesArray(byte[] data_array,int iLen){
 		int len=2+1+data_array.length+1;
 		byte[] CMD_Data = new byte[len];
 		CMD_Data[0]=(byte)0xc1;
@@ -317,7 +327,7 @@ public class loralib {
 		CMD_Data[len-1]=0;
 		CMD_Data[len-1]=Fun_CRC(CMD_Data);
 		
-		byte[] data2=FunLora_ChipSendByte(CMD_Data); 
+		byte[] data2=FunLora_ChipSendByteCheckLength(CMD_Data,iLen); 
 		return data2;
 	}
 	public byte[] FunLora_6_readPureData(){
@@ -451,14 +461,20 @@ def FunLora_6_readPureData(self):
         }
 	}
 	private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
-	public static String FunBytesToHex(byte[] bytes) {
-	    char[] hexChars = new char[bytes.length * 2];
+	public static String FunBytesToHex(byte[] bytes,char iSplit) {
+		int hasSplit=2;
+		if(iSplit!='$') {hasSplit=3;}
+		char[] hexChars = new char[bytes.length * hasSplit];
 	    for ( int j = 0; j < bytes.length; j++ ) {
 	        int v = bytes[j] & 0xFF;
-	        hexChars[j * 2] = hexArray[v >>> 4];
-	        hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+	        hexChars[j * hasSplit] = hexArray[v >>> 4];
+	        hexChars[j * hasSplit + 1] = hexArray[v & 0x0F];
+	        if(hasSplit==3)  hexChars[j * 3 + 2] = (char)iSplit;
 	    }
 	    return new String(hexChars);
+	}
+	public static String FunBytesToHex(byte[] bytes) {
+		return FunBytesToHex(bytes,'$');
 	}
 	public static String FunByteToHex(byte ibyte) {
 		byte[] bytes={ibyte};
