@@ -2,19 +2,27 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="write16" key="selection"/>
+		<item value="Pref" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="write16"/>
-			<item value="serial_serialEvent_Open"/>
-			<item value="TreadStart"/>
-			<item value="ThreadRecevieText"/>
-			<item value="100;"/>
-			<item value="100)"/>
-			<item value="100"/>
+			<item value="pref"/>
+			<item value="pre"/>
+			<item value="Int"/>
+			<item value="y="/>
+			<item value="mloralib"/>
+			<item value="os"/>
+			<item value="mLabelFireware"/>
+			<item value="hex"/>
+			<item value="mChoiceRecevieDisplay"/>
+			<item value="mChoiceRecevieDisplayIndex==1"/>
+			<item value="[33]"/>
+			<item value="mChoiceRecevieDisplay.getIte"/>
+			<item value="mChoiceRecevieDisplay.getSelectedInde"/>
+			<item value="taregtDevice"/>
+			<item value="[26"/>
 		</list>
 		<list key="replacehistory">
 		</list>
@@ -23,7 +31,7 @@
 		<item value="290" key="DIALOG_WIDTH"/>
 		<item value="1|.AppleSystemUIFont|11.0|0|COCOA|1|.AppleSystemUIFont" key="DIALOG_FONT_NAME"/>
 		<item value="409" key="DIALOG_HEIGHT"/>
-		<item value="996" key="DIALOG_X_ORIGIN"/>
+		<item value="959" key="DIALOG_X_ORIGIN"/>
 		<item value="107" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

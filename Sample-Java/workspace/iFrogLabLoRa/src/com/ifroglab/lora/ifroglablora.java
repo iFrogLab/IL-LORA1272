@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.util.prefs.Preferences;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,9 +56,6 @@ public class ifroglablora extends Frame {
 	 
 	
 	// 程式專用
-	//private int count = 0;     // Counter's value
-	
-	//private  Label headerLabel;
 	
 	// 多國語言
 	private String mStr[][]={
@@ -109,11 +107,19 @@ public class ifroglablora extends Frame {
 			  
 			  
 	};
-	private int lan=1;
+	private int lan=0;
 	
 	
 	@SuppressWarnings("deprecation")
 	public ifroglablora () {
+		
+		
+		//String t1= Integer.toString(ChoiceLanguage.getSelectedIndex() );   // ChoiceLanguage.getSelectedIndex()   //ChoiceLanguage.getItem(ChoiceLanguage.getSelectedIndex());	
+		String t1=FunPreferencesLoad("Language");
+		if(t1!="") {
+			lan=Integer.parseInt(t1);
+		}
+		
 
 	    if(mloralib==null)  mloralib=new loralib();
 	   // 內定值設定
@@ -374,7 +380,7 @@ public class ifroglablora extends Frame {
 		         }
 		      });
 		      // END 08
-		      
+		      /*
 		      // Begin 07, 添加Step 2  「更多設定」的按鈕 
 		      Button preferencesButton = new Button(mStr[14][lan]);    //"reflash"
 		      preferencesButton.setBounds(100,100, 100,30); 
@@ -386,6 +392,7 @@ public class ifroglablora extends Frame {
 		         }
 		      });
 		      // END 07
+		      */
 		      
 		      /*
 		      // Begin 10 添加Step 2  LoRa的送資料的測試按鈕 
@@ -412,6 +419,26 @@ public class ifroglablora extends Frame {
 		      });
 		      // END 08
 		      */
+		      
+		      // Begin 06,               添加Step 2  Com 設備列表
+		      final Choice ChoiceLanguage=new Choice();  
+		      ChoiceLanguage.setBounds(100,100,100,30);  
+		      ChoiceLanguage.add("English");             
+		      ChoiceLanguage.add("Chinese");       
+		      mainFrame.add(ChoiceLanguage);  
+		      ChoiceLanguage.setLocation(430,y+50+tUITop+(ChoiceLanguage.size().height/2));
+		      ChoiceLanguage.select(lan);
+		      ChoiceLanguage.addItemListener(new ItemListener(){
+				@Override
+				public void itemStateChanged(ItemEvent e) {
+					String t1= Integer.toString(ChoiceLanguage.getSelectedIndex() );   // ChoiceLanguage.getSelectedIndex()   //ChoiceLanguage.getItem(ChoiceLanguage.getSelectedIndex());	
+					FunPreferencesSave("Language",t1 );
+					System.exit(0);
+				}
+		      });
+		      // END 06
+		      
+		      
 		      // Begin 9,                 添加Step 1 一條區分線
 		      Label lineLabel = new Label();
 		      lineLabel.setAlignment(Label.LEFT);
@@ -421,6 +448,9 @@ public class ifroglablora extends Frame {
 		      mainFrame.add(lineLabel);  
 		      lineLabel.setLocation(0, y+100+tUITop);
 		      // END 9
+		      
+		      
+		      
 		}
 		public void ui_Step3(Frame mainFrame) {
 			 int y=140;
@@ -731,7 +761,15 @@ public class ifroglablora extends Frame {
 	      private int mHight;
 	      
 	   }
-	
+		public void FunPreferencesSave(String PREF_NAME,String newValue) {
+			Preferences prefs = Preferences.userNodeForPackage(com.ifroglab.lora.ifroglablora.class);
+			prefs.put(PREF_NAME, newValue);
+		}
+		public String FunPreferencesLoad(String PREF_NAME) {
+			Preferences prefs = Preferences.userNodeForPackage(com.ifroglab.lora.ifroglablora.class);
+			String propertyValue = prefs.get(PREF_NAME, ""); // "a string"
+			return propertyValue;
+		}
 	class ThreadRecevieText extends Thread
 	{ 
 	  public ThreadRecevieText(TextArea iComRrecevieText,loralib iloralib,Choice iChoiceRecevieDisplay)
