@@ -2,27 +2,27 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="Pref" key="selection"/>
+		<item value="mainFrame" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="pref"/>
-			<item value="pre"/>
-			<item value="Int"/>
-			<item value="y="/>
-			<item value="mloralib"/>
+			<item value="mainFrame"/>
+			<item value="parent"/>
+			<item value="ui_Step1"/>
+			<item value="frame"/>
+			<item value="Panel"/>
+			<item value="Preference"/>
+			<item value="JCheckBox"/>
+			<item value="StringLogFileName"/>
+			<item value="[46]"/>
+			<item value="ifroglab.csv"/>
+			<item value="mac"/>
+			<item value="linux"/>
+			<item value="os."/>
 			<item value="os"/>
-			<item value="mLabelFireware"/>
-			<item value="hex"/>
-			<item value="mChoiceRecevieDisplay"/>
-			<item value="mChoiceRecevieDisplayIndex==1"/>
-			<item value="[33]"/>
-			<item value="mChoiceRecevieDisplay.getIte"/>
-			<item value="mChoiceRecevieDisplay.getSelectedInde"/>
-			<item value="taregtDevice"/>
-			<item value="[26"/>
+			<item value="labelMessage"/>
 		</list>
 		<list key="replacehistory">
 		</list>
@@ -31,7 +31,7 @@
 		<item value="290" key="DIALOG_WIDTH"/>
 		<item value="1|.AppleSystemUIFont|11.0|0|COCOA|1|.AppleSystemUIFont" key="DIALOG_FONT_NAME"/>
 		<item value="409" key="DIALOG_HEIGHT"/>
-		<item value="959" key="DIALOG_X_ORIGIN"/>
+		<item value="934" key="DIALOG_X_ORIGIN"/>
 		<item value="107" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

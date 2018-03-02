@@ -8,6 +8,8 @@ import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 
+
+
 public class loralib {
 	boolean debug=true;
 	public SerialPort comPort;
@@ -19,7 +21,7 @@ public class loralib {
 	public static String OS = null;   //作業系統
 	// 用戶的設定
 	private String mSerialPortDescriptivePortName;
-	private int mBautRate=115200;
+	//private int mBautRate=115200;
 	public byte m_TXRX;
 	public byte m_Freq1;
 	public byte m_Freq2;
@@ -243,15 +245,16 @@ public class loralib {
     private byte Fun_CRC(byte[] data){
     	return Fun_CRC2(data,data.length);
     }
+    /*
     private int PortNameToIndex(String iSerialPortDescriptivePortName){
        return 1;
     }
-
+*/
 	public  byte[] FunLora_Serial(byte[] array1,int CRCNum,int ResultLen){
 		ArrayList<Byte> readBuffer = new ArrayList<Byte>();
 		try{
 			//List<byte> readBuffer2; // = new ArrayList<SerialPort>();
-			int numRead=0;
+//			int numRead=0;
 			if(comPort!=null) comPort.closePort();
 			if(comPort==null || comPort.isOpen()==false){
 				comPort = SerialPort.getCommPort(mSerialPortDescriptivePortName); //iSerialPortDescriptivePortName);
@@ -413,7 +416,8 @@ def FunLora_6_readPureData(self):
 		    byte[] array1={(byte) 0x80,0x00,0x00,0};
 		    array1[3]=Fun_CRC(array1);
 		    if(debug) 	System.out.println(FunBytesToHex(array1)); 
-		    int numRead = comPort.writeBytes(array1, array1.length);
+		    //int numRead = 
+		    	comPort.writeBytes(array1, array1.length);
 		    //TimeUnit.SECONDS.sleep(1);
 		    TimeUnit.MILLISECONDS.sleep(7);
 		    

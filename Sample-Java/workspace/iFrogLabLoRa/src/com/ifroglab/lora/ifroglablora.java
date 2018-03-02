@@ -7,26 +7,40 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Enumeration;
+//import java.util.Enumeration;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.prefs.Preferences;
-import java.io.FileDescriptor;
+
+import javax.swing.JFileChooser;
+
+import java.io.BufferedReader;
+import java.io.File;
+//import java.io.FileDescriptor;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.InputStreamReader;
+//import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 
-import com.fazecast.jSerialComm.SerialPort;
+//import com.fazecast.jSerialComm.SerialPort;
 
 //import gnu.io.*;
 //An AWT program inherits from the top-level container java.awt.Frame
 public class ifroglablora extends Frame {
 		
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// LoRa 相關變數
 	private loralib mloralib;
 	private ArrayList<String> mLoRaSerialPortString; //找到的LoRa Com Port 位置
@@ -35,7 +49,7 @@ public class ifroglablora extends Frame {
 	private byte Freq2=0x65;
 	private byte Freq3=0x6c;
 	private byte Power=0x3;  //{ TXRX,0x01,0x65,0x6c,0x3); 
-	private long mCounter;
+	//private long mCounter;
 
 	
 	// UI
@@ -48,22 +62,28 @@ public class ifroglablora extends Frame {
 	private Frame mainFrame;       // GUI Frame
 	private Label labelMessage;    // Declare a Label component 
 	private Label labelLoRaStatus;    // Declare a Label component 
-	private TextField tfCount; // Declare a TextField component 
-	private Button btnCount;   // Declare a Button component
+	//private TextField tfCount; // Declare a TextField component 
+	//private Button btnCount;   // Declare a Button component
 	private Label mLabelStatus;  // "設備狀態" 
 	private Label mLabelID;   // MAC ID:
 	private Label mLabelFireware;    // Fireware Version
+	
+	private TextField TextFieldUrl;
+	private Checkbox checkBoxSaveLog;
+	private Checkbox checkBoxUpload;
+	private Button ButtonLogFileName;  
+	
 	 
 	
 	// 程式專用
 	
 	// 多國語言
-	private String mStr[][]={
+	public String mStr[][]={
 			  {"Step1:","步驟 1:"},
-			  {"Select iFrogLab LoRa Com Port","iFrogLab LoRa 設備"},
-			  {"refresh:","尋找此機器LoRa設備"},
+			  {"Select LoRa Com Port","iFrogLab LoRa 設備"},
+			  {"Reload","尋找此機器LoRa設備"},
 			  {"Searching:","搜尋中LoRa"},
-			  {"Done:","完成"},
+			  {"Done","完成"},
 			  {"Step2:","步驟 2:"},  //5
 			  {"Setup LoRa device","設定LoRa設備"},  
 			  {"Stauts: ","設備狀態:"},  
@@ -73,7 +93,7 @@ public class ifroglablora extends Frame {
 			  {"Broadcast","廣播Broadcast"},
 			  {"Node (Client)","節點端 Node"},
 			  {"Gateway (Server)","伺服器端 Gateway"},
-			  {"Preferences...","更多設定"},
+			  {"Preferences","更多設定"},
 			  {"Step3:","步驟 3:"},  //15
 			  {"",""},
 			  {"",""},
@@ -103,19 +123,23 @@ public class ifroglablora extends Frame {
 			  {"Traditional Chinese","繁體中文"}, 
 			  {"Send a lot of data","送大量資料"}, 
 			  {" isn't iFrogLab LoRa Device"," 不是iFrogLab LoRa 設備"},  
-			  {"iFrogLab LoRa Device worning, now.","iFrogLab LoRa 工作中"},  
-			  
-			  
+			  {"iFrogLab LoRa Device worning, now.","iFrogLab LoRa 工作中"}, 
+			  {"Upload to Dashboard","上傳到儀表板"}, //45  
+			  {"Open Dashboard","打開儀表板"}, 
+			  {"save data to","儲存資料到"},   
+			  {"http://www.ifroglab.org/iot/AjaxIoTTable.php?action=upload&Key=Temperature&apikey=20180226203605JXpDA&Value=","http://www.ifroglab.org/iot/AjaxIoTTable.php?action=upload&Key=Temperature&apikey=20180226203605JXpDA&Value="}, 
 	};
-	private int lan=0;
-	
+	public int lan=0;
+	// 程式用到的變數
+	private String StringLogFileName="iFrogLab.csv";
+	private ifroglablora ifroglabloraClass; 
 	
 	@SuppressWarnings("deprecation")
 	public ifroglablora () {
 		
 		
 		//String t1= Integer.toString(ChoiceLanguage.getSelectedIndex() );   // ChoiceLanguage.getSelectedIndex()   //ChoiceLanguage.getItem(ChoiceLanguage.getSelectedIndex());	
-		String t1=FunPreferencesLoad("Language");
+		String t1=FunPreferencesLoad("Language","0");
 		if(t1!="") {
 			lan=Integer.parseInt(t1);
 		}
@@ -124,6 +148,7 @@ public class ifroglablora extends Frame {
 	    if(mloralib==null)  mloralib=new loralib();
 	   // 內定值設定
 	   mDeviceID="";
+	   ifroglabloraClass=this;
 	   // Begin 01, 設定主畫面UI
 	   mainFrame= new Frame();  
 	   mainFrame = new Frame("iFrogLab LoRa Application");
@@ -133,9 +158,9 @@ public class ifroglablora extends Frame {
 	          System.exit(0);
 	       }        
 	   });
-	   mainFrame.setSize(600,490);  
-	   mainFrame.setMinimumSize(new Dimension(600,490));
-	   mainFrame.setMaximumSize(new Dimension(600,490));
+	   mainFrame.setSize(600,490+60);  
+	   mainFrame.setMinimumSize(new Dimension(600,490+60));
+	   mainFrame.setMaximumSize(new Dimension(600,490+60));
 	   mainFrame.setResizable(false);
 	   
 	   mainFrame.setLayout(null);  
@@ -321,7 +346,7 @@ public class ifroglablora extends Frame {
 		      // END 5
 		      // Begin 06,               添加Step 2  Com 設備列表
 		      final Choice LoRaModeChoice=new Choice();  
-		      LoRaModeChoice.setBounds(100,100, 180,30);  
+		      LoRaModeChoice.setBounds(100,100, 170,30);  
 		      LoRaModeChoice.add(mStr[11][lan]);             
 		      LoRaModeChoice.add(mStr[12][lan]);             
 		      LoRaModeChoice.add(mStr[13][lan]); 
@@ -341,7 +366,7 @@ public class ifroglablora extends Frame {
 		      final Button startButton = new Button(mStr[24][lan]);    //"reflash"
 		      startButton.setBounds(100,100, 115,30); 
 		      mainFrame.add(startButton);
-		      startButton.setLocation(310,y+50+(startButton.size().height/2+tUITop));
+		      startButton.setLocation(290,y+50+(startButton.size().height/2+tUITop));
 		      startButton.addActionListener(new ActionListener() {
 		         public void actionPerformed(ActionEvent e) {        // 當按下[步驟2；啟動LoRa 按鍵] 
 		        	 if(mDeviceID.length()>0){                 // 如果已經開啟LoRa 設備的話
@@ -362,8 +387,8 @@ public class ifroglablora extends Frame {
 			        		 TreadStop();					  	  // 關閉　LoRa　Reciver 資料
 			        		 startButton.setLabel(mStr[25][lan]);  // 成功的話，就改變按鈕的文字為「關閉LoRa」
 			        		 String StringID=Integer.toString(mloralib.GetFirmwareVersion());
-				        	 labelLoRaStatus.setText(mStr[26][lan]+mDeviceID+",韌體:"+StringID ); //LoRa使用中
-					         mLabelStatus.setText(mStr[26][lan]+mDeviceID+",韌體:"+StringID);     // "設備狀態"
+				        	 labelLoRaStatus.setText(mStr[26][lan]+mDeviceID+","+mStr[10][lan]+":"+StringID ); //LoRa使用中
+					         mLabelStatus.setText(mStr[26][lan]+mDeviceID+","+mStr[10][lan]+":"+StringID);     // "設備狀態"
 							 mLabelID.setText(mStr[9][lan]+mDeviceID);                      // MAC ID:
 							 mLabelFireware.setText(mStr[10][lan]+StringID);               // Fireware Version
 							 mloralib.ReadMode(Freq1, Freq2, Freq3, Power);  //{ TXRX,0x01,0x65,0x6c,0x3);             // 設定LoRa為讀取模式	 
@@ -380,19 +405,22 @@ public class ifroglablora extends Frame {
 		         }
 		      });
 		      // END 08
-		      /*
 		      // Begin 07, 添加Step 2  「更多設定」的按鈕 
-		      Button preferencesButton = new Button(mStr[14][lan]);    //"reflash"
-		      preferencesButton.setBounds(100,100, 100,30); 
+		      Button preferencesButton = new Button(mStr[14][lan]);    //"Preference"
+		      preferencesButton.setBounds(100,100, 125,30); 
 		      mainFrame.add(preferencesButton);
-		      preferencesButton.setLocation(430,y+50+tUITop+(preferencesButton.size().height/2));
+		      preferencesButton.setLocation(495,y+50+tUITop+(preferencesButton.size().height/2));
 		      preferencesButton.addActionListener(new ActionListener() {
 		         public void actionPerformed(ActionEvent e) {
 		        	 	labelMessage.setText(mStr[12][lan]);  
+
+		        	 	PreferenceDialog preferenceDialog = new PreferenceDialog(mainFrame,ifroglabloraClass);
+		        	 	preferenceDialog.setVisible(true);
+		                
 		         }
 		      });
 		      // END 07
-		      */
+		      
 		      
 		      /*
 		      // Begin 10 添加Step 2  LoRa的送資料的測試按鈕 
@@ -420,13 +448,13 @@ public class ifroglablora extends Frame {
 		      // END 08
 		      */
 		      
-		      // Begin 06,               添加Step 2  Com 設備列表
+		      // Begin 06,               添加Step 2  改變語言
 		      final Choice ChoiceLanguage=new Choice();  
 		      ChoiceLanguage.setBounds(100,100,100,30);  
 		      ChoiceLanguage.add("English");             
 		      ChoiceLanguage.add("Chinese");       
 		      mainFrame.add(ChoiceLanguage);  
-		      ChoiceLanguage.setLocation(430,y+50+tUITop+(ChoiceLanguage.size().height/2));
+		      ChoiceLanguage.setLocation(400,y+50+tUITop+(ChoiceLanguage.size().height/2));
 		      ChoiceLanguage.select(lan);
 		      ChoiceLanguage.addItemListener(new ItemListener(){
 				@Override
@@ -512,19 +540,14 @@ public class ifroglablora extends Frame {
 		         }
 		      });
 		      // END 04
-
-		      
 		     // Begin 04,                添加Step 3 的文字 "Step1"
-		    // Label l2 = new Label();
+		     // Label l2 = new Label();
 		     sendText = new TextArea("",5,30);		     
 		     sendText.setText(mStr[19][lan]);    //"Step3"
 		     sendText.setSize(580,80);
 		     mainFrame.add(sendText);  
 		     sendText.setLocation(10, y+80+tUITop);
 		      // END 04
-		     
-		     
-		     
 		     // Begin 03,               添加Step 3  Text (ASCII)  , Hex  ,File
 		     mChoiceRecevieDisplay=new Choice();  
 		     mChoiceRecevieDisplay.setBounds(100,100, 180,30);  
@@ -540,11 +563,9 @@ public class ifroglablora extends Frame {
 		            String data = "Recevie: " 
 		            + mChoiceRecevieDisplay.getItem(mChoiceRecevieDisplay.getSelectedIndex());
 		            labelMessage.setText(data);	
-		        	
 		            recevieText.setText("");
 		            TreadStop();
 		            TreadStart();
-		            
 				}
 		      });
 		      // END 03
@@ -571,33 +592,76 @@ public class ifroglablora extends Frame {
 		      l3.setLocation(10, y+160+tUITop);
 		      // END 2
 		     // Begin 05,                添加Step 3 顯示 接收的資料
-		     // Label l2 = new Label();
 		     recevieText = new TextArea("",5,30);
 		     recevieText.setText("");    
 		     recevieText.setSize(580,80);
 		     mainFrame.add(recevieText);  
 		     recevieText.setLocation(10, y+190+tUITop);
-		      // END 05	     
-		     /*
-		      // Begin 05,            
-		     Choice ChoiceTargetDevice=new Choice();  
-		     ChoiceTargetDevice.setBounds(100,100, 180,30);  
-		     ChoiceTargetDevice.add(mStr[16][lan]);             
-		     ChoiceTargetDevice.add(mStr[17][lan]);             
-		     ChoiceTargetDevice.add(mStr[18][lan]); 
-		      mainFrame.add(ChoiceTargetDevice);  
-		      ChoiceTargetDevice.setLocation(415, y+35+(LoRaModeChoice.size().height/2+tUITop));
-		      ChoiceTargetDevice.addItemListener(new ItemListener(){
-				@Override
-				public void itemStateChanged(ItemEvent e) {
-		            String data = "Setup: " 
-		            + ChoiceTargetDevice.getItem(ChoiceTargetDevice.getSelectedIndex());
-		            labelMessage.setText(data);
-				}
-		      });
-		      // END 05
-		      	     
-		       */
+		     // END 05	     
+  			 // Begin 06, 上傳到網路的選項 
+		     checkBoxUpload = new Checkbox();
+		     checkBoxUpload.setLabel(mStr[45][lan]);
+		     checkBoxUpload.setSize(170,30);
+  			 mainFrame.add(checkBoxUpload);
+  			 checkBoxUpload.setLocation(10, y+190+75+tUITop);
+  			 // END 06	
+  			 // Begin 07, 打開儀表版的按鈕 
+  		     Button ButtonIoT = new Button(mStr[46][lan]);    //"reflash"
+  		     ButtonIoT.setBounds(100,100, 140,30); 
+  		     ButtonIoT.setLocation(320+130, y+190+75+tUITop);
+  		     mainFrame.add(ButtonIoT);
+  		     //mUIComPortName.setBounds(100,100, 150,75); 
+  		     //ButtonIoT.setLocation(300,y+190+tUITop);
+  		     ButtonIoT.addActionListener(new ActionListener() {
+  		        public void actionPerformed(ActionEvent e) {
+  	  			  ui_Setp1_listPorts();                                  // 找出LoRa USB COM ports 設備
+  		        }
+  		     });
+  		     // END 07
+		     // Begin 08, 網址 
+  		     TextFieldUrl=new TextField(mStr[48][lan]);  
+  		     TextFieldUrl.setBounds(280,150, 270,30);  
+  		     mainFrame.add(TextFieldUrl);
+  		     TextFieldUrl.setLocation(180, y+190+75+tUITop);
+   		     // END 08
+
+			 // Begin 06, 上傳到網路的選項 
+		     checkBoxSaveLog = new Checkbox();
+		     checkBoxSaveLog.setLabel(mStr[47][lan]);
+		     checkBoxSaveLog.setSize(110,30);
+			 mainFrame.add(checkBoxSaveLog);
+			 checkBoxSaveLog.setLocation(10, y+190+75+30+tUITop);
+			 // END 06	
+			 		 
+			 // Begin 07, 選檔案按鈕
+			 StringLogFileName=FunPreferencesLoad("StringLogFileName","iFrogLab.csv");
+			 File f = new File(StringLogFileName);
+			 //System.out.println(f.getName());
+			 ButtonLogFileName = new Button(f.getName());   
+			 ButtonLogFileName.setBounds(100,100, 140,30); 
+	  		 mainFrame.add(ButtonLogFileName);
+			 ButtonLogFileName.setLocation(120,y+190+75+30+tUITop);
+	  		 ButtonLogFileName.addActionListener(new ActionListener() {
+	  		     public void actionPerformed(ActionEvent e) {
+	  	  			 //ui_Setp1_listPorts();                                  // 找出LoRa USB COM ports 設備
+	  				 // Begin 08, 選檔案
+					 JFileChooser fileChooser = new JFileChooser();
+					 fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+					 //int result = fileChooser.showOpenDialog(this); //parent);  //Show up the dialog
+					 int result = fileChooser.showSaveDialog(null);
+					 if (result == JFileChooser.APPROVE_OPTION) {
+						    // user selects a file
+						    File selectedFile = fileChooser.getSelectedFile();
+						    StringLogFileName=selectedFile.getAbsolutePath();
+						    String LogFileName2=selectedFile.getName();
+						    System.out.println("Selected file: " +StringLogFileName );
+						    FunPreferencesSave("StringLogFileName",StringLogFileName);
+						    ButtonLogFileName.setLabel(LogFileName2);
+					 }
+					 // END 08, 選檔案
+	  		    }
+	  		  });
+			  // END 07	
 		}
 		   //02 begin  menu
 		   // 下拉式選
@@ -664,10 +728,6 @@ public class ifroglablora extends Frame {
 		      editMenu.add(pasteMenuItem);
 		      
 		      aboutMenu.add(aboutMenuItem);
-
-		      //add menu to menubar
-		    //  menuBar.add(fileMenu);
-		    //  menuBar.add(editMenu);
 		      menuBar.add(aboutMenu);
 
 		      //add menubar to the frame
@@ -711,7 +771,9 @@ public class ifroglablora extends Frame {
 			mThreadRecevieText=null;
 		}
 		
-		mThreadRecevieText = new ThreadRecevieText(recevieText,mloralib,mChoiceRecevieDisplay);
+		mThreadRecevieText = new ThreadRecevieText( labelMessage,checkBoxUpload,
+				  TextFieldUrl,checkBoxSaveLog,
+				  recevieText,mloralib,mChoiceRecevieDisplay);
 		mThreadRecevieText.start();
 	
 	}
@@ -725,7 +787,11 @@ public class ifroglablora extends Frame {
 	/////////////////////////////////////////
 /////////////////////////////////////////
 	class MsgDialog extends Dialog {
-	      public MsgDialog(Frame parent,String iMsg,int iWidth,int iHight){
+	      /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		public MsgDialog(Frame parent,String iMsg,int iWidth,int iHight){
 	         super(parent, true);         
 	         //setBackground(Color.gray);
 	         mMsg=iMsg;
@@ -765,17 +831,23 @@ public class ifroglablora extends Frame {
 			Preferences prefs = Preferences.userNodeForPackage(com.ifroglab.lora.ifroglablora.class);
 			prefs.put(PREF_NAME, newValue);
 		}
-		public String FunPreferencesLoad(String PREF_NAME) {
+		public String FunPreferencesLoad(String PREF_NAME,String defaultValue) {
 			Preferences prefs = Preferences.userNodeForPackage(com.ifroglab.lora.ifroglablora.class);
-			String propertyValue = prefs.get(PREF_NAME, ""); // "a string"
+			String propertyValue = prefs.get(PREF_NAME,defaultValue); // "a string"
 			return propertyValue;
 		}
 	class ThreadRecevieText extends Thread
 	{ 
-	  public ThreadRecevieText(TextArea iComRrecevieText,loralib iloralib,Choice iChoiceRecevieDisplay)
+	  public ThreadRecevieText(Label ilabelMessage,Checkbox icheckBoxUpload,
+			  TextField iTextFieldUrl,Checkbox icheckBoxSaveLog,
+			  TextArea iComRrecevieText,loralib iloralib,Choice iChoiceRecevieDisplay)
 	  { 
 		  delaytime=500;
+		  mlabelMessage=ilabelMessage;
 		  mRrecevieText = iComRrecevieText;
+		  mcheckBoxSaveLog=icheckBoxSaveLog; 
+		  mcheckBoxUpload=icheckBoxUpload; 
+		  mTextFieldUrl=iTextFieldUrl; 
 	      generator = new Random();
 	      threadloralib=iloralib;
           mloralib.ReadMode(Freq1, Freq2, Freq3, Power); 
@@ -818,7 +890,62 @@ public class ifroglablora extends Frame {
 						    	    System.out.println("收到資料COM Port<-"+tRecHex);   
 						    	    if(oldData!=null) {
 					    	    			recevieText.setText(tRecHex+"\n"+recevieText.getText());  //避免顯示上次USB 記憶體上的舊資料
+					    	    			// BEGIN 12, 如果要上傳到 Dashboard
+					    	    			if(mcheckBoxUpload.getState()==true) {
+					    	    				if(mTextFieldUrl.getText().length()>5) {
+					    	    					String urlString = mTextFieldUrl.getText(); //"http://wherever.com/someAction?param1=value1&param2=value2....";
+					    	    					URL url;
+					    	    					URLConnection conn;
+					    	    					InputStream is;
+					    	    					String data3 = "";
+													try {
+														url = new URL(urlString+tRecHex);
+														try {
+															conn = url.openConnection();
+							    	    					        is = conn.getInputStream();
+							    	    					        //InputStream iStream = httpEntity.getContent();
+							    	    					        BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf8"));
+							    	    					        StringBuffer sb = new StringBuffer();
+							    	    					        String line = "";
+
+							    	    					        while ((line = br.readLine()) != null) {
+							    	    					            sb.append(line);
+							    	    					        }
+							    	    					        data3 = sb.toString();
+							    	    					        System.out.println(data3);
+							    	    					        mlabelMessage.setText(data3); 
+							    	    					        
+							    	    					        
+							    	    					        
+							    	    					        
+														} catch (IOException e) {
+															// TODO Auto-generated catch block
+															e.printStackTrace();
+														}
+													} catch (MalformedURLException e) {
+														// TODO Auto-generated catch block
+														e.printStackTrace();
+													}
+					    	    					// Do what you want with that stream
+					    	    					
+					    	    				}
+					    	    			}
+					    	    			// END 12, 如果要上傳到 Dashboard
+					    	    			// BEGIN 11,ifroglab.csv 儲存檔案
+					    	    			if(mcheckBoxSaveLog.getState()==true) {
+					    	    				try	{
+					    	    					if(StringLogFileName.length()>0) {
+					    	    						String filename= StringLogFileName; 
+					    	    				    		FileWriter fw = new FileWriter(filename,true);   //the true will append the new data
+					    	    				    		fw.write(tRecHex+"\n");                         //appends the string to the file
+					    	    				    		fw.close();
+					    	    					}
+					    	    				}catch(IOException ioe){
+					    	    				    System.err.println("IOException: " + ioe.getMessage());
+					    	    				}
+					    	    			}					    	    			
 						    	    }
+			    	    			    // END 11,ifroglab.csv 儲存檔案
 							    	oldData=data2.clone();
 				    			}
 				    		}
@@ -838,5 +965,11 @@ public class ifroglablora extends Frame {
 	  private long mCounter;
 	  private int mChoiceRecevieDisplayIndex;
 	  private int delaytime;
+	  private Checkbox mcheckBoxSaveLog;// = new Checkbox();
+	  private Checkbox mcheckBoxUpload;// = new Checkbox();
+	  private TextField mTextFieldUrl;//=new TextField
+	  private Label mlabelMessage;
+	    		  
+	    		  
 	}	
 }
