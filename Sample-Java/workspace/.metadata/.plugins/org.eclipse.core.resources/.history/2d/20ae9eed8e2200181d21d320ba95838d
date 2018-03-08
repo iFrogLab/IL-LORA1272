@@ -11,7 +11,7 @@ import com.fazecast.jSerialComm.SerialPortEvent;
 
 
 public class loralib {
-	boolean debug=false;
+	boolean debug=true;
 	public SerialPort comPort;
 	public SerialPort mSerialPort[];  //COM Port 資料
 	//public SerialPort mLoRaSerialPort[];  //COM Port 資料

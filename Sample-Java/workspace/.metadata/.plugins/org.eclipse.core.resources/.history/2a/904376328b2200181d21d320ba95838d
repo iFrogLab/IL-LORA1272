@@ -1283,7 +1283,7 @@ public class ifroglablora extends Frame {
 					    			byte t1=data[3+i2];
 					    			data2[i2]=t1;
 					    		}
-				    			//if(oldData==null || Arrays.equals(oldData, data2)==false) {
+				    			if(oldData==null || Arrays.equals(oldData, data2)==false) {
 						    	 	String  tRecHex="";
 						    	 	try {
 							    	 	if(mChoiceRecevieDisplay.getSelectedIndex()==0) {   //文字
@@ -1295,7 +1295,7 @@ public class ifroglablora extends Frame {
 							    	 	}
 						    	 	}catch (UnsupportedEncodingException e) {}
 						    	    System.out.println("收到資料COM Port<-"+tRecHex);   
-						    	    //if(oldData!=null) {
+						    	    if(oldData!=null) {
 					    	    			recevieText.setText(tRecHex+"\n"+recevieText.getText());  //避免顯示上次USB 記憶體上的舊資料
 					    	    			// BEGIN 13, 如果要上傳到 URL
 						    	    	    if(mLo.checkBoxUpload=="true") {
@@ -1312,14 +1312,17 @@ public class ifroglablora extends Frame {
 						    	    	    		String thttpURLResult="";
 					    	    	    	    		String thttpURL=mLo.mURL[8]+"&Key=data&Value="+tRecHex+"&apikey="+APIKEY;
 									    	if(mChoiceRecevieDisplay.getSelectedIndex()==0) {   //文字 不改，直接丟
-									    		thttpURL=mLo.mURL[8]+"&Key=String&Value="+tRecHex+"&apikey="+APIKEY;
+									    		thttpURL=mLo.mURL[8]+"&Key=data&Value="+tRecHex+"&apikey="+APIKEY;
 									    		thttpURLResult=FunHTTP(thttpURL);
 									    	}else if(mChoiceRecevieDisplay.getSelectedIndex()==1 ||    //16進位數字
 									    			mChoiceRecevieDisplay.getSelectedIndex()==2 ) {     //10進位數字
 									    		for(int i=0;i<len;i++) {	
-									    			int t1=(int) (data2[i]& 0xFF);
-									    			String t2 = Integer.toString(t1);
-			    	    	    	    				    		thttpURL=mLo.mURL[8]+"&Key=byte"+Integer.toString(i)+"&Value="+t2+"&apikey="+APIKEY;
+			    	    	    	    				    		thttpURL=mLo.mURL[8]+"&Key=byte"+Integer.toString(i)+"&Value="+data2[i]+"&apikey="+APIKEY;
+			    	    	    	    				    		thttpURLResult=FunHTTP(thttpURL);
+									    		}
+									    	}else if(mChoiceRecevieDisplay.getSelectedIndex()==2) {   //10進位數字		
+									    		for(int i=0;i<len;i++) {	
+			    	    	    	    				    		thttpURL=mLo.mURL[8]+"&Key=byte"+Integer.toString(i)+"&Value="+data2[i]+"&apikey="+APIKEY;
 			    	    	    	    				    		thttpURLResult=FunHTTP(thttpURL);
 									    		}
 									    	}
@@ -1339,10 +1342,10 @@ public class ifroglablora extends Frame {
 					    	    				    System.err.println("IOException: " + ioe.getMessage());
 					    	    				}
 					    	    			}					    	    			
-						    	  //  }
+						    	    }
 			    	    			    // END 11,ifroglab.csv 儲存檔案
 							    	oldData=data2.clone();
-				    			//}
+				    			}
 				    		}
 				    	  }
 			}
@@ -1356,7 +1359,7 @@ public class ifroglablora extends Frame {
 	  private Random generator;
 	  private TextArea mRrecevieText;
 	  private loralib threadloralib;
-	  private byte[] oldData;
+	  //private byte[] oldData;
 	  private long mCounter;
 	  // private int mChoiceRecevieDisplayIndex;
 	  private Choice mChoiceRecevieDisplay;

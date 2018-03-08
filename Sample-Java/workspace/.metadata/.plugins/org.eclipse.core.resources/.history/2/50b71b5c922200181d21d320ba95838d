@@ -1316,10 +1316,10 @@ public class ifroglablora extends Frame {
 									    		thttpURLResult=FunHTTP(thttpURL);
 									    	}else if(mChoiceRecevieDisplay.getSelectedIndex()==1 ||    //16進位數字
 									    			mChoiceRecevieDisplay.getSelectedIndex()==2 ) {     //10進位數字
+									    		
 									    		for(int i=0;i<len;i++) {	
-									    			int t1=(int) (data2[i]& 0xFF);
-									    			String t2 = Integer.toString(t1);
-			    	    	    	    				    		thttpURL=mLo.mURL[8]+"&Key=byte"+Integer.toString(i)+"&Value="+t2+"&apikey="+APIKEY;
+									    			int t1=(int) (bytes[i]& 0xFF);
+			    	    	    	    				    		thttpURL=mLo.mURL[8]+"&Key=byte"+Integer.toString(i)+"&Value="+data2[i]+"&apikey="+APIKEY;
 			    	    	    	    				    		thttpURLResult=FunHTTP(thttpURL);
 									    		}
 									    	}
