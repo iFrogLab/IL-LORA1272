@@ -9,6 +9,22 @@
       <title>eclipse.org</title>
       <link>http://www.eclipse.org</link>
     </image>
+     <item>
+      <title><![CDATA[From Java EE to Jakarta EE]]></title>
+      <link><![CDATA[https://mmilinkov.wordpress.com/2018/02/26/and-the-name-is/]]></link>
+      <description><![CDATA[We are happy to announce that the new name for the technology formerly known as Java EE is... Jakarta EE!]]></description>
+      <pubDate>Mon, 26 Feb 2018 14:50:00 EST</pubDate>
+      <category>news</category>
+      <pressrelease>0</pressrelease>
+    </item>
+    <item>
+      <title><![CDATA[Eclipse Newsletter | Boot & Build Eclipse Projects]]></title>
+      <link><![CDATA[https://www.eclipse.org/community/eclipse_newsletter/2018/february/]]></link>
+      <description><![CDATA[Featuring articles about Spring Tools, Gradle plugin (Buildship), Dirigible cloud platform, and EMF Parsley.]]></description>
+      <pubDate>Thu, 22 Feb 2018 3:51:00 EST</pubDate>
+      <category>news</category>
+      <pressrelease>0</pressrelease>
+    </item>
     <item>
       <title><![CDATA[Countdown: 2 weeks | Complete IoT Developer Survey]]></title>
       <link><![CDATA[https://www.surveymonkey.de/r/eclipseorg]]></link>

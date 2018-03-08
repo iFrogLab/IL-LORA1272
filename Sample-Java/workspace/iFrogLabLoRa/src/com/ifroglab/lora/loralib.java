@@ -477,6 +477,32 @@ def FunLora_6_readPureData(self):
 	    }
 	    return new String(hexChars);
 	}
+	public static String FunBytesToHexString(byte[] bytes,char iSplit) {
+		String d1="";
+	    for ( int j = 0; j < bytes.length; j++ ) {
+	    		int t1=(int) (bytes[j]& 0xFF);
+	    		String t2 = Integer.toHexString(t1);
+	    		if(d1=="") {
+	    			d1= t2;
+	    		}else {
+	    			d1=d1+","+t2; //t2;
+	    		}
+	    }
+		return d1;
+	}
+	public static String FunBytesToString(byte[] bytes,char iSplit) {
+		String d1="";
+	    for ( int j = 0; j < bytes.length; j++ ) {
+	    		int t1=(int) (bytes[j]& 0xFF);
+	    		String t2 = Integer.toString(t1);
+	    		if(d1=="") {
+	    			d1= t2;
+	    		}else {
+	    			d1=d1+","+t2; 
+	    		}
+	    }
+		return d1;
+	}
 	public static String FunBytesToHex(byte[] bytes) {
 		return FunBytesToHex(bytes,'$');
 	}

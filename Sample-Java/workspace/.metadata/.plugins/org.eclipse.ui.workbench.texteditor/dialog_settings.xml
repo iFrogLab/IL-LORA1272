@@ -2,27 +2,27 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="mainFrame" key="selection"/>
+		<item value="APIKEY" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="mainFrame"/>
-			<item value="parent"/>
-			<item value="ui_Step1"/>
-			<item value="frame"/>
-			<item value="Panel"/>
-			<item value="Preference"/>
-			<item value="JCheckBox"/>
-			<item value="StringLogFileName"/>
-			<item value="[46]"/>
-			<item value="ifroglab.csv"/>
-			<item value="mac"/>
-			<item value="linux"/>
-			<item value="os."/>
-			<item value="os"/>
-			<item value="labelMessage"/>
+			<item value="APIKEY"/>
+			<item value="data_ifroglab_dashboard_05_ListIoTWidgets"/>
+			<item value="data_ifroglab_dashboard_06_CreateIoTWidgets"/>
+			<item value="{&quot;Result&quot;:&quot;OK&quot;,&quot;TotalRecordCount&quot;:0,&quot;maxid&quot;:0,&quot;Records&quot;:[]}"/>
+			<item value="mURL"/>
+			<item value="PersonId"/>
+			<item value="ProjectId"/>
+			<item value="data_ifroglab_dashboard_03_ListProject"/>
+			<item value="Data"/>
+			<item value="[1]"/>
+			<item value="json"/>
+			<item value="HttpURLConnection"/>
+			<item value="mDeviceID"/>
+			<item value="cons"/>
+			<item value="ID"/>
 		</list>
 		<list key="replacehistory">
 		</list>
