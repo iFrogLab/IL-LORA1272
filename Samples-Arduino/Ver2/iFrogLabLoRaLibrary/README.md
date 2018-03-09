@@ -6,5 +6,9 @@ Arduino library for controlling iFrogLab LoRa [IL-LORA1272][IL-LORA1272],and mak
 
 After downloading, install in Arduino Libraries folder. Restart Arduino IDE, then open File->Sketchbook->Library->iFrogLabLoRaLibrary->sample01_chipInfo.
 
+Here has youtube tutorial video to setup library on Arduino.
+http://www.ifroglab.com/en/?p=6726
+
+
 [IL-LORA1272]:  http://www.ifroglab.com/?p=7086
 [IL-LORA1272 WebSite] : https://github.com/iFrogLab/IL-LORA1272/tree/master/Samples-Arduino/Ver2/iFrogLabLoRaLibrary
