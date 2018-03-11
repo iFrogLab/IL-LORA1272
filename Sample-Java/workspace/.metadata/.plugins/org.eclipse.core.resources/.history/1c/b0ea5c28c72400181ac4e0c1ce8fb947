@@ -788,7 +788,8 @@ public class ifroglablora extends Frame {
 		      startButton.setLocation(290,y+50+(startButton.size().height/2+tUITop));
 		      startButton.addActionListener(new ActionListener() {
 		         public void actionPerformed(ActionEvent e) {        // 當按下[步驟2；啟動LoRa 按鍵] 
-		        	 if(mDeviceID.length()>0){                 // 如果已經開啟LoRa 設備的話
+		        	 if(mThreadRecevieText!=null) {   
+		        	 //if(mDeviceID.length()>0){                 // 如果已經開啟LoRa 設備的話
 			        	 labelMessage.setText(mStr[25][lan]); //  按鈕顯示「開啟LoRa」　
 			        	 labelLoRaStatus.setText(mStr[27][lan]); //LoRa未開啟
 			        	 startButton.setLabel(mStr[24][lan]);
@@ -817,8 +818,7 @@ public class ifroglablora extends Frame {
 			        	 }else {
 			        		 String tMsg= mUIComPortName.getItem(mUIComPortName.getSelectedIndex())+mStr[43][lan];
 			        		 labelMessage.setText(tMsg); // 這不是iFrogLab LoRa 設備
-
-			                 MsgDialog aboutDialog = new MsgDialog(mainFrame,tMsg,240,150 );
+			                 MsgDialog aboutDialog = new MsgDialog(mainFrame,tMsg,500,100 );
 			                 aboutDialog.setVisible(true);
 			        	 }
 		        	 }
@@ -958,7 +958,7 @@ public class ifroglablora extends Frame {
 		        	    	 	int len1=parts.length;
 				        	     int len=tSendTextString.length();
 		     	    	 		 if(len1>16) len1=16;
-		        	    	 	byte[] data= new byte[len1];//= {0,0,0,0,0, 0,0,0,0,0,  0,0,0,0,0,  0,0,0,0,0};
+		        	    	 	byte[] data= new byte[len1];
 		        	    	 	for(int i=0;i<len1;i++) {
 		        	    	 		data[i]=(byte)Long.parseLong(parts[i], 10);
 		        	    	 	}
@@ -986,7 +986,7 @@ public class ifroglablora extends Frame {
 		     mChoiceRecevieDisplay.add(mStr[33][lan]);             
 		     mChoiceRecevieDisplay.add(mStr[34][lan]);             
 		     mChoiceRecevieDisplay.add(mStr[35][lan]);             
-		     mChoiceRecevieDisplay.add(mStr[36][lan]); 
+		     // mChoiceRecevieDisplay.add(mStr[36][lan]); 
 		      mainFrame.add(mChoiceRecevieDisplay);  
 		      mChoiceRecevieDisplay.setLocation(125, y+160+tUITop);
 		      mChoiceRecevieDisplay.addItemListener(new ItemListener(){
@@ -1221,7 +1221,7 @@ public class ifroglablora extends Frame {
 				  labelMessage,
 				// checkBoxUpload,
 				//  TextFieldUrl,checkBoxSaveLog,
-				  recevieText,mloralib,mChoiceRecevieDisplay);
+				  recevieText,mloralib,mChoiceRecevieDisplay,ifroglabloraClass);
 		mThreadRecevieText.start();
 	
 	}
@@ -1250,7 +1250,7 @@ public class ifroglablora extends Frame {
 			  Label ilabelMessage,
 			  // Checkbox icheckBoxUpload,
 			  // TextField iTextFieldUrl,Checkbox icheckBoxSaveLog,
-			  TextArea iComRrecevieText,loralib iloralib,Choice iChoiceRecevieDisplay)
+			  TextArea iComRrecevieText,loralib iloralib,Choice iChoiceRecevieDisplay,ifroglablora imLo)
 	  { 
 		  delaytime=500;
 		  mlabelMessage=ilabelMessage;
@@ -1258,7 +1258,8 @@ public class ifroglablora extends Frame {
 	      generator = new Random();
 	      threadloralib=iloralib;
           mloralib.ReadMode(Freq1, Freq2, Freq3, Power); 
-          mChoiceRecevieDisplay=iChoiceRecevieDisplay.getSelectedIndex();
+          mChoiceRecevieDisplay=iChoiceRecevieDisplay; //.getSelectedIndex();
+          mLo=imLo;
 	  }
 
 	  public void run()
@@ -1282,43 +1283,54 @@ public class ifroglablora extends Frame {
 					    			byte t1=data[3+i2];
 					    			data2[i2]=t1;
 					    		}
-				    			if(oldData==null || Arrays.equals(oldData, data2)==false) {
+				    			//if(oldData==null || Arrays.equals(oldData, data2)==false) {
 						    	 	String  tRecHex="";
 						    	 	try {
-							    	 	if(mChoiceRecevieDisplayIndex==0) {   //文字
+							    	 	if(mChoiceRecevieDisplay.getSelectedIndex()==0) {   //文字
 							    	 		tRecHex = new String(data2, "UTF-8");
-							    	 	}else if(mChoiceRecevieDisplayIndex==1) {   //16進位數字
-								    	 	tRecHex=mloralib.FunBytesToHex(data2,',');    //FunBytesToHex(data2);
-							    	 	}else if(mChoiceRecevieDisplayIndex==2) {   //10進位數字
-							    	 		tRecHex=mloralib.FunBytesToHex(data2);
+							    	 	}else if(mChoiceRecevieDisplay.getSelectedIndex()==1) {   //16進位數字
+								    	 	tRecHex=mloralib.FunBytesToHexString(data2,',');    //FunBytesToHex(data2);
+							    	 	}else if(mChoiceRecevieDisplay.getSelectedIndex()==2) {   //10進位數字
+							    	 		tRecHex=mloralib.FunBytesToString(data2,',');
 							    	 	}
 						    	 	}catch (UnsupportedEncodingException e) {}
 						    	    System.out.println("收到資料COM Port<-"+tRecHex);   
-						    	    if(oldData!=null) {
+						    	    //if(oldData!=null) {
 					    	    			recevieText.setText(tRecHex+"\n"+recevieText.getText());  //避免顯示上次USB 記憶體上的舊資料
-					    	    			// BEGIN 13, 如果要上傳到 Dashboard
-						    	    	    if(checkBoxUpload=="true") {
+					    	    			// BEGIN 13, 如果要上傳到 URL
+						    	    	    if(mLo.checkBoxUpload=="true") {
 					    	    				if(TextFieldUrl.length()>5) {
 					    	    					String data3=FunHTTP(TextFieldUrl+tRecHex);
 				    	    					    mlabelMessage.setText(data3); 
-					    	    					
-					    	    					
 					    	    				}
 					    	    			}
-					    	    			// END 13, 如果要上傳到 Dashboard
+					    	    			// END 13, 如果要上傳到 URL
 					    	    			
-					    	    			// BEGIN 12, 如果要上傳到 URL
-						    	    	    if(checkBoxDashboard=="true") {
-						    	    	    	    String t1=mURL[8]+"&Key=data&Value="+tRecHex+"&apikey="+APIKEY;
-					    	    				String data3=FunHTTP(t1);
-				    	    					mlabelMessage.setText(data3); 
+					    	    			// BEGIN 12, 如果要上傳到  Dashboard
+						    	    	    String t1aa=mLo.checkBoxDashboard;
+						    	    	    if(mLo.checkBoxDashboard.equals("true")) {
+						    	    	    		String thttpURLResult="";
+					    	    	    	    		String thttpURL=mLo.mURL[8]+"&Key=data&Value="+tRecHex+"&apikey="+APIKEY;
+									    	if(mChoiceRecevieDisplay.getSelectedIndex()==0) {   //文字 不改，直接丟
+									    		thttpURL=mLo.mURL[8]+"&Key=String&Value="+tRecHex+"&apikey="+APIKEY;
+									    		thttpURLResult=FunHTTP(thttpURL);
+									    	}else if(mChoiceRecevieDisplay.getSelectedIndex()==1 ||    //16進位數字
+									    			mChoiceRecevieDisplay.getSelectedIndex()==2 ) {     //10進位數字
+									    		for(int i=0;i<len;i++) {	
+									    			int t1=(int) (data2[i]& 0xFF);
+									    			String t2 = Integer.toString(t1);
+			    	    	    	    				    		thttpURL=mLo.mURL[8]+"&Key=byte"+Integer.toString(i)+"&Value="+t2+"&apikey="+APIKEY;
+			    	    	    	    				    		thttpURLResult=FunHTTP(thttpURL);
+									    		}
+									    	}
+				    	    					mlabelMessage.setText(thttpURLResult); 
 					    	    			}
-					    	    			// END 12, 如果要上傳到 URL
+					    	    			// END 12, 如果要上傳到 Dashboard
 					    	    			// BEGIN 11,ifroglab.csv 儲存檔案
-					    	    			if(checkBoxSaveLog=="true") {
+					    	    			if(mLo.checkBoxSaveLog.equals("true")) {
 					    	    				try	{
-					    	    					if(StringLogFileName.length()>0) {
-					    	    						String filename= StringLogFileName; 
+					    	    					if(mLo.StringLogFileName.length()>0) {
+					    	    						String filename= mLo.StringLogFileName; 
 					    	    				    		FileWriter fw = new FileWriter(filename,true);   //the true will append the new data
 					    	    				    		fw.write(tRecHex+"\n");                         //appends the string to the file
 					    	    				    		fw.close();
@@ -1327,16 +1339,31 @@ public class ifroglablora extends Frame {
 					    	    				    System.err.println("IOException: " + ioe.getMessage());
 					    	    				}
 					    	    			}					    	    			
-						    	    }
+						    	  //  }
 			    	    			    // END 11,ifroglab.csv 儲存檔案
 							    	oldData=data2.clone();
-				    			}
+				    			//}
 				    		}
 				    	  }
 			}
 		    //sleep(500);
 		    sleep(delaytime);
 		    if(delaytime<500)   delaytime=delaytime+2;
+		    // begon 001  debug 1
+		    
+		    byte[] data_d2= {1,2,3};
+		    
+		    int t1=(int) (data2[i]& 0xFF);
+			String t2 = Integer.toString(t1);
+				    		thttpURL=mLo.mURL[8]+"&Key=byte"+Integer.toString(i)+"&Value="+t2+"&apikey="+APIKEY;
+				    		thttpURLResult=FunHTTP(thttpURL);
+				    		
+
+		    sleep(2000);
+		    
+		    // end 001 debug 1
+		    
+		    
 	     }
 	   }
 	   catch (InterruptedException exception) {}
@@ -1353,6 +1380,7 @@ public class ifroglablora extends Frame {
 	//  private Checkbox mcheckBoxUpload;// = new Checkbox();
     //	private TextField mTextFieldUrl;//=new TextField
 	  private Label mlabelMessage;
+	  private ifroglablora mLo;
 	    		  
 	    		  
 	}	

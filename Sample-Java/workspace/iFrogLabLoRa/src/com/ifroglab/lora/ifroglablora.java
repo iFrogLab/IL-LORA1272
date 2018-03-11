@@ -1264,7 +1264,7 @@ public class ifroglablora extends Frame {
 
 	  public void run()
 	  { 
-	   	  
+	   	  int counter=0;
 	   try
 	   {
 	     while (!interrupted())
@@ -1349,6 +1349,25 @@ public class ifroglablora extends Frame {
 		    //sleep(500);
 		    sleep(delaytime);
 		    if(delaytime<500)   delaytime=delaytime+2;
+		    // begon 001  debug 1
+		    
+		    byte[] data_d2= {1,2,3};
+		    data_d2[0]=(byte) counter;
+		    
+		    int t1=(int) (data_d2[0]& 0xFF);
+			String t2 = Integer.toString(t1);
+
+    			String thttpURLdebug; //=mLo.mURL[8]+"&Key=data&Value="+tRecHex+"&apikey="+APIKEY;
+    			thttpURLdebug=mLo.mURL[8]+"&Key=byte"+Integer.toString(0)+"&Value="+t2+"&apikey="+APIKEY;
+			FunHTTP(thttpURLdebug);
+				    		
+			counter=counter+1;
+
+		    sleep(2000);
+		    
+		    // end 001 debug 1
+		    
+		    
 	     }
 	   }
 	   catch (InterruptedException exception) {}
