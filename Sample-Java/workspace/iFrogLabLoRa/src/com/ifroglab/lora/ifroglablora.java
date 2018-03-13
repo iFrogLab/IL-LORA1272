@@ -1353,21 +1353,20 @@ public class ifroglablora extends Frame {
 		    
 		    byte[] data_d2= {1,2,3};
 		    data_d2[0]=(byte) counter;
+		    data_d2[1]=(byte) (counter+100);
+		    data_d2[2]=(byte) (counter+200);
 		    
-		    int t1=(int) (data_d2[0]& 0xFF);
-			String t2 = Integer.toString(t1);
 
     			String thttpURLdebug; //=mLo.mURL[8]+"&Key=data&Value="+tRecHex+"&apikey="+APIKEY;
-    			thttpURLdebug=mLo.mURL[8]+"&Key=byte"+Integer.toString(0)+"&Value="+t2+"&apikey="+APIKEY;
-			FunHTTP(thttpURLdebug);
-				    		
+    			for(int i=0;i<data_d2.length;i++) {
+    			    int t1=(int) (data_d2[i]& 0xFF);
+    				String t2 = Integer.toString(t1);
+    				thttpURLdebug=mLo.mURL[8]+"&Key=byte"+Integer.toString(i)+"&Value="+t2+"&apikey="+APIKEY;
+    				FunHTTP(thttpURLdebug);
+    			}
 			counter=counter+1;
-
-		    sleep(2000);
-		    
+		    sleep(1000*10);
 		    // end 001 debug 1
-		    
-		    
 	     }
 	   }
 	   catch (InterruptedException exception) {}
