@@ -328,7 +328,9 @@ class LoRa(object):
         CMD_Data=[0xc1,0x05]
         CMD_Data.append(len(TX_Data))
         for i3 in data_array:
-           CMD_Data.append(i3)
+          i4=ord(i3)
+          #print(i4)
+          CMD_Data.append(i4)
         CRC=self.Fun_CRC(CMD_Data)
         CMD_Data.append(CRC)
         while True:
